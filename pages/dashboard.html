@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Sonrisas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/main.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside id="sidebar" class="sidebar"></aside>
+    <div class="main-area">
+      <header id="topbar" class="topbar"></header>
+      <main class="content">
+
+        <div class="page-head">
+          <div>
+            <h1>Buenos días, María 👋</h1>
+            <p>Martes, 14 de abril de 2026 · Hoy tienes 12 citas programadas</p>
+          </div>
+          <div class="page-head-actions">
+            <button class="btn btn-secondary" onclick="showToast('Exportación iniciada','info')">
+              <i data-lucide="download"></i> Exportar
+            </button>
+            <button class="btn btn-primary" onclick="openNewCitaModal()">
+              <i data-lucide="plus"></i> Nueva cita
+            </button>
+          </div>
+        </div>
+
+        <!-- KPI Bento -->
+        <div class="bento" style="margin-bottom:20px">
+          <div class="stat-card col-3">
+            <div class="stat-label">
+              Citas hoy
+              <div class="stat-icon"><i data-lucide="calendar-check"></i></div>
+            </div>
+            <div class="stat-value">12</div>
+            <div class="stat-delta up">
+              <i data-lucide="trending-up"></i> +20%
+              <span class="stat-delta-note">vs ayer</span>
+            </div>
+          </div>
+          <div class="stat-card col-3">
+            <div class="stat-label">
+              Pacientes activos
+              <div class="stat-icon"><i data-lucide="users"></i></div>
+            </div>
+            <div class="stat-value">384</div>
+            <div class="stat-delta up">
+              <i data-lucide="trending-up"></i> +12
+              <span class="stat-delta-note">esta semana</span>
+            </div>
+          </div>
+          <div class="stat-card col-3">
+            <div class="stat-label">
+              Ingresos mes
+              <div class="stat-icon"><i data-lucide="wallet"></i></div>
+            </div>
+            <div class="stat-value">Bs 48.6K</div>
+            <div class="stat-delta up">
+              <i data-lucide="trending-up"></i> +8.3%
+              <span class="stat-delta-note">vs marzo</span>
+            </div>
+          </div>
+          <div class="stat-card col-3">
+            <div class="stat-label">
+              Ocupación sillón
+              <div class="stat-icon"><i data-lucide="activity"></i></div>
+            </div>
+            <div class="stat-value">78%</div>
+            <div class="stat-delta down">
+              <i data-lucide="trending-down"></i> -3%
+              <span class="stat-delta-note">vs meta 82%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Agenda + Side info -->
+        <div class="bento" style="margin-bottom:20px">
+          <div class="card col-8">
+            <div class="card-head">
+              <div>
+                <div class="card-title">Agenda del día</div>
+                <div class="card-subtitle">Próximas citas — 14 de abril</div>
+              </div>
+              <a class="card-link" href="agenda.html">Ver agenda completa <i data-lucide="arrow-right"></i></a>
+            </div>
+            <div class="agenda-list">
+              <div class="agenda-item" onclick="window.location.href='paciente-detalle.html'">
+                <div>
+                  <div class="agenda-time">08:30</div>
+                  <div class="agenda-time-end">45 min</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px">
+                  <div class="avatar">JP</div>
+                  <div>
+                    <div class="agenda-patient-name">Juan Pérez Morales</div>
+                    <div class="agenda-patient-meta">Limpieza dental · Dr. Andrés Gutiérrez</div>
+                  </div>
+                </div>
+                <span class="badge badge-success">Confirmada</span>
+              </div>
+
+              <div class="agenda-item" onclick="window.location.href='paciente-detalle.html'">
+                <div>
+                  <div class="agenda-time">09:30</div>
+                  <div class="agenda-time-end">60 min</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px">
+                  <div class="avatar" style="background:linear-gradient(135deg,#FEE2E2,#FCA5A5)">AG</div>
+                  <div>
+                    <div class="agenda-patient-name">Ana García Rojas</div>
+                    <div class="agenda-patient-meta">Endodoncia unirradicular · Dr. Andrés Gutiérrez</div>
+                  </div>
+                </div>
+                <span class="badge badge-success">Confirmada</span>
+              </div>
+
+              <div class="agenda-item" onclick="window.location.href='paciente-detalle.html'">
+                <div>
+                  <div class="agenda-time">11:00</div>
+                  <div class="agenda-time-end">30 min</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px">
+                  <div class="avatar" style="background:linear-gradient(135deg,#DBEAFE,#93C5FD)">CM</div>
+                  <div>
+                    <div class="agenda-patient-name">Carlos Mendoza Villca</div>
+                    <div class="agenda-patient-meta">Control ortodoncia · Dra. María Fernández</div>
+                  </div>
+                </div>
+                <span class="badge badge-warning">Pendiente</span>
+              </div>
+
+              <div class="agenda-item" onclick="window.location.href='paciente-detalle.html'">
+                <div>
+                  <div class="agenda-time">14:00</div>
+                  <div class="agenda-time-end">90 min</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px">
+                  <div class="avatar" style="background:linear-gradient(135deg,#DCFCE7,#86EFAC)">LC</div>
+                  <div>
+                    <div class="agenda-patient-name">Laura Choque Aguilar</div>
+                    <div class="agenda-patient-meta">Corona porcelana · Dr. Sebastián Rojas</div>
+                  </div>
+                </div>
+                <span class="badge badge-success">Confirmada</span>
+              </div>
+
+              <div class="agenda-item" onclick="window.location.href='paciente-detalle.html'">
+                <div>
+                  <div class="agenda-time">16:30</div>
+                  <div class="agenda-time-end">45 min</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px">
+                  <div class="avatar" style="background:linear-gradient(135deg,#EDE9FE,#C4B5FD)">PF</div>
+                  <div>
+                    <div class="agenda-patient-name">Pedro Flores Ramírez</div>
+                    <div class="agenda-patient-meta">Resina posterior · Dr. Andrés Gutiérrez</div>
+                  </div>
+                </div>
+                <span class="badge badge-info">Nuevo</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-4" style="display:flex;flex-direction:column;gap:16px">
+            <div class="card">
+              <div class="card-head">
+                <div class="card-title">Ingresos (últimos 7 días)</div>
+              </div>
+              <div class="kpi-row" style="margin-bottom:14px">
+                <div class="kpi">
+                  <div class="kpi-label">Semana</div>
+                  <div class="kpi-value">Bs 12.4K</div>
+                  <div class="kpi-sub" style="color:var(--success)">+14% vs semana pasada</div>
+                </div>
+              </div>
+              <div class="bar-chart">
+                <div class="bar-chart-col"><div class="bar-chart-bar" style="height:45%" data-value="Bs 1.2K"></div><div class="bar-chart-label">L</div></div>
+                <div class="bar-chart-col"><div class="bar-chart-bar" style="height:62%" data-value="Bs 1.8K"></div><div class="bar-chart-label">M</div></div>
+                <div class="bar-chart-col"><div class="bar-chart-bar" style="height:78%" data-value="Bs 2.3K"></div><div class="bar-chart-label">M</div></div>
+                <div class="bar-chart-col"><div class="bar-chart-bar" style="height:55%" data-value="Bs 1.5K"></div><div class="bar-chart-label">J</div></div>
+                <div class="bar-chart-col"><div class="bar-chart-bar" style="height:88%" data-value="Bs 2.6K"></div><div class="bar-chart-label">V</div></div>
+                <div class="bar-chart-col"><div class="bar-chart-bar" style="height:72%" data-value="Bs 2.1K"></div><div class="bar-chart-label">S</div></div>
+                <div class="bar-chart-col muted"><div class="bar-chart-bar" style="height:30%" data-value="Hoy"></div><div class="bar-chart-label">D</div></div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head">
+                <div class="card-title">Ocupación por profesional</div>
+              </div>
+              <div class="progress-row">
+                <div class="progress-head">
+                  <span class="progress-name">Dra. María Fernández</span>
+                  <span class="progress-value">92%</span>
+                </div>
+                <div class="progress-track"><div class="progress-fill" style="width:92%"></div></div>
+              </div>
+              <div class="progress-row">
+                <div class="progress-head">
+                  <span class="progress-name">Dr. Andrés Gutiérrez</span>
+                  <span class="progress-value">78%</span>
+                </div>
+                <div class="progress-track"><div class="progress-fill" style="width:78%"></div></div>
+              </div>
+              <div class="progress-row">
+                <div class="progress-head">
+                  <span class="progress-name">Dr. Sebastián Rojas</span>
+                  <span class="progress-value">64%</span>
+                </div>
+                <div class="progress-track"><div class="progress-fill" style="width:64%"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom row -->
+        <div class="bento">
+          <div class="card col-4">
+            <div class="card-head">
+              <div class="card-title">Tratamientos populares</div>
+              <div class="card-subtitle" style="margin-top:0">Este mes</div>
+            </div>
+            <div class="progress-row">
+              <div class="progress-head"><span class="progress-name">Limpieza dental</span><span class="progress-value">38</span></div>
+              <div class="progress-track"><div class="progress-fill" style="width:88%"></div></div>
+            </div>
+            <div class="progress-row">
+              <div class="progress-head"><span class="progress-name">Resina</span><span class="progress-value">24</span></div>
+              <div class="progress-track"><div class="progress-fill" style="width:56%"></div></div>
+            </div>
+            <div class="progress-row">
+              <div class="progress-head"><span class="progress-name">Consulta general</span><span class="progress-value">22</span></div>
+              <div class="progress-track"><div class="progress-fill" style="width:52%"></div></div>
+            </div>
+            <div class="progress-row">
+              <div class="progress-head"><span class="progress-name">Endodoncia</span><span class="progress-value">9</span></div>
+              <div class="progress-track"><div class="progress-fill" style="width:22%"></div></div>
+            </div>
+          </div>
+
+          <div class="card col-4">
+            <div class="card-head">
+              <div class="card-title">Pagos recientes</div>
+              <a class="card-link" href="cobros.html">Ver todos <i data-lucide="arrow-right"></i></a>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;align-items:center;gap:12px">
+                <div class="avatar" style="background:linear-gradient(135deg,#DCFCE7,#86EFAC)">JP</div>
+                <div style="flex:1">
+                  <div style="font-weight:600;font-size:13px">Juan Pérez Morales</div>
+                  <div style="font-size:11.5px;color:var(--text-tertiary)">Limpieza · hace 12 min</div>
+                </div>
+                <div style="font-weight:700;font-variant-numeric:tabular-nums">Bs 250</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px">
+                <div class="avatar" style="background:linear-gradient(135deg,#DBEAFE,#93C5FD)">CV</div>
+                <div style="flex:1">
+                  <div style="font-weight:600;font-size:13px">Carmen Vargas Suárez</div>
+                  <div style="font-size:11.5px;color:var(--text-tertiary)">Corona · hace 1 h</div>
+                </div>
+                <div style="font-weight:700;font-variant-numeric:tabular-nums">Bs 2.500</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px">
+                <div class="avatar" style="background:linear-gradient(135deg,#FEE2E2,#FCA5A5)">RI</div>
+                <div style="flex:1">
+                  <div style="font-weight:600;font-size:13px">Roberto Ibáñez Torres</div>
+                  <div style="font-size:11.5px;color:var(--text-tertiary)">Resina · hace 2 h</div>
+                </div>
+                <div style="font-weight:700;font-variant-numeric:tabular-nums">Bs 350</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px">
+                <div class="avatar" style="background:linear-gradient(135deg,#EDE9FE,#C4B5FD)">VR</div>
+                <div style="flex:1">
+                  <div style="font-weight:600;font-size:13px">Valeria Rivera Quispe</div>
+                  <div style="font-size:11.5px;color:var(--text-tertiary)">Blanqueamiento · ayer</div>
+                </div>
+                <div style="font-weight:700;font-variant-numeric:tabular-nums">Bs 800</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card col-4">
+            <div class="card-head">
+              <div class="card-title">Distribución del mes</div>
+            </div>
+            <div class="donut">
+              <svg viewBox="0 0 42 42">
+                <circle cx="21" cy="21" r="15.915" fill="none" stroke="#E4E4E4" stroke-width="6"/>
+                <circle cx="21" cy="21" r="15.915" fill="none" stroke="#18181B" stroke-width="6" stroke-dasharray="64 100" stroke-linecap="round"/>
+              </svg>
+              <div class="donut-center">
+                <div class="donut-value">64%</div>
+                <div class="donut-label">atendidas</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-top:16px;font-size:12px">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <span style="display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:3px;background:#18181B"></span>Atendidas</span>
+                <strong>148</strong>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <span style="display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:3px;background:#E4E4E4"></span>Programadas</span>
+                <strong>62</strong>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <span style="display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:3px;background:#FCA5A5"></span>No asistieron</span>
+                <strong>22</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+    initLayout({ page: 'dashboard', breadcrumb: 'Operación', heading: 'Dashboard' });
+  </script>
+</body>
+</html>

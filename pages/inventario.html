@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inventario — Sonrisas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/main.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside id="sidebar" class="sidebar"></aside>
+    <div class="main-area">
+      <header id="topbar" class="topbar"></header>
+      <main class="content">
+
+        <div class="page-head">
+          <div>
+            <h1>Inventario de insumos</h1>
+            <p>Stock clínico y material de consumo · 142 ítems registrados</p>
+          </div>
+          <div class="page-head-actions">
+            <button class="btn btn-secondary" onclick="showToast('Exportando inventario','info')"><i data-lucide="download"></i> Exportar</button>
+            <button class="btn btn-secondary" onclick="openMovimientoModal()"><i data-lucide="repeat"></i> Movimiento</button>
+            <button class="btn btn-primary" onclick="openNewInsumoModal()"><i data-lucide="plus"></i> Nuevo insumo</button>
+          </div>
+        </div>
+
+        <!-- KPIs -->
+        <div class="bento" style="margin-bottom:18px">
+          <div class="stat-card col-3">
+            <div class="stat-label">Ítems totales<div class="stat-icon"><i data-lucide="package"></i></div></div>
+            <div class="stat-value" style="font-size:26px">142</div>
+            <div class="stat-delta-note">en 5 categorías</div>
+          </div>
+          <div class="stat-card col-3">
+            <div class="stat-label">Valor de stock<div class="stat-icon"><i data-lucide="dollar-sign"></i></div></div>
+            <div class="stat-value" style="font-size:26px">Bs 18.4K</div>
+          </div>
+          <div class="stat-card col-3">
+            <div class="stat-label">Stock bajo<div class="stat-icon" style="background:var(--warning)"><i data-lucide="alert-triangle"></i></div></div>
+            <div class="stat-value" style="font-size:26px;color:var(--warning)">3</div>
+            <div class="stat-delta-note">requieren reposición</div>
+          </div>
+          <div class="stat-card col-3">
+            <div class="stat-label">Por vencer (30d)<div class="stat-icon" style="background:var(--error)"><i data-lucide="clock"></i></div></div>
+            <div class="stat-value" style="font-size:26px;color:var(--error)">2</div>
+            <div class="stat-delta-note">anestesia, pasta</div>
+          </div>
+        </div>
+
+        <div class="bento">
+          <!-- Sidebar categorías -->
+          <div class="card-solid col-3" style="padding:16px">
+            <div class="card-title" style="margin-bottom:12px">Categorías</div>
+            <div id="cat-nav" style="display:flex;flex-direction:column;gap:2px">
+              <div class="cat-link active" data-cat="all" onclick="filterByCat('all')" style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;cursor:pointer;font-size:13px;font-weight:500;background:var(--bg-alt);color:var(--text)">
+                <i data-lucide="package" style="width:16px;height:16px"></i>
+                <span>Todos</span>
+              </div>
+              <div class="cat-link" data-cat="Insumos clínicos" onclick="filterByCat('Insumos clínicos')" style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;cursor:pointer;font-size:13px;font-weight:500;color:var(--text-secondary)">
+                <i data-lucide="stethoscope" style="width:16px;height:16px"></i>
+                <span>Insumos clínicos</span>
+              </div>
+              <div class="cat-link" data-cat="Restauración" onclick="filterByCat('Restauración')" style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;cursor:pointer;font-size:13px;font-weight:500;color:var(--text-secondary)">
+                <i data-lucide="flask-conical" style="width:16px;height:16px"></i>
+                <span>Restauración</span>
+              </div>
+              <div class="cat-link" data-cat="Medicamentos" onclick="filterByCat('Medicamentos')" style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;cursor:pointer;font-size:13px;font-weight:500;color:var(--text-secondary)">
+                <i data-lucide="pill" style="width:16px;height:16px"></i>
+                <span>Medicamentos</span>
+              </div>
+              <div class="cat-link" data-cat="Descartables" onclick="filterByCat('Descartables')" style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;cursor:pointer;font-size:13px;font-weight:500;color:var(--text-secondary)">
+                <i data-lucide="shield" style="width:16px;height:16px"></i>
+                <span>Descartables</span>
+              </div>
+              <div class="cat-link" data-cat="Prótesis" onclick="filterByCat('Prótesis')" style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;cursor:pointer;font-size:13px;font-weight:500;color:var(--text-secondary)">
+                <i data-lucide="smile" style="width:16px;height:16px"></i>
+                <span>Prótesis / Labs</span>
+              </div>
+            </div>
+
+            <div class="card-title" style="margin:20px 0 12px">Proveedores</div>
+            <div id="prov-nav" style="display:flex;flex-direction:column;gap:2px">
+              <div class="cat-link" data-prov="Dentaltec SRL" onclick="filterByProv('Dentaltec SRL')" style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;cursor:pointer;font-size:12px;color:var(--text-secondary)">
+                <span>Dentaltec SRL</span>
+              </div>
+              <div class="cat-link" data-prov="Medical Supply" onclick="filterByProv('Medical Supply')" style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;cursor:pointer;font-size:12px;color:var(--text-secondary)">
+                <span>Medical Supply</span>
+              </div>
+              <div class="cat-link" data-prov="Ivoclar Bolivia" onclick="filterByProv('Ivoclar Bolivia')" style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;cursor:pointer;font-size:12px;color:var(--text-secondary)">
+                <span>Ivoclar Bolivia</span>
+              </div>
+              <div class="cat-link" data-prov="3M Oral Care" onclick="filterByProv('3M Oral Care')" style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;cursor:pointer;font-size:12px;color:var(--text-secondary)">
+                <span>3M Oral Care</span>
+              </div>
+            </div>
+
+            <div style="margin-top:20px;padding:14px;background:var(--bg-alt);border-radius:var(--r-md)">
+              <div style="font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.04em;font-weight:600;margin-bottom:4px">Filtros activos</div>
+              <div id="active-filters" style="font-size:12px;color:var(--text-secondary)">Ninguno · Mostrando todo</div>
+              <button class="btn btn-ghost btn-sm" style="margin-top:8px;width:100%;justify-content:center" onclick="resetAllFilters()">
+                <i data-lucide="x"></i> Limpiar filtros
+              </button>
+            </div>
+          </div>
+
+          <!-- Tabla principal -->
+          <div class="col-9">
+            <div class="table-wrap">
+              <div class="table-toolbar">
+                <div class="table-toolbar-left">
+                  <div class="search-inline"><i data-lucide="search"></i><input placeholder="Buscar insumo, SKU, proveedor..."></div>
+                  <div class="filter-chip active">Todos</div>
+                  <div class="filter-chip">Stock bajo</div>
+                  <div class="filter-chip">Por vencer</div>
+                  <div class="filter-chip">Sin stock</div>
+                </div>
+              </div>
+
+              <table class="data">
+                <thead>
+                  <tr>
+                    <th>Insumo</th>
+                    <th>Categoría</th>
+                    <th>SKU</th>
+                    <th style="text-align:right">Stock</th>
+                    <th style="text-align:right">Mínimo</th>
+                    <th style="text-align:right">Costo u.</th>
+                    <th>Vence</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+                <tbody id="inv-tbody">
+                  <tr data-cat="Medicamentos" data-status="stock-bajo" data-provider="Dentaltec SRL">
+                    <td>
+                      <div style="font-weight:600;font-size:13px">Anestésico Lidocaína 2%</div>
+                      <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Cartuchos 1.8ml · Caja x50</div>
+                    </td>
+                    <td><span class="badge badge-info">Medicamentos</span></td>
+                    <td style="font-family:monospace;font-size:11px">MED-ANS-001</td>
+                    <td style="text-align:right;font-weight:700">8</td>
+                    <td style="text-align:right">15</td>
+                    <td style="text-align:right">Bs 180</td>
+                    <td><span style="color:var(--error);font-weight:600">15 may</span></td>
+                    <td><span class="badge badge-error">Stock bajo</span></td>
+                  </tr>
+                  <tr data-cat="Restauración" data-status="stock-bajo" data-provider="Ivoclar Bolivia">
+                    <td>
+                      <div style="font-weight:600;font-size:13px">Resina compuesta A3</div>
+                      <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Ivoclar Tetric N-Ceram · 4g</div>
+                    </td>
+                    <td><span class="badge badge-warning">Restauración</span></td>
+                    <td style="font-family:monospace;font-size:11px">RES-A3-004</td>
+                    <td style="text-align:right;font-weight:700">3</td>
+                    <td style="text-align:right">5</td>
+                    <td style="text-align:right">Bs 450</td>
+                    <td>oct 2027</td>
+                    <td><span class="badge badge-warning">Stock bajo</span></td>
+                  </tr>
+                  <tr data-cat="Descartables" data-status="ok" data-provider="Medical Supply">
+                    <td>
+                      <div style="font-weight:600;font-size:13px">Guantes nitrilo talla M</div>
+                      <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Caja x100 · sin polvo</div>
+                    </td>
+                    <td><span class="badge badge-neutral">Descartables</span></td>
+                    <td style="font-family:monospace;font-size:11px">DSC-GLN-M12</td>
+                    <td style="text-align:right;font-weight:700">24</td>
+                    <td style="text-align:right">10</td>
+                    <td style="text-align:right">Bs 85</td>
+                    <td>—</td>
+                    <td><span class="badge badge-success">OK</span></td>
+                  </tr>
+                  <tr data-cat="Descartables" data-status="ok" data-provider="Dentaltec SRL">
+                    <td>
+                      <div style="font-weight:600;font-size:13px">Aguja dental 27G corta</div>
+                      <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Caja x100</div>
+                    </td>
+                    <td><span class="badge badge-neutral">Descartables</span></td>
+                    <td style="font-family:monospace;font-size:11px">DSC-AGD-27C</td>
+                    <td style="text-align:right;font-weight:700">12</td>
+                    <td style="text-align:right">5</td>
+                    <td style="text-align:right">Bs 120</td>
+                    <td>mar 2028</td>
+                    <td><span class="badge badge-success">OK</span></td>
+                  </tr>
+                  <tr data-cat="Restauración" data-status="por-vencer" data-provider="3M Oral Care">
+                    <td>
+                      <div style="font-weight:600;font-size:13px">Pasta profiláctica</div>
+                      <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Menta · 100g</div>
+                    </td>
+                    <td><span class="badge badge-warning">Restauración</span></td>
+                    <td style="font-family:monospace;font-size:11px">RES-PPF-100</td>
+                    <td style="text-align:right;font-weight:700">6</td>
+                    <td style="text-align:right">3</td>
+                    <td style="text-align:right">Bs 65</td>
+                    <td><span style="color:var(--error);font-weight:600">28 abr</span></td>
+                    <td><span class="badge badge-warning">Por vencer</span></td>
+                  </tr>
+                  <tr data-cat="Restauración" data-status="ok" data-provider="Ivoclar Bolivia">
+                    <td>
+                      <div style="font-weight:600;font-size:13px">Ácido grabador 37%</div>
+                      <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Gel · jeringa 3ml</div>
+                    </td>
+                    <td><span class="badge badge-warning">Restauración</span></td>
+                    <td style="font-family:monospace;font-size:11px">RES-ACG-37J</td>
+                    <td style="text-align:right;font-weight:700">18</td>
+                    <td style="text-align:right">8</td>
+                    <td style="text-align:right">Bs 45</td>
+                    <td>ago 2027</td>
+                    <td><span class="badge badge-success">OK</span></td>
+                  </tr>
+                  <tr data-cat="Insumos clínicos" data-status="ok" data-provider="Medical Supply">
+                    <td>
+                      <div style="font-weight:600;font-size:13px">Algodón torundas</div>
+                      <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Bolsa x500</div>
+                    </td>
+                    <td><span class="badge badge-info">Insumos clínicos</span></td>
+                    <td style="font-family:monospace;font-size:11px">INC-ALG-500</td>
+                    <td style="text-align:right;font-weight:700">32</td>
+                    <td style="text-align:right">10</td>
+                    <td style="text-align:right">Bs 25</td>
+                    <td>—</td>
+                    <td><span class="badge badge-success">OK</span></td>
+                  </tr>
+                  <tr data-cat="Insumos clínicos" data-status="ok" data-provider="Dentaltec SRL">
+                    <td>
+                      <div style="font-weight:600;font-size:13px">Hilo retractor gingival</div>
+                      <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">#00 · 213cm</div>
+                    </td>
+                    <td><span class="badge badge-info">Insumos clínicos</span></td>
+                    <td style="font-family:monospace;font-size:11px">INC-HRG-00</td>
+                    <td style="text-align:right;font-weight:700">5</td>
+                    <td style="text-align:right">3</td>
+                    <td style="text-align:right">Bs 220</td>
+                    <td>ene 2028</td>
+                    <td><span class="badge badge-success">OK</span></td>
+                  </tr>
+                  <tr data-cat="Restauración" data-status="ok" data-provider="3M Oral Care">
+                    <td>
+                      <div style="font-weight:600;font-size:13px">Matrices Tofflemire</div>
+                      <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Metálicas · caja x12</div>
+                    </td>
+                    <td><span class="badge badge-warning">Restauración</span></td>
+                    <td style="font-family:monospace;font-size:11px">RES-MTF-012</td>
+                    <td style="text-align:right;font-weight:700">14</td>
+                    <td style="text-align:right">5</td>
+                    <td style="text-align:right">Bs 58</td>
+                    <td>—</td>
+                    <td><span class="badge badge-success">OK</span></td>
+                  </tr>
+                  <tr data-cat="Prótesis" data-status="ok" data-provider="Dentaltec SRL">
+                    <td>
+                      <div style="font-weight:600;font-size:13px">Corona provisional acrílica</div>
+                      <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Kit surtido</div>
+                    </td>
+                    <td><span class="badge badge-error">Prótesis</span></td>
+                    <td style="font-family:monospace;font-size:11px">PRO-CPA-KIT</td>
+                    <td style="text-align:right;font-weight:700">9</td>
+                    <td style="text-align:right">4</td>
+                    <td style="text-align:right">Bs 380</td>
+                    <td>jun 2028</td>
+                    <td><span class="badge badge-success">OK</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Últimos movimientos -->
+            <div class="card-solid" style="margin-top:16px">
+              <div class="card-head">
+                <div class="card-title">Últimos movimientos</div>
+                <a class="card-link" href="#">Ver todos <i data-lucide="arrow-right"></i></a>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--bg-alt);border-radius:10px">
+                  <div style="width:32px;height:32px;border-radius:9px;background:var(--success);display:flex;align-items:center;justify-content:center;color:#FFF"><i data-lucide="arrow-down" style="width:16px;height:16px"></i></div>
+                  <div style="flex:1">
+                    <div style="font-weight:600;font-size:13px">Entrada · Resina A3 (+10 unidades)</div>
+                    <div style="font-size:11px;color:var(--text-tertiary)">Proveedor: Ivoclar Bolivia · Bs 4.500 · hoy 09:42</div>
+                  </div>
+                  <span class="badge badge-success">Entrada</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--bg-alt);border-radius:10px">
+                  <div style="width:32px;height:32px;border-radius:9px;background:var(--error);display:flex;align-items:center;justify-content:center;color:#FFF"><i data-lucide="arrow-up" style="width:16px;height:16px"></i></div>
+                  <div style="flex:1">
+                    <div style="font-weight:600;font-size:13px">Consumo · Anestésico Lidocaína (-4 cartuchos)</div>
+                    <div style="font-size:11px;color:var(--text-tertiary)">Paciente: Ana García · Tratamiento: Endodoncia · hoy 09:15</div>
+                  </div>
+                  <span class="badge badge-neutral">Consumo</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--bg-alt);border-radius:10px">
+                  <div style="width:32px;height:32px;border-radius:9px;background:var(--error);display:flex;align-items:center;justify-content:center;color:#FFF"><i data-lucide="arrow-up" style="width:16px;height:16px"></i></div>
+                  <div style="flex:1">
+                    <div style="font-weight:600;font-size:13px">Consumo · Guantes nitrilo M (-2 cajas)</div>
+                    <div style="font-size:11px;color:var(--text-tertiary)">Ajuste operativo · ayer 18:30</div>
+                  </div>
+                  <span class="badge badge-neutral">Consumo</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--bg-alt);border-radius:10px">
+                  <div style="width:32px;height:32px;border-radius:9px;background:var(--warning);display:flex;align-items:center;justify-content:center;color:#FFF"><i data-lucide="alert-triangle" style="width:16px;height:16px"></i></div>
+                  <div style="flex:1">
+                    <div style="font-weight:600;font-size:13px">Ajuste · Pasta profiláctica</div>
+                    <div style="font-size:11px;color:var(--text-tertiary)">Inventario físico: 6 (ajuste -1) · ayer 14:12</div>
+                  </div>
+                  <span class="badge badge-warning">Ajuste</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+    initLayout({ page: 'inventario', breadcrumb: 'Gestión', heading: 'Inventario de insumos' });
+
+    /* ═══ FILTERING ENGINE ═══ */
+    let currentCat = 'all';
+    let currentStatus = 'all';
+    let currentProv = null;
+    let searchQuery = '';
+
+    const rows = () => [...document.querySelectorAll('#inv-tbody tr')];
+    const filtersEl = () => document.getElementById('active-filters');
+
+    function applyFilters() {
+      let visible = 0;
+      rows().forEach(row => {
+        const cat = row.dataset.cat;
+        const status = row.dataset.status;
+        const prov = row.dataset.provider;
+        const text = row.textContent.toLowerCase();
+
+        let show = true;
+        if (currentCat !== 'all' && cat !== currentCat) show = false;
+        if (currentStatus === 'stock-bajo' && status !== 'stock-bajo') show = false;
+        if (currentStatus === 'por-vencer' && status !== 'por-vencer') show = false;
+        if (currentStatus === 'sin-stock' && status === 'ok') show = false; // demo: none are sin-stock
+        if (currentProv && prov !== currentProv) show = false;
+        if (searchQuery && !text.includes(searchQuery.toLowerCase())) show = false;
+
+        row.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+
+      // Update active filters display
+      const parts = [];
+      if (currentCat !== 'all') parts.push(`Cat: ${currentCat}`);
+      if (currentStatus !== 'all') parts.push(`Estado: ${currentStatus}`);
+      if (currentProv) parts.push(`Prov: ${currentProv}`);
+      if (searchQuery) parts.push(`Búsqueda: "${searchQuery}"`);
+      filtersEl().textContent = parts.length ? parts.join(' · ') + ` · ${visible} resultados` : `Ninguno · Mostrando todo (${visible})`;
+
+    }
+
+    /* ── Category sidebar click ── */
+    function filterByCat(cat) {
+      currentCat = cat;
+      currentProv = null; // clear provider when switching category
+      document.querySelectorAll('#cat-nav .cat-link').forEach(el => {
+        el.classList.toggle('active', el.dataset.cat === cat);
+        el.style.background = el.dataset.cat === cat ? 'var(--bg-alt)' : '';
+        el.style.color = el.dataset.cat === cat ? 'var(--text)' : 'var(--text-secondary)';
+      });
+      document.querySelectorAll('#prov-nav .cat-link').forEach(el => {
+        el.classList.remove('active');
+        el.style.background = '';
+        el.style.color = 'var(--text-secondary)';
+      });
+      applyFilters();
+      // silent filter
+    }
+
+    /* ── Provider sidebar click ── */
+    function filterByProv(prov) {
+      currentProv = currentProv === prov ? null : prov; // toggle
+      document.querySelectorAll('#prov-nav .cat-link').forEach(el => {
+        const active = el.dataset.prov === currentProv;
+        el.classList.toggle('active', active);
+        el.style.background = active ? 'var(--bg-alt)' : '';
+        el.style.color = active ? 'var(--text)' : 'var(--text-secondary)';
+      });
+      applyFilters();
+      // silent filter
+    }
+
+    /* ── Filter chips ── */
+    document.querySelectorAll('.filter-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const text = chip.textContent.trim().toLowerCase();
+        if (text === 'todos') currentStatus = 'all';
+        else if (text === 'stock bajo') currentStatus = 'stock-bajo';
+        else if (text === 'por vencer') currentStatus = 'por-vencer';
+        else if (text === 'sin stock') currentStatus = 'sin-stock';
+        // Update chip active state
+        chip.parentElement.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        applyFilters();
+      });
+    });
+
+    /* ── Search ── */
+    document.querySelector('.search-inline input').addEventListener('input', function() {
+      searchQuery = this.value.trim();
+      applyFilters();
+    });
+
+    /* ── Reset all ── */
+    function resetAllFilters() {
+      currentCat = 'all';
+      currentStatus = 'all';
+      currentProv = null;
+      searchQuery = '';
+      document.querySelector('.search-inline input').value = '';
+      document.querySelectorAll('#cat-nav .cat-link').forEach((el, i) => {
+        el.classList.toggle('active', i === 0);
+        el.style.background = i === 0 ? 'var(--bg-alt)' : '';
+        el.style.color = i === 0 ? 'var(--text)' : 'var(--text-secondary)';
+      });
+      document.querySelectorAll('#prov-nav .cat-link').forEach(el => {
+        el.classList.remove('active');
+        el.style.background = '';
+        el.style.color = 'var(--text-secondary)';
+      });
+      document.querySelectorAll('.filter-chip').forEach((c, i) => c.classList.toggle('active', i === 0));
+      applyFilters();
+      showToast('Filtros limpiados', 'success');
+    }
+
+    function openNewInsumoModal() {
+      openGenericModal({
+        title: 'Nuevo insumo',
+        subtitle: 'Agrega un ítem al inventario',
+        size: 'lg',
+        submitLabel: 'Crear insumo',
+        body: `
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Nombre</label><input class="form-input" placeholder="Ej: Resina A3" required></div>
+            <div class="form-group"><label class="form-label">SKU</label><input class="form-input" placeholder="RES-A3-004"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Categoría</label><select class="form-select"><option>Insumos clínicos</option><option>Restauración</option><option>Medicamentos</option><option>Descartables</option><option>Prótesis / Labs</option></select></div>
+            <div class="form-group"><label class="form-label">Proveedor</label><select class="form-select"><option>Dentaltec SRL</option><option>Medical Supply</option><option>Ivoclar Bolivia</option><option>3M Oral Care</option></select></div>
+          </div>
+          <div class="form-row-3">
+            <div class="form-group"><label class="form-label">Stock inicial</label><input class="form-input" type="number" value="0" required></div>
+            <div class="form-group"><label class="form-label">Stock mínimo</label><input class="form-input" type="number" value="5"></div>
+            <div class="form-group"><label class="form-label">Costo unitario (Bs)</label><input class="form-input" type="number" value="0"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Unidad</label><select class="form-select"><option>Unidad</option><option>Caja</option><option>Paquete</option><option>Frasco</option><option>Jeringa</option></select></div>
+            <div class="form-group"><label class="form-label">Fecha de vencimiento</label><input class="form-input" type="date"></div>
+          </div>
+          <div class="form-group"><label class="form-label">Descripción</label><textarea class="form-textarea"></textarea></div>
+        `,
+        onSubmit: () => showToast('Insumo agregado al inventario', 'success'),
+      });
+    }
+
+    function openMovimientoModal() {
+      openGenericModal({
+        title: 'Registrar movimiento de stock',
+        subtitle: 'Entrada, consumo o ajuste manual',
+        submitLabel: 'Registrar movimiento',
+        body: `
+          <div class="form-group">
+            <label class="form-label">Tipo de movimiento</label>
+            <select class="form-select">
+              <option>Entrada (compra / reposición)</option>
+              <option>Consumo (uso en paciente)</option>
+              <option>Ajuste manual</option>
+              <option>Merma / descarte</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Insumo</label>
+            <select class="form-select">
+              <option>Anestésico Lidocaína 2%</option>
+              <option>Resina compuesta A3</option>
+              <option>Guantes nitrilo talla M</option>
+              <option>Pasta profiláctica</option>
+              <option>Algodón torundas</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Cantidad</label><input class="form-input" type="number" value="1" required></div>
+            <div class="form-group"><label class="form-label">Fecha</label><input class="form-input" type="date" value="2026-04-14" required></div>
+          </div>
+          <div class="form-group"><label class="form-label">Motivo / Referencia</label><input class="form-input" placeholder="Ej: Paciente Juan Pérez · Endodoncia"></div>
+          <div class="form-group"><label class="form-label">Notas</label><textarea class="form-textarea"></textarea></div>
+        `,
+        onSubmit: () => showToast('Movimiento registrado', 'success'),
+      });
+    }
+  </script>
+</body>
+</html>

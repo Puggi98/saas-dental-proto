@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configuración institucional — Sonrisas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/main.css">
+  <style>
+    .integration-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px;
+      background: var(--surface-solid);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      box-shadow: var(--shadow-sm);
+    }
+    .integration-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .integration-icon svg { width: 22px; height: 22px; color: #FFF; }
+    .int-body { flex: 1; min-width: 0; }
+    .int-title { font-weight: 700; font-size: 14px; margin-bottom: 2px; }
+    .int-desc { font-size: 11.5px; color: var(--text-secondary); }
+    .template-card {
+      padding: 14px 16px;
+      background: var(--surface-solid);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      margin-bottom: 10px;
+    }
+    .template-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .template-name { font-weight: 600; font-size: 13px; }
+    .template-preview {
+      background: #DCF8C6;
+      padding: 10px 12px;
+      border-radius: 8px 8px 8px 0;
+      font-size: 12.5px;
+      color: #111;
+      line-height: 1.45;
+      position: relative;
+      max-width: 420px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+    }
+    .template-preview::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: -8px;
+      width: 0; height: 0;
+      border-top: 8px solid #DCF8C6;
+      border-left: 8px solid transparent;
+    }
+    .template-var {
+      background: rgba(37,211,102,0.18);
+      color: #14532D;
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 11.5px;
+      font-family: monospace;
+    }
+    .schedule-row {
+      display: grid;
+      grid-template-columns: 120px 1fr 1fr 80px;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .schedule-row:last-child { border-bottom: none; }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside id="sidebar" class="sidebar"></aside>
+    <div class="main-area">
+      <header id="topbar" class="topbar"></header>
+      <main class="content">
+
+        <div class="page-head">
+          <div>
+            <h1>Configuración institucional</h1>
+            <p>Datos, horarios, sedes, plantillas de mensajes e integraciones</p>
+          </div>
+        </div>
+
+        <div class="tabs" id="admin-tabs">
+          <div class="tab active" onclick="switchTab(0)"><i data-lucide="building-2"></i> Datos generales</div>
+          <div class="tab" onclick="switchTab(1)"><i data-lucide="clock"></i> Horarios y sedes</div>
+          <div class="tab" onclick="switchTab(2)"><i data-lucide="message-square-text"></i> Plantillas WhatsApp</div>
+          <div class="tab" onclick="switchTab(3)"><i data-lucide="plug"></i> Integraciones</div>
+          <div class="tab" onclick="switchTab(4)"><i data-lucide="shield-check"></i> Seguridad institucional</div>
+          <div class="tab" onclick="switchTab(5)"><i data-lucide="credit-card"></i> Plan y facturación</div>
+        </div>
+
+        <div class="tab-panels">
+
+          <!-- TAB 1: Datos generales -->
+          <div class="tab-panel active">
+            <div class="bento">
+              <div class="card-solid col-8">
+                <div class="card-head"><div class="card-title">Información de la clínica</div></div>
+                <form class="demo-form">
+                  <div class="form-row">
+                    <div class="form-group"><label class="form-label">Nombre comercial</label><input class="form-input" value="Clínica Dental Sonrisas"></div>
+                    <div class="form-group"><label class="form-label">NIT</label><input class="form-input" value="1234567890"></div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group"><label class="form-label">Razón social</label><input class="form-input" value="Sonrisas SRL"></div>
+                    <div class="form-group"><label class="form-label">Registro sanitario</label><input class="form-input" value="SEDES-SC-2018-0421"></div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group"><label class="form-label">Teléfono</label><input class="form-input" value="+591 3 345-6789"></div>
+                    <div class="form-group"><label class="form-label">Email de contacto</label><input class="form-input" value="contacto@sonrisas.bo"></div>
+                  </div>
+                  <div class="form-group"><label class="form-label">Dirección sede principal</label><input class="form-input" value="Av. San Martín #2450, Equipetrol, Santa Cruz"></div>
+                  <div class="form-row-3">
+                    <div class="form-group"><label class="form-label">Ciudad</label><input class="form-input" value="Santa Cruz"></div>
+                    <div class="form-group"><label class="form-label">Zona horaria</label><select class="form-select"><option>America/La_Paz (GMT-4)</option></select></div>
+                    <div class="form-group"><label class="form-label">Moneda</label><select class="form-select"><option>Bolivianos (Bs)</option><option>USD</option></select></div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Descripción (para comprobantes y web)</label>
+                    <textarea class="form-textarea">Clínica Dental Sonrisas · Odontología integral · Atención desde 2018</textarea>
+                  </div>
+                  <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:10px">
+                    <button type="button" class="btn btn-ghost">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                  </div>
+                </form>
+              </div>
+
+              <div class="col-4" style="display:flex;flex-direction:column;gap:16px">
+                <div class="card-solid">
+                  <div class="card-head"><div class="card-title">Identidad visual</div></div>
+                  <div style="border:2px dashed var(--border-strong);border-radius:var(--r-lg);padding:24px;text-align:center;background:var(--bg-alt)">
+                    <div style="width:68px;height:68px;border-radius:16px;background:var(--surface-dark);color:#FFF;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:26px;margin:0 auto 10px">S</div>
+                    <div style="font-size:12.5px;font-weight:600;margin-bottom:4px">sonrisas-logo.png</div>
+                    <div style="font-size:11px;color:var(--text-tertiary);margin-bottom:12px">PNG · 240×240 · 18 KB</div>
+                    <button class="btn btn-secondary btn-sm"><i data-lucide="upload"></i> Cambiar logo</button>
+                  </div>
+                  <div class="form-group" style="margin-top:14px">
+                    <label class="form-label">Color primario</label>
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <div style="width:36px;height:36px;border-radius:9px;background:#18181B;border:1px solid var(--border-strong)"></div>
+                      <input class="form-input" value="#18181B" style="flex:1;font-family:monospace">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card-solid">
+                  <div class="card-head"><div class="card-title">Certificaciones</div></div>
+                  <div style="display:flex;flex-direction:column;gap:10px;font-size:12.5px">
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--success-light);border-radius:8px">
+                      <span style="display:flex;align-items:center;gap:8px"><i data-lucide="shield-check" style="width:15px;height:15px;color:var(--success)"></i> Licencia SEDES</span>
+                      <strong style="color:#16803C">Vigente</strong>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--success-light);border-radius:8px">
+                      <span style="display:flex;align-items:center;gap:8px"><i data-lucide="shield-check" style="width:15px;height:15px;color:var(--success)"></i> NIT activo</span>
+                      <strong style="color:#16803C">Vigente</strong>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--warning-light);border-radius:8px">
+                      <span style="display:flex;align-items:center;gap:8px"><i data-lucide="clock" style="width:15px;height:15px;color:var(--warning)"></i> Bioseguridad</span>
+                      <strong style="color:#B45309">Vence en 42d</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 2: Horarios y sedes -->
+          <div class="tab-panel">
+            <div class="bento">
+              <div class="card-solid col-7">
+                <div class="card-head"><div class="card-title">Horarios de atención</div><button class="btn btn-ghost btn-sm"><i data-lucide="copy"></i> Duplicar para todos los días</button></div>
+                <div class="schedule-row">
+                  <div style="font-weight:600;font-size:13px">Lunes</div>
+                  <input class="form-input" type="time" value="08:00">
+                  <input class="form-input" type="time" value="19:00">
+                  <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--success);font-weight:600"><input type="checkbox" checked> Abierto</label>
+                </div>
+                <div class="schedule-row">
+                  <div style="font-weight:600;font-size:13px">Martes</div>
+                  <input class="form-input" type="time" value="08:00">
+                  <input class="form-input" type="time" value="19:00">
+                  <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--success);font-weight:600"><input type="checkbox" checked> Abierto</label>
+                </div>
+                <div class="schedule-row">
+                  <div style="font-weight:600;font-size:13px">Miércoles</div>
+                  <input class="form-input" type="time" value="08:00">
+                  <input class="form-input" type="time" value="19:00">
+                  <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--success);font-weight:600"><input type="checkbox" checked> Abierto</label>
+                </div>
+                <div class="schedule-row">
+                  <div style="font-weight:600;font-size:13px">Jueves</div>
+                  <input class="form-input" type="time" value="08:00">
+                  <input class="form-input" type="time" value="19:00">
+                  <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--success);font-weight:600"><input type="checkbox" checked> Abierto</label>
+                </div>
+                <div class="schedule-row">
+                  <div style="font-weight:600;font-size:13px">Viernes</div>
+                  <input class="form-input" type="time" value="08:00">
+                  <input class="form-input" type="time" value="19:00">
+                  <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--success);font-weight:600"><input type="checkbox" checked> Abierto</label>
+                </div>
+                <div class="schedule-row">
+                  <div style="font-weight:600;font-size:13px">Sábado</div>
+                  <input class="form-input" type="time" value="09:00">
+                  <input class="form-input" type="time" value="13:00">
+                  <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--success);font-weight:600"><input type="checkbox" checked> Abierto</label>
+                </div>
+                <div class="schedule-row">
+                  <div style="font-weight:600;font-size:13px;color:var(--text-tertiary)">Domingo</div>
+                  <input class="form-input" type="time" value="00:00" disabled>
+                  <input class="form-input" type="time" value="00:00" disabled>
+                  <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-tertiary);font-weight:600"><input type="checkbox"> Cerrado</label>
+                </div>
+
+                <div style="margin-top:18px;padding:14px;background:var(--bg-alt);border-radius:var(--r-md)">
+                  <div style="font-weight:600;font-size:13px;margin-bottom:10px;display:flex;align-items:center;gap:8px"><i data-lucide="calendar-x" style="width:15px;height:15px"></i> Feriados y cierres</div>
+                  <div style="display:flex;flex-wrap:wrap;gap:6px">
+                    <span class="badge badge-neutral">1 mayo · Día del Trabajo</span>
+                    <span class="badge badge-neutral">21 mayo · Día del Mar</span>
+                    <span class="badge badge-neutral">6 agosto · Independencia</span>
+                    <button class="btn btn-ghost btn-sm"><i data-lucide="plus"></i> Agregar</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-solid col-5">
+                <div class="card-head">
+                  <div class="card-title">Sedes (2)</div>
+                  <button class="btn btn-primary btn-sm"><i data-lucide="plus"></i> Nueva sede</button>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:12px">
+                  <div style="padding:16px;border:1.5px solid var(--accent);border-radius:var(--r-md);background:var(--bg-alt)">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+                      <div>
+                        <div style="font-weight:700;font-size:14px">Sonrisas Equipetrol</div>
+                        <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Sede principal</div>
+                      </div>
+                      <span class="badge badge-dark">Principal</span>
+                    </div>
+                    <div style="margin-top:10px;font-size:12px;color:var(--text-secondary);display:flex;flex-direction:column;gap:4px">
+                      <div style="display:flex;gap:6px;align-items:center"><i data-lucide="map-pin" style="width:13px;height:13px"></i> Av. San Martín #2450, Equipetrol</div>
+                      <div style="display:flex;gap:6px;align-items:center"><i data-lucide="phone" style="width:13px;height:13px"></i> +591 3 345-6789</div>
+                      <div style="display:flex;gap:6px;align-items:center"><i data-lucide="users" style="width:13px;height:13px"></i> 5 profesionales · 3 sillones</div>
+                    </div>
+                  </div>
+
+                  <div style="padding:16px;border:1px solid var(--border);border-radius:var(--r-md)">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+                      <div>
+                        <div style="font-weight:700;font-size:14px">Sonrisas Norte</div>
+                        <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Sucursal</div>
+                      </div>
+                      <span class="badge badge-success">Activa</span>
+                    </div>
+                    <div style="margin-top:10px;font-size:12px;color:var(--text-secondary);display:flex;flex-direction:column;gap:4px">
+                      <div style="display:flex;gap:6px;align-items:center"><i data-lucide="map-pin" style="width:13px;height:13px"></i> Av. Beni #380, Zona Norte</div>
+                      <div style="display:flex;gap:6px;align-items:center"><i data-lucide="phone" style="width:13px;height:13px"></i> +591 3 345-1234</div>
+                      <div style="display:flex;gap:6px;align-items:center"><i data-lucide="users" style="width:13px;height:13px"></i> 2 profesionales · 2 sillones</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 3: Plantillas WhatsApp -->
+          <div class="tab-panel">
+            <div class="bento">
+              <div class="col-8">
+                <div class="card-solid" style="margin-bottom:16px">
+                  <div style="display:flex;align-items:center;gap:12px;padding-bottom:14px;border-bottom:1px solid var(--border);margin-bottom:16px">
+                    <div style="width:42px;height:42px;border-radius:12px;background:#25D366;display:flex;align-items:center;justify-content:center"><i data-lucide="message-circle" style="color:white;width:20px;height:20px"></i></div>
+                    <div style="flex:1">
+                      <div style="font-weight:700;font-size:14.5px">WhatsApp Business · Vinculado</div>
+                      <div style="font-size:11.5px;color:var(--text-secondary)">Número: +591 712-34567 · Conectado desde 12 ene 2026</div>
+                    </div>
+                    <span class="badge badge-success">Activo</span>
+                  </div>
+
+                  <div class="card-head">
+                    <div class="card-title">Plantillas de mensajes</div>
+                    <button class="btn btn-primary btn-sm" onclick="openNuevaPlantillaModal()"><i data-lucide="plus"></i> Nueva plantilla</button>
+                  </div>
+
+                  <div class="template-card">
+                    <div class="template-head">
+                      <div>
+                        <span class="template-name">Confirmación de cita</span>
+                        <span class="badge badge-success" style="margin-left:8px">Activa</span>
+                      </div>
+                      <div style="display:flex;gap:4px">
+                        <button class="btn btn-ghost btn-sm"><i data-lucide="pencil"></i></button>
+                        <button class="btn btn-ghost btn-sm"><i data-lucide="copy"></i></button>
+                      </div>
+                    </div>
+                    <div class="template-preview">
+                      Hola <span class="template-var">{{nombre}}</span> 👋<br>
+                      Te recordamos tu cita en <strong>Clínica Sonrisas</strong>:<br>
+                      📅 <span class="template-var">{{fecha}}</span><br>
+                      ⏰ <span class="template-var">{{hora}}</span><br>
+                      👨‍⚕️ <span class="template-var">{{profesional}}</span><br><br>
+                      Responde <strong>SI</strong> para confirmar o <strong>NO</strong> si no podrás asistir.
+                    </div>
+                    <div style="margin-top:8px;font-size:11px;color:var(--text-tertiary)">Se envía automáticamente 24h antes de la cita</div>
+                  </div>
+
+                  <div class="template-card">
+                    <div class="template-head">
+                      <div>
+                        <span class="template-name">Bienvenida nuevo paciente</span>
+                        <span class="badge badge-success" style="margin-left:8px">Activa</span>
+                      </div>
+                      <div style="display:flex;gap:4px">
+                        <button class="btn btn-ghost btn-sm"><i data-lucide="pencil"></i></button>
+                        <button class="btn btn-ghost btn-sm"><i data-lucide="copy"></i></button>
+                      </div>
+                    </div>
+                    <div class="template-preview">
+                      ¡Bienvenido/a <span class="template-var">{{nombre}}</span>! 🦷✨<br><br>
+                      Gracias por confiar en <strong>Clínica Sonrisas</strong>. Te hemos registrado en nuestro sistema.<br><br>
+                      Si tienes dudas o necesitás reprogramar tu cita, respondé este mensaje y te atenderemos.<br><br>
+                      📍 Av. San Martín #2450, Equipetrol
+                    </div>
+                    <div style="margin-top:8px;font-size:11px;color:var(--text-tertiary)">Se envía al crear un paciente nuevo</div>
+                  </div>
+
+                  <div class="template-card">
+                    <div class="template-head">
+                      <div>
+                        <span class="template-name">Comprobante de pago</span>
+                        <span class="badge badge-success" style="margin-left:8px">Activa</span>
+                      </div>
+                      <div style="display:flex;gap:4px">
+                        <button class="btn btn-ghost btn-sm"><i data-lucide="pencil"></i></button>
+                        <button class="btn btn-ghost btn-sm"><i data-lucide="copy"></i></button>
+                      </div>
+                    </div>
+                    <div class="template-preview">
+                      Hola <span class="template-var">{{nombre}}</span>, recibimos tu pago ✅<br><br>
+                      🧾 Comprobante #<span class="template-var">{{numero}}</span><br>
+                      💰 Monto: <span class="template-var">{{monto}}</span><br>
+                      📋 Concepto: <span class="template-var">{{tratamiento}}</span><br><br>
+                      Te adjuntamos el comprobante en PDF. ¡Gracias por tu confianza!
+                    </div>
+                    <div style="margin-top:8px;font-size:11px;color:var(--text-tertiary)">Se envía al registrar un cobro</div>
+                  </div>
+
+                  <div class="template-card">
+                    <div class="template-head">
+                      <div>
+                        <span class="template-name">Recordatorio de control</span>
+                        <span class="badge badge-warning" style="margin-left:8px">Pausada</span>
+                      </div>
+                      <div style="display:flex;gap:4px">
+                        <button class="btn btn-ghost btn-sm"><i data-lucide="pencil"></i></button>
+                        <button class="btn btn-ghost btn-sm"><i data-lucide="copy"></i></button>
+                      </div>
+                    </div>
+                    <div class="template-preview">
+                      Hola <span class="template-var">{{nombre}}</span> 😊<br><br>
+                      Ya pasaron 6 meses desde tu última limpieza. ¿Te gustaría agendar tu control?<br><br>
+                      Respondé este mensaje o llamanos al +591 3 345-6789.
+                    </div>
+                    <div style="margin-top:8px;font-size:11px;color:var(--text-tertiary)">Se envía 6 meses después de la última visita</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-4" style="display:flex;flex-direction:column;gap:16px">
+                <div class="card-solid">
+                  <div class="card-head"><div class="card-title">Variables disponibles</div></div>
+                  <div style="display:flex;flex-wrap:wrap;gap:6px">
+                    <span class="template-var">{{nombre}}</span>
+                    <span class="template-var">{{apellido}}</span>
+                    <span class="template-var">{{fecha}}</span>
+                    <span class="template-var">{{hora}}</span>
+                    <span class="template-var">{{profesional}}</span>
+                    <span class="template-var">{{tratamiento}}</span>
+                    <span class="template-var">{{monto}}</span>
+                    <span class="template-var">{{numero}}</span>
+                    <span class="template-var">{{clinica}}</span>
+                    <span class="template-var">{{direccion}}</span>
+                    <span class="template-var">{{telefono}}</span>
+                  </div>
+                </div>
+
+                <div class="card-solid">
+                  <div class="card-head"><div class="card-title">Configuración general</div></div>
+                  <div style="display:flex;flex-direction:column;gap:14px">
+                    <label style="display:flex;align-items:center;justify-content:space-between;font-size:12.5px">
+                      <span>Envío automático de recordatorios</span>
+                      <input type="checkbox" checked>
+                    </label>
+                    <label style="display:flex;align-items:center;justify-content:space-between;font-size:12.5px">
+                      <span>Responder ausencias automáticamente</span>
+                      <input type="checkbox" checked>
+                    </label>
+                    <label style="display:flex;align-items:center;justify-content:space-between;font-size:12.5px">
+                      <span>Permitir confirmaciones por WhatsApp</span>
+                      <input type="checkbox" checked>
+                    </label>
+                    <div class="form-group">
+                      <label class="form-label">Enviar recordatorio con</label>
+                      <select class="form-select">
+                        <option>24 horas de anticipación</option>
+                        <option>48 horas de anticipación</option>
+                        <option>1 hora de anticipación</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Horario de envío permitido</label>
+                      <div style="display:flex;gap:8px;align-items:center">
+                        <input class="form-input" type="time" value="08:00">
+                        <span style="font-size:12px;color:var(--text-tertiary)">–</span>
+                        <input class="form-input" type="time" value="21:00">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card-solid">
+                  <div class="card-head"><div class="card-title">Este mes</div></div>
+                  <div class="kpi-row">
+                    <div class="kpi">
+                      <div class="kpi-label">Enviados</div>
+                      <div class="kpi-value">487</div>
+                    </div>
+                    <div class="kpi">
+                      <div class="kpi-label">Respondidos</div>
+                      <div class="kpi-value" style="color:var(--success)">78%</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 4: Integraciones -->
+          <div class="tab-panel">
+            <div class="bento">
+              <div class="col-12">
+                <div class="card-title" style="margin-bottom:12px">Integraciones activas</div>
+              </div>
+              <div class="col-6">
+                <div class="integration-card">
+                  <div class="integration-icon" style="background:#25D366"><i data-lucide="message-circle"></i></div>
+                  <div class="int-body">
+                    <div class="int-title">WhatsApp Business</div>
+                    <div class="int-desc">+591 712-34567 · Recordatorios, confirmaciones, comprobantes</div>
+                  </div>
+                  <button class="btn btn-secondary btn-sm">Configurar</button>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="integration-card">
+                  <div class="integration-icon" style="background:#4285F4"><i data-lucide="calendar"></i></div>
+                  <div class="int-body">
+                    <div class="int-title">Google Calendar</div>
+                    <div class="int-desc">maria.fernandez@gmail.com · Sincronización bidireccional</div>
+                  </div>
+                  <button class="btn btn-secondary btn-sm">Configurar</button>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="integration-card">
+                  <div class="integration-icon" style="background:#EA4335"><i data-lucide="mail"></i></div>
+                  <div class="int-body">
+                    <div class="int-title">Gmail (SMTP)</div>
+                    <div class="int-desc">noreply@sonrisas.bo · Comprobantes y notificaciones</div>
+                  </div>
+                  <button class="btn btn-secondary btn-sm">Configurar</button>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="integration-card">
+                  <div class="integration-icon" style="background:#18181B"><i data-lucide="qr-code"></i></div>
+                  <div class="int-body">
+                    <div class="int-title">QR de pagos (Banco Unión)</div>
+                    <div class="int-desc">Cuenta ••• 4821 · Cobros con QR integrados</div>
+                  </div>
+                  <button class="btn btn-secondary btn-sm">Configurar</button>
+                </div>
+              </div>
+
+              <div class="col-12" style="margin-top:8px">
+                <div class="card-title" style="margin-bottom:12px">Disponibles</div>
+              </div>
+              <div class="col-6">
+                <div class="integration-card" style="opacity:0.75">
+                  <div class="integration-icon" style="background:#0EA5E9"><i data-lucide="send"></i></div>
+                  <div class="int-body">
+                    <div class="int-title">Telegram Bot</div>
+                    <div class="int-desc">Notificaciones al equipo, alertas de agenda</div>
+                  </div>
+                  <button class="btn btn-primary btn-sm">Conectar</button>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="integration-card" style="opacity:0.75">
+                  <div class="integration-icon" style="background:#00A1E0"><i data-lucide="cloud"></i></div>
+                  <div class="int-body">
+                    <div class="int-title">Impuestos Nacionales (SIN)</div>
+                    <div class="int-desc">Facturación electrónica modalidad online</div>
+                  </div>
+                  <button class="btn btn-primary btn-sm">Conectar</button>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="integration-card" style="opacity:0.75">
+                  <div class="integration-icon" style="background:#6B6B6B"><i data-lucide="printer"></i></div>
+                  <div class="int-body">
+                    <div class="int-title">Impresora térmica</div>
+                    <div class="int-desc">Comprobantes 80mm · Epson / Xprinter</div>
+                  </div>
+                  <button class="btn btn-primary btn-sm">Conectar</button>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="integration-card" style="opacity:0.75">
+                  <div class="integration-icon" style="background:#F59E0B"><i data-lucide="key"></i></div>
+                  <div class="int-body">
+                    <div class="int-title">Webhooks / API</div>
+                    <div class="int-desc">Integraciones personalizadas con otros sistemas</div>
+                  </div>
+                  <button class="btn btn-primary btn-sm">Conectar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 5: Seguridad institucional -->
+          <div class="tab-panel">
+            <div class="bento">
+              <div class="card-solid col-6">
+                <div class="card-head"><div class="card-title">Políticas de acceso</div></div>
+                <div style="display:flex;flex-direction:column;gap:14px">
+                  <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px">
+                    <div>
+                      <div style="font-weight:600">2FA obligatorio para toda la clínica</div>
+                      <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Todos los usuarios deben activar autenticación en dos pasos</div>
+                    </div>
+                    <input type="checkbox" checked>
+                  </label>
+                  <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px">
+                    <div>
+                      <div style="font-weight:600">Bloqueo de sesión inactiva</div>
+                      <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Cerrar sesión después de 30 min de inactividad</div>
+                    </div>
+                    <input type="checkbox" checked>
+                  </label>
+                  <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px">
+                    <div>
+                      <div style="font-weight:600">Restricción por IP</div>
+                      <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Solo permitir acceso desde IPs autorizadas</div>
+                    </div>
+                    <input type="checkbox">
+                  </label>
+                  <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px">
+                    <div>
+                      <div style="font-weight:600">Exigir cambio de contraseña</div>
+                      <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Cada 90 días</div>
+                    </div>
+                    <input type="checkbox">
+                  </label>
+                </div>
+              </div>
+
+              <div class="card-solid col-6">
+                <div class="card-head"><div class="card-title">Privacidad de datos del paciente</div></div>
+                <div style="display:flex;flex-direction:column;gap:14px">
+                  <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px">
+                    <div>
+                      <div style="font-weight:600">Enmascaramiento de CI en listados</div>
+                      <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Recepción ve últimos 4 dígitos</div>
+                    </div>
+                    <input type="checkbox" checked>
+                  </label>
+                  <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px">
+                    <div>
+                      <div style="font-weight:600">Historia clínica solo para profesionales</div>
+                      <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Recepción no puede ver odontograma ni notas</div>
+                    </div>
+                    <input type="checkbox" checked>
+                  </label>
+                  <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px">
+                    <div>
+                      <div style="font-weight:600">Audit log de accesos</div>
+                      <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Registrar cada acceso a datos sensibles</div>
+                    </div>
+                    <input type="checkbox" checked>
+                  </label>
+                  <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px">
+                    <div>
+                      <div style="font-weight:600">Consentimiento digital obligatorio</div>
+                      <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Antes de cualquier tratamiento</div>
+                    </div>
+                    <input type="checkbox" checked>
+                  </label>
+                </div>
+              </div>
+
+              <div class="card-solid col-12">
+                <div class="card-head">
+                  <div>
+                    <div class="card-title">Backups automáticos</div>
+                    <div class="card-subtitle" style="margin-top:0">Protege la información de tu clínica</div>
+                  </div>
+                  <span class="badge badge-success">Activo</span>
+                </div>
+                <div class="bento">
+                  <div class="stat-card col-4">
+                    <div class="stat-label">Último backup</div>
+                    <div class="stat-value" style="font-size:20px">Hoy 03:00</div>
+                    <div class="stat-delta-note">Automático diario</div>
+                  </div>
+                  <div class="stat-card col-4">
+                    <div class="stat-label">Tamaño</div>
+                    <div class="stat-value" style="font-size:20px">2.4 GB</div>
+                    <div class="stat-delta-note">Encriptado AES-256</div>
+                  </div>
+                  <div class="stat-card col-4">
+                    <div class="stat-label">Retención</div>
+                    <div class="stat-value" style="font-size:20px">90 días</div>
+                    <div class="stat-delta-note">30 backups disponibles</div>
+                  </div>
+                </div>
+                <div style="display:flex;gap:10px;margin-top:14px">
+                  <button class="btn btn-secondary btn-sm"><i data-lucide="download"></i> Descargar último backup</button>
+                  <button class="btn btn-secondary btn-sm"><i data-lucide="history"></i> Ver histórico</button>
+                  <button class="btn btn-secondary btn-sm"><i data-lucide="refresh-cw"></i> Ejecutar backup ahora</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 6: Plan y facturación -->
+          <div class="tab-panel">
+            <div class="bento">
+              <div class="col-7">
+                <div class="card-solid" style="padding:26px;background:linear-gradient(135deg,#18181B,#2A2A2A);color:#FFF;border:none">
+                  <div style="display:flex;justify-content:space-between;align-items:flex-start">
+                    <div>
+                      <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.04em;opacity:0.6;font-weight:600">Plan actual</div>
+                      <div style="font-size:24px;font-weight:800;margin:4px 0">Pro · Multi-profesional</div>
+                      <div style="font-size:12.5px;opacity:0.7">Hasta 10 usuarios · 3.000 pacientes · Todas las funciones</div>
+                    </div>
+                    <span style="background:#D0FF71;color:#201F1F;padding:4px 10px;border-radius:999px;font-size:10.5px;font-weight:700">ACTIVO</span>
+                  </div>
+                  <div style="display:flex;align-items:baseline;gap:8px;margin-top:20px">
+                    <span style="font-size:36px;font-weight:800">Bs 420</span>
+                    <span style="font-size:14px;opacity:0.6">/mes</span>
+                  </div>
+                  <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.1);display:flex;justify-content:space-between;font-size:12px;opacity:0.8">
+                    <span>Próxima facturación: 8 de mayo 2026</span>
+                    <span>Activo desde: 12 ene 2026</span>
+                  </div>
+                </div>
+
+                <div class="card-solid" style="margin-top:16px">
+                  <div class="card-head"><div class="card-title">Uso del plan</div></div>
+                  <div class="progress-row">
+                    <div class="progress-head"><span class="progress-name">Usuarios activos</span><span class="progress-value">7 / 10</span></div>
+                    <div class="progress-track"><div class="progress-fill" style="width:70%"></div></div>
+                  </div>
+                  <div class="progress-row">
+                    <div class="progress-head"><span class="progress-name">Pacientes registrados</span><span class="progress-value">384 / 3.000</span></div>
+                    <div class="progress-track"><div class="progress-fill" style="width:13%"></div></div>
+                  </div>
+                  <div class="progress-row">
+                    <div class="progress-head"><span class="progress-name">Almacenamiento documental</span><span class="progress-value">14.2 / 50 GB</span></div>
+                    <div class="progress-track"><div class="progress-fill" style="width:28%"></div></div>
+                  </div>
+                  <div class="progress-row">
+                    <div class="progress-head"><span class="progress-name">Mensajes WhatsApp (mes)</span><span class="progress-value">487 / 2.000</span></div>
+                    <div class="progress-track"><div class="progress-fill" style="width:24%"></div></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-5" style="display:flex;flex-direction:column;gap:16px">
+                <div class="card-solid">
+                  <div class="card-head"><div class="card-title">Método de pago</div></div>
+                  <div style="display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--border-strong);border-radius:var(--r-md)">
+                    <div style="width:38px;height:26px;background:linear-gradient(135deg,#1A1F71,#4B5FE3);border-radius:4px"></div>
+                    <div style="flex:1">
+                      <div style="font-weight:600;font-size:13px">Visa ••• 4821</div>
+                      <div style="font-size:11px;color:var(--text-tertiary)">Expira 08/28</div>
+                    </div>
+                    <button class="btn btn-ghost btn-sm">Cambiar</button>
+                  </div>
+                </div>
+
+                <div class="card-solid">
+                  <div class="card-head">
+                    <div class="card-title">Facturas recientes</div>
+                    <a class="card-link" href="#">Ver todas <i data-lucide="arrow-right"></i></a>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:10px">
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg-alt);border-radius:8px">
+                      <div>
+                        <div style="font-weight:600;font-size:12.5px">Abril 2026</div>
+                        <div style="font-size:11px;color:var(--text-tertiary)">8 abr · Pagada</div>
+                      </div>
+                      <div style="display:flex;align-items:center;gap:8px">
+                        <strong style="font-size:13px">Bs 420</strong>
+                        <button class="btn btn-ghost btn-sm"><i data-lucide="download"></i></button>
+                      </div>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg-alt);border-radius:8px">
+                      <div>
+                        <div style="font-weight:600;font-size:12.5px">Marzo 2026</div>
+                        <div style="font-size:11px;color:var(--text-tertiary)">8 mar · Pagada</div>
+                      </div>
+                      <div style="display:flex;align-items:center;gap:8px">
+                        <strong style="font-size:13px">Bs 420</strong>
+                        <button class="btn btn-ghost btn-sm"><i data-lucide="download"></i></button>
+                      </div>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg-alt);border-radius:8px">
+                      <div>
+                        <div style="font-weight:600;font-size:12.5px">Febrero 2026</div>
+                        <div style="font-size:11px;color:var(--text-tertiary)">8 feb · Pagada</div>
+                      </div>
+                      <div style="display:flex;align-items:center;gap:8px">
+                        <strong style="font-size:13px">Bs 420</strong>
+                        <button class="btn btn-ghost btn-sm"><i data-lucide="download"></i></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+    initLayout({ page: 'admin-clinica', breadcrumb: 'Administración', heading: 'Configuración institucional' });
+
+    function switchTab(i) {
+      document.querySelectorAll('#admin-tabs .tab').forEach((t, idx) => t.classList.toggle('active', idx === i));
+      document.querySelectorAll('.tab-panel').forEach((p, idx) => p.classList.toggle('active', idx === i));
+      lucide.createIcons();
+    }
+
+    function openNuevaPlantillaModal() {
+      openGenericModal({
+        title: 'Nueva plantilla de mensaje',
+        subtitle: 'Crea una plantilla reutilizable para WhatsApp',
+        size: 'lg',
+        submitLabel: 'Crear plantilla',
+        body: `
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Nombre de la plantilla</label><input class="form-input" placeholder="Ej: Recordatorio de cita" required></div>
+            <div class="form-group"><label class="form-label">Categoría</label><select class="form-select"><option>Recordatorio</option><option>Confirmación</option><option>Bienvenida</option><option>Pago</option><option>Seguimiento</option></select></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Trigger (cuándo se envía)</label>
+            <select class="form-select">
+              <option>Manual (envío a demanda)</option>
+              <option>24h antes de la cita</option>
+              <option>48h antes de la cita</option>
+              <option>1h antes de la cita</option>
+              <option>Al crear paciente nuevo</option>
+              <option>Al registrar cobro</option>
+              <option>Después de 6 meses sin visita</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Contenido del mensaje</label>
+            <textarea class="form-textarea" style="min-height:140px" placeholder="Hola {{nombre}}, te recordamos tu cita el {{fecha}} a las {{hora}}..."></textarea>
+            <div class="form-hint">Usa variables como {{nombre}}, {{fecha}}, {{hora}}, {{profesional}}, {{monto}}, {{tratamiento}}</div>
+          </div>
+          <label style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text-secondary)"><input type="checkbox" checked> Activar plantilla al crearla</label>
+        `,
+        onSubmit: () => showToast('Plantilla creada', 'success'),
+      });
+    }
+  </script>
+</body>
+</html>

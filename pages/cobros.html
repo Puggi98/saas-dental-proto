@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cobros — Sonrisas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/main.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside id="sidebar" class="sidebar"></aside>
+    <div class="main-area">
+      <header id="topbar" class="topbar"></header>
+      <main class="content">
+
+        <div class="page-head">
+          <div>
+            <h1>Cobros</h1>
+            <p>Historial de pagos y comprobantes · Abril 2026</p>
+          </div>
+          <div class="page-head-actions">
+            <button class="btn btn-secondary" onclick="showToast('Exportando a PDF','info')"><i data-lucide="file-text"></i> Exportar PDF</button>
+            <button class="btn btn-primary" onclick="openNewCobroModal()"><i data-lucide="plus"></i> Registrar cobro</button>
+          </div>
+        </div>
+
+        <div class="bento" style="margin-bottom:18px">
+          <div class="stat-card col-3">
+            <div class="stat-label">Cobrado hoy</div>
+            <div class="stat-value" style="font-size:26px">Bs 2.450</div>
+            <div class="stat-delta up"><i data-lucide="trending-up"></i> 5 pagos</div>
+          </div>
+          <div class="stat-card col-3">
+            <div class="stat-label">Cobrado esta semana</div>
+            <div class="stat-value" style="font-size:26px">Bs 12.4K</div>
+            <div class="stat-delta up"><i data-lucide="trending-up"></i> +14%</div>
+          </div>
+          <div class="stat-card col-3">
+            <div class="stat-label">Mes en curso</div>
+            <div class="stat-value" style="font-size:26px">Bs 48.6K</div>
+            <div class="stat-delta up"><i data-lucide="trending-up"></i> +8.3%</div>
+          </div>
+          <div class="stat-card col-3">
+            <div class="stat-label">Saldos por cobrar</div>
+            <div class="stat-value" style="font-size:26px;color:var(--error)">Bs 3.240</div>
+            <div class="stat-delta down"><i data-lucide="alert-circle"></i> 18 pacientes</div>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <div class="table-toolbar">
+            <div class="table-toolbar-left">
+              <div class="search-inline">
+                <i data-lucide="search"></i>
+                <input placeholder="Buscar por paciente o comprobante...">
+              </div>
+              <div class="filter-chip active">Todos</div>
+              <div class="filter-chip">Efectivo</div>
+              <div class="filter-chip">QR</div>
+              <div class="filter-chip">Transferencia</div>
+              <div class="filter-chip">Tarjeta</div>
+            </div>
+            <select class="form-select" style="width:180px;padding:7px 12px;font-size:12.5px">
+              <option>Abril 2026</option><option>Marzo 2026</option><option>Febrero 2026</option>
+            </select>
+          </div>
+
+          <table class="data">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Paciente</th>
+                <th>Concepto</th>
+                <th>Profesional</th>
+                <th>Método</th>
+                <th>Fecha</th>
+                <th style="text-align:right">Monto</th>
+                <th>Estado</th>
+                <th style="text-align:right">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="font-variant-numeric:tabular-nums;font-weight:600">#0421</td>
+                <td><div class="cell-user"><div class="avatar">JP</div><div><div class="cell-user-name">Juan Pérez Morales</div></div></div></td>
+                <td>Limpieza dental</td>
+                <td>Dr. A. Gutiérrez</td>
+                <td><span class="badge badge-neutral">Efectivo</span></td>
+                <td>14 abr · 09:15</td>
+                <td style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">Bs 250</td>
+                <td><span class="badge badge-success">Pagado</span></td>
+                <td><div class="cell-actions"><button><i data-lucide="printer"></i></button><button><i data-lucide="download"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr>
+                <td style="font-variant-numeric:tabular-nums;font-weight:600">#0420</td>
+                <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#FEF3C7,#FCD34D)">CV</div><div><div class="cell-user-name">Carmen Vargas Suárez</div></div></div></td>
+                <td>Corona porcelana 36</td>
+                <td>Dr. S. Rojas</td>
+                <td><span class="badge badge-info">QR</span></td>
+                <td>14 abr · 08:40</td>
+                <td style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">Bs 2.500</td>
+                <td><span class="badge badge-success">Pagado</span></td>
+                <td><div class="cell-actions"><button><i data-lucide="printer"></i></button><button><i data-lucide="download"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr>
+                <td style="font-variant-numeric:tabular-nums;font-weight:600">#0419</td>
+                <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#CFFAFE,#67E8F9)">RI</div><div><div class="cell-user-name">Roberto Ibáñez Torres</div></div></div></td>
+                <td>Resina 35</td>
+                <td>Dr. A. Gutiérrez</td>
+                <td><span class="badge badge-info">Transferencia</span></td>
+                <td>13 abr · 17:20</td>
+                <td style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">Bs 350</td>
+                <td><span class="badge badge-success">Pagado</span></td>
+                <td><div class="cell-actions"><button><i data-lucide="printer"></i></button><button><i data-lucide="download"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr>
+                <td style="font-variant-numeric:tabular-nums;font-weight:600">#0418</td>
+                <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#FCE7F3,#F9A8D4)">VR</div><div><div class="cell-user-name">Valeria Rivera Quispe</div></div></div></td>
+                <td>Blanqueamiento completo</td>
+                <td>Dra. M. Fernández</td>
+                <td><span class="badge badge-neutral">Efectivo</span></td>
+                <td>12 abr · 15:40</td>
+                <td style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">Bs 800</td>
+                <td><span class="badge badge-success">Pagado</span></td>
+                <td><div class="cell-actions"><button><i data-lucide="printer"></i></button><button><i data-lucide="download"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr>
+                <td style="font-variant-numeric:tabular-nums;font-weight:600">#0417</td>
+                <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#DBEAFE,#93C5FD)">CM</div><div><div class="cell-user-name">Carlos Mendoza Villca</div></div></div></td>
+                <td>Ortodoncia — control mensual</td>
+                <td>Dra. M. Fernández</td>
+                <td><span class="badge badge-info">Tarjeta</span></td>
+                <td>12 abr · 11:30</td>
+                <td style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">Bs 450</td>
+                <td><span class="badge badge-success">Pagado</span></td>
+                <td><div class="cell-actions"><button><i data-lucide="printer"></i></button><button><i data-lucide="download"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr>
+                <td style="font-variant-numeric:tabular-nums;font-weight:600">#0416</td>
+                <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#DCFCE7,#86EFAC)">LC</div><div><div class="cell-user-name">Laura Choque Aguilar</div></div></div></td>
+                <td>Corona porcelana (cuota 1/2)</td>
+                <td>Dr. S. Rojas</td>
+                <td><span class="badge badge-info">QR</span></td>
+                <td>11 abr · 16:00</td>
+                <td style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">Bs 1.250</td>
+                <td><span class="badge badge-warning">Parcial</span></td>
+                <td><div class="cell-actions"><button><i data-lucide="printer"></i></button><button><i data-lucide="download"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr>
+                <td style="font-variant-numeric:tabular-nums;font-weight:600">#0415</td>
+                <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#FEE2E2,#FCA5A5)">AG</div><div><div class="cell-user-name">Ana García Rojas</div></div></div></td>
+                <td>Endodoncia 15</td>
+                <td>Dr. A. Gutiérrez</td>
+                <td><span class="badge badge-neutral">Pendiente</span></td>
+                <td>11 abr · 10:30</td>
+                <td style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">Bs 1.200</td>
+                <td><span class="badge badge-error">Por cobrar</span></td>
+                <td><div class="cell-actions"><button><i data-lucide="send"></i></button><button><i data-lucide="phone"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="../js/app.js"></script>
+  <script>initLayout({ page: 'cobros', breadcrumb: 'Operación', heading: 'Cobros y facturación' });</script>
+</body>
+</html>

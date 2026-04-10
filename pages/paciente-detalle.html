@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juan Pérez Morales — Sonrisas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/main.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside id="sidebar" class="sidebar"></aside>
+    <div class="main-area">
+      <header id="topbar" class="topbar"></header>
+      <main class="content">
+
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;font-size:12px;color:var(--text-secondary)">
+          <a href="pacientes.html" style="display:inline-flex;align-items:center;gap:6px;font-weight:600">
+            <i data-lucide="arrow-left" style="width:14px;height:14px"></i> Volver a pacientes
+          </a>
+        </div>
+
+        <div class="patient-head">
+          <div class="avatar">JP</div>
+          <div class="patient-head-info">
+            <div class="patient-head-name">Juan Pérez Morales</div>
+            <div class="patient-head-meta">
+              <span><i data-lucide="id-card"></i> CI 6123456 SC</span>
+              <span><i data-lucide="cake"></i> 34 años · 12 mar 1992</span>
+              <span><i data-lucide="phone"></i> +591 712-34567</span>
+              <span><i data-lucide="mail"></i> juan.perez@gmail.com</span>
+              <span><i data-lucide="map-pin"></i> Santa Cruz</span>
+            </div>
+            <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+              <span class="badge badge-success">Activo</span>
+              <span class="badge badge-info">18 visitas</span>
+              <span class="badge badge-neutral">Paciente desde 2021</span>
+            </div>
+          </div>
+          <div class="patient-head-actions">
+            <button class="btn btn-secondary" onclick="showToast('Llamando...','info')"><i data-lucide="phone"></i> Llamar</button>
+            <button class="btn btn-secondary" onclick="showToast('Compartir por WhatsApp','info')"><i data-lucide="message-circle"></i> WhatsApp</button>
+            <button class="btn btn-primary" onclick="openNewCitaModal('jp')"><i data-lucide="calendar-plus"></i> Nueva cita</button>
+          </div>
+        </div>
+
+        <div class="tabs" id="patient-tabs">
+          <div class="tab active" onclick="switchTab(0)"><i data-lucide="user"></i> Datos</div>
+          <div class="tab" onclick="switchTab(1)"><i data-lucide="tooth"></i> Odontograma</div>
+          <div class="tab" onclick="switchTab(2)"><i data-lucide="clipboard-list"></i> Historia clínica</div>
+          <div class="tab" onclick="switchTab(3)"><i data-lucide="wallet"></i> Pagos</div>
+          <div class="tab" onclick="switchTab(4)"><i data-lucide="calendar"></i> Citas</div>
+        </div>
+
+        <div class="tab-panels">
+
+          <!-- TAB 1: Datos -->
+          <div class="tab-panel active">
+            <div class="bento">
+              <div class="card-solid col-7">
+                <div class="card-head"><div class="card-title">Datos personales</div><button class="btn btn-ghost btn-sm"><i data-lucide="pencil"></i> Editar</button></div>
+                <form class="demo-form">
+                  <div class="form-row">
+                    <div class="form-group"><label class="form-label">Nombre</label><input class="form-input" value="Juan"></div>
+                    <div class="form-group"><label class="form-label">Apellidos</label><input class="form-input" value="Pérez Morales"></div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group"><label class="form-label">CI</label><input class="form-input" value="6123456 SC"></div>
+                    <div class="form-group"><label class="form-label">Fecha de nacimiento</label><input class="form-input" type="date" value="1992-03-12"></div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group"><label class="form-label">Teléfono</label><input class="form-input" value="+591 712-34567"></div>
+                    <div class="form-group"><label class="form-label">Email</label><input class="form-input" value="juan.perez@gmail.com"></div>
+                  </div>
+                  <div class="form-group"><label class="form-label">Dirección</label><input class="form-input" value="Av. Cristo Redentor #1450, Santa Cruz"></div>
+                  <div class="form-row">
+                    <div class="form-group"><label class="form-label">Género</label><select class="form-select"><option>Masculino</option><option>Femenino</option><option>Otro</option></select></div>
+                    <div class="form-group"><label class="form-label">Ocupación</label><input class="form-input" value="Ingeniero de sistemas"></div>
+                  </div>
+                  <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:10px">
+                    <button type="button" class="btn btn-ghost">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                  </div>
+                </form>
+              </div>
+
+              <div class="col-5" style="display:flex;flex-direction:column;gap:16px">
+                <div class="card-solid">
+                  <div class="card-head"><div class="card-title">Antecedentes médicos</div></div>
+                  <div style="display:flex;flex-direction:column;gap:10px">
+                    <label style="display:flex;align-items:center;gap:10px;font-size:13px"><input type="checkbox" checked> Hipertensión</label>
+                    <label style="display:flex;align-items:center;gap:10px;font-size:13px"><input type="checkbox"> Diabetes</label>
+                    <label style="display:flex;align-items:center;gap:10px;font-size:13px"><input type="checkbox"> Alergia a penicilina</label>
+                    <label style="display:flex;align-items:center;gap:10px;font-size:13px"><input type="checkbox"> Embarazo</label>
+                    <label style="display:flex;align-items:center;gap:10px;font-size:13px"><input type="checkbox"> Anticoagulantes</label>
+                    <label style="display:flex;align-items:center;gap:10px;font-size:13px"><input type="checkbox" checked> Fumador</label>
+                  </div>
+                  <div class="form-group" style="margin-top:14px">
+                    <label class="form-label">Notas adicionales</label>
+                    <textarea class="form-textarea">Paciente con hipertensión controlada. Toma losartán 50mg diario.</textarea>
+                  </div>
+                </div>
+
+                <div class="card-solid">
+                  <div class="card-head"><div class="card-title">Resumen financiero</div></div>
+                  <div class="kpi-row">
+                    <div class="kpi">
+                      <div class="kpi-label">Total gastado</div>
+                      <div class="kpi-value">Bs 4.820</div>
+                    </div>
+                    <div class="kpi">
+                      <div class="kpi-label">Saldo pendiente</div>
+                      <div class="kpi-value" style="color:var(--success)">Bs 0</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 2: Odontograma -->
+          <div class="tab-panel">
+            <div class="odonto-wrap">
+              <div class="odonto-head">
+                <div>
+                  <div class="card-title">Odontograma interactivo</div>
+                  <div class="card-subtitle">Selecciona una herramienta y haz clic sobre un diente para cambiar su estado</div>
+                </div>
+                <div style="display:flex;gap:8px;align-items:center">
+                  <button class="btn btn-secondary btn-sm"><i data-lucide="history"></i> Historial</button>
+                  <button class="btn btn-primary btn-sm" onclick="showToast('Odontograma guardado','success')"><i data-lucide="save"></i> Guardar</button>
+                </div>
+              </div>
+
+              <div class="odonto-tools" style="margin-bottom:22px">
+                <div class="odonto-tool" data-state="sano" onclick="setOdontoTool('sano')">
+                  <div class="odonto-tool-swatch" style="background:#FFFFFF"></div> Sano
+                </div>
+                <div class="odonto-tool active" data-state="caries" onclick="setOdontoTool('caries')">
+                  <div class="odonto-tool-swatch" style="background:var(--tooth-caries)"></div> Caries
+                </div>
+                <div class="odonto-tool" data-state="restaurado" onclick="setOdontoTool('restaurado')">
+                  <div class="odonto-tool-swatch" style="background:var(--tooth-restaurado)"></div> Restaurado
+                </div>
+                <div class="odonto-tool" data-state="endodoncia" onclick="setOdontoTool('endodoncia')">
+                  <div class="odonto-tool-swatch" style="background:var(--tooth-endo)"></div> Endodoncia
+                </div>
+                <div class="odonto-tool" data-state="corona" onclick="setOdontoTool('corona')">
+                  <div class="odonto-tool-swatch" style="background:var(--tooth-corona)"></div> Corona
+                </div>
+                <div class="odonto-tool" data-state="ausente" onclick="setOdontoTool('ausente')">
+                  <div class="odonto-tool-swatch" style="background:#D4D4D4"></div> Ausente
+                </div>
+              </div>
+
+              <div class="odonto-chart" id="odontograma-mount"></div>
+
+              <div style="margin-top:22px;padding-top:18px;border-top:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:18px">
+                <div>
+                  <div class="card-title" style="margin-bottom:10px">Hallazgos marcados</div>
+                  <div style="font-size:12.5px;color:var(--text-secondary);line-height:1.7">
+                    <div>• Diente <strong>16</strong> — Caries oclusal distal</div>
+                    <div>• Diente <strong>24</strong> — Restaurado con resina</div>
+                    <div>• Diente <strong>26</strong> — Restaurado con resina</div>
+                    <div>• Diente <strong>36</strong> — Corona porcelana</div>
+                    <div>• Diente <strong>37</strong> — Caries oclusal</div>
+                    <div>• Diente <strong>46</strong> — Endodoncia unirradicular</div>
+                    <div>• Dientes <strong>18, 28, 38, 48</strong> — Ausentes (cordales extraídos)</div>
+                  </div>
+                </div>
+                <div>
+                  <div class="card-title" style="margin-bottom:10px">Notas del profesional</div>
+                  <textarea class="form-textarea" style="min-height:140px">Paciente con higiene aceptable. Se recomienda tratamiento para caries en 16 y 37. Próxima visita de control en 3 meses.</textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 3: Historia clínica -->
+          <div class="tab-panel">
+            <div class="bento">
+              <div class="card-solid col-8">
+                <div class="card-head">
+                  <div class="card-title">Historial de consultas</div>
+                  <button class="btn btn-primary btn-sm" onclick="openNewConsultaModal()"><i data-lucide="plus"></i> Nueva consulta</button>
+                </div>
+                <div class="timeline">
+                  <div class="timeline-item">
+                    <div class="timeline-date">10 abr 2026 · Dr. Andrés Gutiérrez</div>
+                    <div class="timeline-title">Limpieza dental completa</div>
+                    <div class="timeline-desc">Tartrectomía supragingival. Paciente toleró bien el procedimiento. Se reforzó técnica de cepillado.</div>
+                  </div>
+                  <div class="timeline-item">
+                    <div class="timeline-date">28 feb 2026 · Dra. María Fernández</div>
+                    <div class="timeline-title">Restauración de resina 24, 26</div>
+                    <div class="timeline-desc">Obturaciones clase I con resina compuesta A3. Sin complicaciones.</div>
+                  </div>
+                  <div class="timeline-item">
+                    <div class="timeline-date">12 ene 2026 · Dr. Sebastián Rojas</div>
+                    <div class="timeline-title">Consulta general + diagnóstico</div>
+                    <div class="timeline-desc">Se detectan caries en 16, 24, 26, 37. Se elabora plan de tratamiento.</div>
+                  </div>
+                  <div class="timeline-item">
+                    <div class="timeline-date">5 oct 2025 · Dr. Sebastián Rojas</div>
+                    <div class="timeline-title">Extracción de cordales 18, 28</div>
+                    <div class="timeline-desc">Exodoncia simple de terceros molares superiores. Recuperación sin incidencias.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-solid col-4">
+                <div class="card-head"><div class="card-title">Plan de tratamiento activo</div></div>
+                <div style="display:flex;flex-direction:column;gap:12px">
+                  <div style="padding:12px;border-radius:10px;background:var(--bg-alt);display:flex;justify-content:space-between;align-items:center">
+                    <div>
+                      <div style="font-weight:600;font-size:13px">Caries 16</div>
+                      <div style="font-size:11px;color:var(--text-secondary)">Resina oclusal</div>
+                    </div>
+                    <span class="badge badge-warning">Pendiente</span>
+                  </div>
+                  <div style="padding:12px;border-radius:10px;background:var(--bg-alt);display:flex;justify-content:space-between;align-items:center">
+                    <div>
+                      <div style="font-weight:600;font-size:13px">Caries 37</div>
+                      <div style="font-size:11px;color:var(--text-secondary)">Resina oclusal</div>
+                    </div>
+                    <span class="badge badge-warning">Pendiente</span>
+                  </div>
+                  <div style="padding:12px;border-radius:10px;background:var(--success-light);display:flex;justify-content:space-between;align-items:center">
+                    <div>
+                      <div style="font-weight:600;font-size:13px">Limpieza general</div>
+                      <div style="font-size:11px;color:var(--text-secondary)">Cada 6 meses</div>
+                    </div>
+                    <span class="badge badge-success">Completo</span>
+                  </div>
+                </div>
+                <button class="btn btn-secondary" style="width:100%;justify-content:center;margin-top:14px" onclick="openAgregarPlanModal()"><i data-lucide="plus"></i> Agregar al plan</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 4: Pagos -->
+          <div class="tab-panel">
+            <div class="table-wrap">
+              <div class="table-toolbar">
+                <div class="card-title">Historial de cobros</div>
+                <button class="btn btn-primary btn-sm" onclick="openNewCobroModal('jp')"><i data-lucide="plus"></i> Registrar pago</button>
+              </div>
+              <table class="data">
+                <thead><tr><th>Fecha</th><th>Concepto</th><th>Método</th><th style="text-align:right">Monto</th><th>Estado</th><th></th></tr></thead>
+                <tbody>
+                  <tr><td>10 abr 2026</td><td>Limpieza dental</td><td>Efectivo</td><td style="text-align:right;font-weight:600">Bs 250</td><td><span class="badge badge-success">Pagado</span></td><td><button class="btn btn-ghost btn-sm"><i data-lucide="printer"></i></button></td></tr>
+                  <tr><td>28 feb 2026</td><td>Resina x 2 (24, 26)</td><td>Transferencia</td><td style="text-align:right;font-weight:600">Bs 700</td><td><span class="badge badge-success">Pagado</span></td><td><button class="btn btn-ghost btn-sm"><i data-lucide="printer"></i></button></td></tr>
+                  <tr><td>12 ene 2026</td><td>Consulta general</td><td>Efectivo</td><td style="text-align:right;font-weight:600">Bs 100</td><td><span class="badge badge-success">Pagado</span></td><td><button class="btn btn-ghost btn-sm"><i data-lucide="printer"></i></button></td></tr>
+                  <tr><td>5 oct 2025</td><td>Extracción 18, 28</td><td>QR</td><td style="text-align:right;font-weight:600">Bs 400</td><td><span class="badge badge-success">Pagado</span></td><td><button class="btn btn-ghost btn-sm"><i data-lucide="printer"></i></button></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- TAB 5: Citas -->
+          <div class="tab-panel">
+            <div class="table-wrap">
+              <div class="table-toolbar"><div class="card-title">Historial de citas</div></div>
+              <table class="data">
+                <thead><tr><th>Fecha</th><th>Hora</th><th>Profesional</th><th>Tratamiento</th><th>Estado</th></tr></thead>
+                <tbody>
+                  <tr><td>14 abr 2026</td><td>08:30</td><td>Dr. Andrés Gutiérrez</td><td>Limpieza dental</td><td><span class="badge badge-success">Confirmada</span></td></tr>
+                  <tr><td>10 abr 2026</td><td>09:00</td><td>Dr. Andrés Gutiérrez</td><td>Limpieza dental</td><td><span class="badge badge-neutral">Atendida</span></td></tr>
+                  <tr><td>28 feb 2026</td><td>11:30</td><td>Dra. María Fernández</td><td>Resina 24, 26</td><td><span class="badge badge-neutral">Atendida</span></td></tr>
+                  <tr><td>12 ene 2026</td><td>16:00</td><td>Dr. Sebastián Rojas</td><td>Consulta general</td><td><span class="badge badge-neutral">Atendida</span></td></tr>
+                  <tr><td>5 oct 2025</td><td>10:00</td><td>Dr. Sebastián Rojas</td><td>Extracción cordales</td><td><span class="badge badge-neutral">Atendida</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+    initLayout({ page: 'pacientes', breadcrumb: 'Pacientes › Juan Pérez Morales', heading: 'Ficha del paciente' });
+    renderOdontograma('odontograma-mount');
+    lucide.createIcons();
+
+    function switchTab(i) {
+      document.querySelectorAll('#patient-tabs .tab').forEach((t, idx) => t.classList.toggle('active', idx === i));
+      document.querySelectorAll('.tab-panel').forEach((p, idx) => p.classList.toggle('active', idx === i));
+      if (i === 1) renderOdontograma('odontograma-mount');
+      lucide.createIcons();
+    }
+  </script>
+</body>
+</html>

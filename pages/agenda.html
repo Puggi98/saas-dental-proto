@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agenda — Sonrisas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/main.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside id="sidebar" class="sidebar"></aside>
+    <div class="main-area">
+      <header id="topbar" class="topbar"></header>
+      <main class="content">
+
+        <div class="page-head">
+          <div>
+            <h1>Agenda</h1>
+            <p>Calendario semanal de citas · Clínica Sonrisas</p>
+          </div>
+          <div class="page-head-actions">
+            <button class="btn btn-secondary" onclick="showToast('Filtros abiertos','info')">
+              <i data-lucide="sliders-horizontal"></i> Filtros
+            </button>
+            <button class="btn btn-primary" onclick="openNewCitaModal()">
+              <i data-lucide="plus"></i> Nueva cita
+            </button>
+          </div>
+        </div>
+
+        <div class="calendar">
+          <div class="cal-header">
+            <div class="cal-nav">
+              <button class="icon-btn" onclick="showToast('Semana anterior','info')"><i data-lucide="chevron-left"></i></button>
+              <h3>13 — 19 de abril 2026</h3>
+              <button class="icon-btn" onclick="showToast('Semana siguiente','info')"><i data-lucide="chevron-right"></i></button>
+              <button class="btn btn-ghost btn-sm">Hoy</button>
+            </div>
+            <div style="display:flex;gap:10px;align-items:center">
+              <div class="cal-view-toggle">
+                <button>Día</button>
+                <button class="active">Semana</button>
+                <button>Mes</button>
+              </div>
+              <select class="form-select" style="width:200px;padding:7px 12px;font-size:12.5px">
+                <option>Todos los profesionales</option>
+                <option>Dra. María Fernández</option>
+                <option>Dr. Andrés Gutiérrez</option>
+                <option>Dr. Sebastián Rojas</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="cal-grid">
+            <div class="cal-time-col">
+              <div class="cal-time-slot">08:00</div>
+              <div class="cal-time-slot">09:00</div>
+              <div class="cal-time-slot">10:00</div>
+              <div class="cal-time-slot">11:00</div>
+              <div class="cal-time-slot">12:00</div>
+              <div class="cal-time-slot">13:00</div>
+              <div class="cal-time-slot">14:00</div>
+              <div class="cal-time-slot">15:00</div>
+              <div class="cal-time-slot">16:00</div>
+              <div class="cal-time-slot">17:00</div>
+              <div class="cal-time-slot">18:00</div>
+            </div>
+
+            <!-- Lunes -->
+            <div class="cal-day">
+              <div class="cal-day-header"><div class="cal-day-name">Lun</div><div class="cal-day-num">13</div></div>
+              <div class="cal-day-body">
+                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
+                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
+                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
+                <div class="cal-slot"></div><div class="cal-slot"></div>
+                <div class="cal-event ev-blue" style="top:16px;height:48px" onclick="window.location.href='paciente-detalle.html'">
+                  <strong>C. Vargas</strong><span>Limpieza</span>
+                </div>
+                <div class="cal-event ev-green" style="top:184px;height:56px" onclick="window.location.href='paciente-detalle.html'">
+                  <strong>R. Ibáñez</strong><span>Resina</span>
+                </div>
+                <div class="cal-event ev-purple" style="top:464px;height:64px" onclick="window.location.href='paciente-detalle.html'">
+                  <strong>V. Rivera</strong><span>Blanqueamiento</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Martes (hoy) -->
+            <div class="cal-day today">
+              <div class="cal-day-header"><div class="cal-day-name">Mar</div><div class="cal-day-num">14</div></div>
+              <div class="cal-day-body">
+                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
+                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
+                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
+                <div class="cal-slot"></div><div class="cal-slot"></div>
+                <div class="cal-event ev-blue" style="top:28px;height:40px" onclick="window.location.href='paciente-detalle.html'">
+                  <strong>J. Pérez</strong><span>08:30 · Limpieza</span>
+                </div>
+                <div class="cal-event ev-rose" style="top:84px;height:56px" onclick="window.location.href='paciente-detalle.html'">
+                  <strong>A. García</strong><span>09:30 · Endodoncia</span>
+                </div>
+                <div class="cal-event ev-amber" style="top:168px;height:28px" onclick="window.location.href='paciente-detalle.html'">
+                  <strong>C. Mendoza</strong><span>11:00</span>
+                </div>
+                <div class="cal-event ev-green" style="top:336px;height:88px" onclick="window.location.href='paciente-detalle.html'">
+                  <strong>L. Choque</strong><span>14:00 · Corona</span>
+                </div>
+                <div class="cal-event ev-purple" style="top:476px;height:44px" onclick="window.location.href='paciente-detalle.html'">
+                  <strong>P. Flores</strong><span>16:30 · Resina</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Miércoles -->
+            <div class="cal-day">
+              <div class="cal-day-header"><div class="cal-day-name">Mié</div><div class="cal-day-num">15</div></div>
+              <div class="cal-day-body">
+                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
+                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
+                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
+                <div class="cal-slot"></div><div class="cal-slot"></div>
+                <div class="cal-event ev-green" style="top:56px;height:40px">
+                  <strong>J. Pérez</strong><span>Consulta</span>
+                </div>
+                <div class="cal-event ev-blue" style="top:140px;height:52px">
+                  <strong>V. Rivera</strong><span>Control</span>
+                </div>
+                <div class="cal-event ev-rose" style="top:252px;height:72px">
+                  <strong>C. Mendoza</strong><span>Ortodoncia</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Jueves -->
+            <div class="cal-day">
+              <div class="cal-day-header"><div class="cal-day-name">Jue</div><div class="cal-day-num">16</div></div>
+              <div class="cal-day-body">
+                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
+                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
+                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
+                <div class="cal-slot"></div><div class="cal-slot"></div>
+                <div class="cal-event ev-amber" style="top:16px;height:40px">
+                  <strong>R. Ibáñez</strong><span>Control</span>
+                </div>
+                <div class="cal-event ev-purple" style="top:196px;height:84px">
+                  <strong>L. Choque</strong><span>Corona</span>
+                </div>
+                <div class="cal-event ev-green" style="top:336px;height:56px">
+                  <strong>P. Flores</strong><span>Limpieza</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Viernes -->
+            <div class="cal-day">
+              <div class="cal-day-header"><div class="cal-day-name">Vie</div><div class="cal-day-num">17</div></div>
+              <div class="cal-day-body">
+                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
+                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
+                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
+                <div class="cal-slot"></div><div class="cal-slot"></div>
+                <div class="cal-event ev-blue" style="top:28px;height:52px">
+                  <strong>A. García</strong><span>Limpieza</span>
+                </div>
+                <div class="cal-event ev-rose" style="top:112px;height:68px">
+                  <strong>C. Vargas</strong><span>Endodoncia</span>
+                </div>
+                <div class="cal-event ev-green" style="top:280px;height:44px">
+                  <strong>J. Pérez</strong><span>Control</span>
+                </div>
+                <div class="cal-event ev-amber" style="top:420px;height:56px">
+                  <strong>V. Rivera</strong><span>Ortodoncia</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sábado -->
+            <div class="cal-day">
+              <div class="cal-day-header"><div class="cal-day-name">Sáb</div><div class="cal-day-num">18</div></div>
+              <div class="cal-day-body">
+                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
+                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
+                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
+                <div class="cal-slot"></div><div class="cal-slot"></div>
+                <div class="cal-event ev-green" style="top:56px;height:48px">
+                  <strong>P. Flores</strong><span>Resina</span>
+                </div>
+                <div class="cal-event ev-purple" style="top:168px;height:76px">
+                  <strong>L. Choque</strong><span>Corona</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Domingo -->
+            <div class="cal-day">
+              <div class="cal-day-header"><div class="cal-day-name">Dom</div><div class="cal-day-num">19</div></div>
+              <div class="cal-day-body" style="background:repeating-linear-gradient(45deg,transparent,transparent 6px,rgba(0,0,0,0.015) 6px,rgba(0,0,0,0.015) 12px)">
+                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
+                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
+                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
+                <div class="cal-slot"></div><div class="cal-slot"></div>
+                <div style="position:absolute;top:50%;left:0;right:0;text-align:center;transform:translateY(-50%);font-size:11px;color:var(--text-tertiary);font-weight:600">
+                  Cerrado
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap;font-size:11.5px;color:var(--text-secondary)">
+          <div style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:3px;background:#DBEAFE;border-left:3px solid #3B82F6"></span> Limpieza</div>
+          <div style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:3px;background:#FFE4E6;border-left:3px solid #F43F5E"></span> Endodoncia</div>
+          <div style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:3px;background:#DCFCE7;border-left:3px solid #22C55E"></span> Resina / Consulta</div>
+          <div style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:3px;background:#EDE9FE;border-left:3px solid #A855F7"></span> Corona / Blanqueamiento</div>
+          <div style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:3px;background:#FEF3C7;border-left:3px solid #F59E0B"></span> Ortodoncia</div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="../js/app.js"></script>
+  <script>initLayout({ page: 'agenda', breadcrumb: 'Operación', heading: 'Agenda semanal' });</script>
+</body>
+</html>

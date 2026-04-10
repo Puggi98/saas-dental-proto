@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documentos — Sonrisas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/main.css">
+  <style>
+    .doc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+    }
+    .doc-card {
+      background: var(--surface-solid);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.15s;
+      cursor: pointer;
+    }
+    .doc-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--border-strong);
+    }
+    .doc-preview {
+      height: 140px;
+      background: var(--bg-alt);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .doc-preview.radio {
+      background: radial-gradient(ellipse at center, #1A1A1A 0%, #0A0A0A 70%);
+    }
+    .doc-preview.radio svg { color: #E4E4E4; }
+    .doc-preview.pdf { background: linear-gradient(135deg, #FEE2E2, #FCA5A5); }
+    .doc-preview.pdf svg { color: #991B1B; }
+    .doc-preview.image { background: linear-gradient(135deg, #DBEAFE, #93C5FD); }
+    .doc-preview.image svg { color: #1E3A8A; }
+    .doc-preview.consent { background: linear-gradient(135deg, #DCFCE7, #86EFAC); }
+    .doc-preview.consent svg { color: #14532D; }
+    .doc-preview.receta { background: linear-gradient(135deg, #EDE9FE, #C4B5FD); }
+    .doc-preview.receta svg { color: #4C1D95; }
+    .doc-preview.seguro { background: linear-gradient(135deg, #FEF3C7, #FCD34D); }
+    .doc-preview.seguro svg { color: #78350F; }
+    .doc-preview svg { width: 46px; height: 46px; stroke-width: 1.5; }
+    .doc-type-tag {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      padding: 3px 9px;
+      background: rgba(255,255,255,0.92);
+      border-radius: 6px;
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .doc-body { padding: 12px 14px; }
+    .doc-name {
+      font-weight: 600;
+      font-size: 13px;
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .doc-meta {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      display: flex;
+      justify-content: space-between;
+    }
+    .category-sidebar {
+      padding: 16px;
+    }
+    .cat-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+    .cat-link:hover, .cat-link.active {
+      background: var(--bg-alt);
+      color: var(--text);
+    }
+    .cat-link svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .cat-count { margin-left: auto; font-size: 11px; color: var(--text-tertiary); font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside id="sidebar" class="sidebar"></aside>
+    <div class="main-area">
+      <header id="topbar" class="topbar"></header>
+      <main class="content">
+
+        <div class="page-head">
+          <div>
+            <h1>Gestor documental</h1>
+            <p>Radiografías, consentimientos, recetas y documentos clínicos · 1.284 archivos</p>
+          </div>
+          <div class="page-head-actions">
+            <button class="btn btn-secondary"><i data-lucide="folder-plus"></i> Nueva carpeta</button>
+            <button class="btn btn-primary" onclick="openUploadModal()"><i data-lucide="upload"></i> Subir archivo</button>
+          </div>
+        </div>
+
+        <!-- KPIs -->
+        <div class="bento" style="margin-bottom:18px">
+          <div class="stat-card col-3">
+            <div class="stat-label">Total archivos<div class="stat-icon"><i data-lucide="files"></i></div></div>
+            <div class="stat-value" style="font-size:26px">1.284</div>
+          </div>
+          <div class="stat-card col-3">
+            <div class="stat-label">Radiografías<div class="stat-icon" style="background:#1A1A1A"><i data-lucide="scan"></i></div></div>
+            <div class="stat-value" style="font-size:26px">428</div>
+          </div>
+          <div class="stat-card col-3">
+            <div class="stat-label">Almacenamiento<div class="stat-icon"><i data-lucide="hard-drive"></i></div></div>
+            <div class="stat-value" style="font-size:26px">14.2 GB</div>
+            <div class="stat-delta-note">de 50 GB · 28%</div>
+          </div>
+          <div class="stat-card col-3">
+            <div class="stat-label">Subidos hoy<div class="stat-icon" style="background:var(--success)"><i data-lucide="upload"></i></div></div>
+            <div class="stat-value" style="font-size:26px">12</div>
+          </div>
+        </div>
+
+        <div class="bento">
+          <!-- Sidebar de categorías -->
+          <div class="card-solid col-3 category-sidebar" style="padding:16px">
+            <div class="card-title" style="margin-bottom:12px">Tipos de documento</div>
+            <div id="doc-cat-nav" style="display:flex;flex-direction:column;gap:2px">
+              <div class="cat-link active" data-doctype="all" onclick="filterDocsByType('all')">
+                <i data-lucide="folder-open"></i><span>Todos</span>
+              </div>
+              <div class="cat-link" data-doctype="Radiografía" onclick="filterDocsByType('Radiografía')">
+                <i data-lucide="scan" style="color:#1A1A1A"></i><span>Radiografías</span>
+              </div>
+              <div class="cat-link" data-doctype="Consentimiento" onclick="filterDocsByType('Consentimiento')">
+                <i data-lucide="file-text" style="color:#14532D"></i><span>Consentimientos</span>
+              </div>
+              <div class="cat-link" data-doctype="Receta" onclick="filterDocsByType('Receta')">
+                <i data-lucide="pill" style="color:#4C1D95"></i><span>Recetas</span>
+              </div>
+              <div class="cat-link" data-doctype="Foto" onclick="filterDocsByType('Foto')">
+                <i data-lucide="image" style="color:#1E3A8A"></i><span>Fotografías clínicas</span>
+              </div>
+              <div class="cat-link" data-doctype="Seguro" onclick="filterDocsByType('Seguro')">
+                <i data-lucide="shield-check" style="color:#78350F"></i><span>Seguros</span>
+              </div>
+              <div class="cat-link" data-doctype="PDF" onclick="filterDocsByType('PDF')">
+                <i data-lucide="file" style="color:#6B6B6B"></i><span>Otros / PDF</span>
+              </div>
+            </div>
+
+            <div class="card-title" style="margin:22px 0 10px">Filtros rápidos</div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div class="cat-link"><i data-lucide="clock"></i><span>Subidos esta semana</span></div>
+              <div class="cat-link"><i data-lucide="star"></i><span>Destacados</span></div>
+              <div class="cat-link"><i data-lucide="share-2"></i><span>Compartidos</span></div>
+              <div class="cat-link"><i data-lucide="trash-2"></i><span>Papelera</span></div>
+            </div>
+
+            <div style="margin-top:22px;padding:14px;background:var(--bg-alt);border-radius:var(--r-md)">
+              <div style="font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.04em;font-weight:600;margin-bottom:6px">Almacenamiento</div>
+              <div class="progress-track" style="height:8px"><div class="progress-fill" style="width:28%"></div></div>
+              <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:11px;color:var(--text-secondary)">
+                <span>14.2 GB usado</span>
+                <strong>50 GB</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Grid de documentos -->
+          <div class="col-9">
+            <div class="card-solid" style="padding:16px">
+              <div class="table-toolbar" style="padding:0 0 14px;border-bottom:1px solid var(--border);margin-bottom:16px">
+                <div class="table-toolbar-left">
+                  <div class="search-inline"><i data-lucide="search"></i><input placeholder="Buscar por nombre, paciente, fecha..."></div>
+                  <div class="filter-chip active">Todos</div>
+                  <div class="filter-chip">Recientes</div>
+                  <div class="filter-chip">Radiografías</div>
+                  <div class="filter-chip">PDFs</div>
+                </div>
+                <div style="display:flex;gap:6px">
+                  <button class="icon-btn" style="width:34px;height:34px"><i data-lucide="layout-grid"></i></button>
+                  <button class="icon-btn" style="width:34px;height:34px"><i data-lucide="list"></i></button>
+                </div>
+              </div>
+
+              <div class="doc-grid">
+                <div class="doc-card">
+                  <div class="doc-preview radio">
+                    <span class="doc-type-tag">Radiografía</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M3 3v18M3 12h18M21 3v18"/><circle cx="12" cy="12" r="8"/><path d="M12 4v16M4 12h16"/></svg>
+                  </div>
+                  <div class="doc-body">
+                    <div class="doc-name">Panorámica — J. Pérez</div>
+                    <div class="doc-meta"><span>14 abr 2026</span><span>2.4 MB</span></div>
+                  </div>
+                </div>
+
+                <div class="doc-card">
+                  <div class="doc-preview radio">
+                    <span class="doc-type-tag">Radiografía</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="16" height="16" rx="2"/><circle cx="12" cy="12" r="4"/></svg>
+                  </div>
+                  <div class="doc-body">
+                    <div class="doc-name">Periapical 16 — A. García</div>
+                    <div class="doc-meta"><span>14 abr 2026</span><span>1.1 MB</span></div>
+                  </div>
+                </div>
+
+                <div class="doc-card">
+                  <div class="doc-preview consent">
+                    <span class="doc-type-tag">Consentimiento</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 15l2 2 4-4"/></svg>
+                  </div>
+                  <div class="doc-body">
+                    <div class="doc-name">Consentimiento endodoncia</div>
+                    <div class="doc-meta"><span>14 abr 2026</span><span>180 KB</span></div>
+                  </div>
+                </div>
+
+                <div class="doc-card">
+                  <div class="doc-preview receta">
+                    <span class="doc-type-tag">Receta</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M10.5 20H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v6"/><path d="M4 8h16M8 12l4 4M12 12l-4 4"/><circle cx="18" cy="18" r="3"/></svg>
+                  </div>
+                  <div class="doc-body">
+                    <div class="doc-name">Receta amoxicilina 500mg</div>
+                    <div class="doc-meta"><span>13 abr 2026</span><span>92 KB</span></div>
+                  </div>
+                </div>
+
+                <div class="doc-card">
+                  <div class="doc-preview image">
+                    <span class="doc-type-tag">Foto</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                  </div>
+                  <div class="doc-body">
+                    <div class="doc-name">Pre-tratamiento L. Choque</div>
+                    <div class="doc-meta"><span>13 abr 2026</span><span>3.8 MB</span></div>
+                  </div>
+                </div>
+
+                <div class="doc-card">
+                  <div class="doc-preview radio">
+                    <span class="doc-type-tag">Radiografía</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M2 12h20"/></svg>
+                  </div>
+                  <div class="doc-body">
+                    <div class="doc-name">Bitewing — C. Mendoza</div>
+                    <div class="doc-meta"><span>12 abr 2026</span><span>1.9 MB</span></div>
+                  </div>
+                </div>
+
+                <div class="doc-card">
+                  <div class="doc-preview seguro">
+                    <span class="doc-type-tag">Seguro</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+                  </div>
+                  <div class="doc-body">
+                    <div class="doc-name">Autorización BISA Seguros</div>
+                    <div class="doc-meta"><span>12 abr 2026</span><span>420 KB</span></div>
+                  </div>
+                </div>
+
+                <div class="doc-card">
+                  <div class="doc-preview pdf">
+                    <span class="doc-type-tag">PDF</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 15h6M9 11h3"/></svg>
+                  </div>
+                  <div class="doc-body">
+                    <div class="doc-name">Plan tratamiento V. Rivera</div>
+                    <div class="doc-meta"><span>12 abr 2026</span><span>245 KB</span></div>
+                  </div>
+                </div>
+
+                <div class="doc-card">
+                  <div class="doc-preview image">
+                    <span class="doc-type-tag">Foto</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                  </div>
+                  <div class="doc-body">
+                    <div class="doc-name">Post-op endodoncia</div>
+                    <div class="doc-meta"><span>11 abr 2026</span><span>2.1 MB</span></div>
+                  </div>
+                </div>
+
+                <div class="doc-card">
+                  <div class="doc-preview radio">
+                    <span class="doc-type-tag">Radiografía</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+                  </div>
+                  <div class="doc-body">
+                    <div class="doc-name">Teleradiografía lateral</div>
+                    <div class="doc-meta"><span>11 abr 2026</span><span>4.2 MB</span></div>
+                  </div>
+                </div>
+
+                <div class="doc-card">
+                  <div class="doc-preview consent">
+                    <span class="doc-type-tag">Consentimiento</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 15l2 2 4-4"/></svg>
+                  </div>
+                  <div class="doc-body">
+                    <div class="doc-name">Consentimiento extracción</div>
+                    <div class="doc-meta"><span>10 abr 2026</span><span>162 KB</span></div>
+                  </div>
+                </div>
+
+                <div class="doc-card">
+                  <div class="doc-preview pdf">
+                    <span class="doc-type-tag">PDF</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 15h6M9 11h3"/></svg>
+                  </div>
+                  <div class="doc-body">
+                    <div class="doc-name">Historia clínica completa</div>
+                    <div class="doc-meta"><span>10 abr 2026</span><span>1.5 MB</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="padding:18px 0 0;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--text-secondary);border-top:1px solid var(--border);margin-top:18px">
+                <div>Mostrando 12 de 1.284 documentos</div>
+                <button class="btn btn-secondary btn-sm">Cargar más <i data-lucide="chevron-down"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+    initLayout({ page: 'documentos', breadcrumb: 'Gestión', heading: 'Gestor documental' });
+
+    /* ═══ DOCUMENT FILTERING ═══ */
+    let docTypeFilter = 'all';
+    let docSearchQuery = '';
+
+    const docCards = () => [...document.querySelectorAll('.doc-card')];
+    const docCountEl = () => document.querySelector('.doc-grid + div div'); // "Mostrando X de Y"
+
+    function getCardType(card) {
+      const tag = card.querySelector('.doc-type-tag');
+      return tag ? tag.textContent.trim() : '';
+    }
+
+    function applyDocFilters() {
+      let visible = 0;
+      docCards().forEach(card => {
+        const type = getCardType(card);
+        const text = card.textContent.toLowerCase();
+        let show = true;
+
+        // Type filter
+        if (docTypeFilter !== 'all' && type !== docTypeFilter) show = false;
+
+        // Search filter
+        if (docSearchQuery && !text.includes(docSearchQuery.toLowerCase())) show = false;
+
+        card.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+
+      // Update counter
+      if (docCountEl()) {
+        docCountEl().textContent = docTypeFilter === 'all' && !docSearchQuery
+          ? `Mostrando 12 de 1.284 documentos`
+          : `Mostrando ${visible} documento${visible !== 1 ? 's' : ''} filtrado${visible !== 1 ? 's' : ''}`;
+      }
+    }
+
+    /* ── Sidebar type click ── */
+    function filterDocsByType(type) {
+      docTypeFilter = type;
+      document.querySelectorAll('#doc-cat-nav .cat-link').forEach(el => {
+        const isActive = el.dataset.doctype === type;
+        el.classList.toggle('active', isActive);
+      });
+      // Also sync the filter chips
+      document.querySelectorAll('.filter-chip').forEach((c, i) => c.classList.toggle('active', i === 0));
+      applyDocFilters();
+      // silent filter
+    }
+
+    /* ── Filter chips ── */
+    document.querySelectorAll('.filter-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const text = chip.textContent.trim().toLowerCase();
+        chip.parentElement.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+
+        if (text === 'todos') { docTypeFilter = 'all'; }
+        else if (text === 'radiografías') { docTypeFilter = 'Radiografía'; }
+        else if (text === 'pdfs') { docTypeFilter = 'PDF'; }
+        else if (text === 'recientes') { docTypeFilter = 'all'; } // show all, sorted by date (already is)
+
+        // Sync sidebar active state
+        document.querySelectorAll('#doc-cat-nav .cat-link').forEach(el => {
+          el.classList.toggle('active', el.dataset.doctype === docTypeFilter);
+        });
+
+        applyDocFilters();
+      });
+    });
+
+    /* ── Search ── */
+    document.querySelector('.search-inline input').addEventListener('input', function() {
+      docSearchQuery = this.value.trim();
+      applyDocFilters();
+    });
+
+    /* ── Quick filter links (Subidos esta semana, Destacados, etc.) ── */
+    document.querySelectorAll('.category-sidebar .cat-link:not([data-doctype])').forEach(link => {
+      link.addEventListener('click', () => {
+        const label = link.querySelector('span')?.textContent?.trim() || '';
+        showToast(`Filtro rápido: ${label}`, 'info');
+      });
+    });
+
+    function openUploadModal() {
+      openGenericModal({
+        title: 'Subir documento',
+        subtitle: 'Asocia el archivo a un paciente y clasifícalo',
+        size: 'lg',
+        submitLabel: 'Subir archivo',
+        body: `
+          <div style="border:2px dashed var(--border-strong);border-radius:var(--r-lg);padding:32px;text-align:center;background:var(--bg-alt);margin-bottom:16px">
+            <div style="width:52px;height:52px;border-radius:14px;background:var(--surface-solid);border:1px solid var(--border-strong);display:inline-flex;align-items:center;justify-content:center;margin-bottom:10px">
+              <i data-lucide="upload-cloud" style="width:24px;height:24px;color:var(--text-secondary)"></i>
+            </div>
+            <div style="font-weight:600;font-size:13.5px;margin-bottom:4px">Arrastra tu archivo aquí</div>
+            <div style="font-size:11.5px;color:var(--text-tertiary)">JPG, PNG, PDF, DICOM · máx 20 MB</div>
+            <button type="button" class="btn btn-secondary btn-sm" style="margin-top:12px">Seleccionar archivo</button>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Tipo de documento</label>
+              <select class="form-select">
+                <option>Radiografía panorámica</option>
+                <option>Radiografía periapical</option>
+                <option>Radiografía bitewing</option>
+                <option>Teleradiografía lateral</option>
+                <option>Consentimiento informado</option>
+                <option>Receta médica</option>
+                <option>Fotografía clínica</option>
+                <option>Autorización de seguro</option>
+                <option>Plan de tratamiento</option>
+                <option>Otro</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Paciente asociado</label>
+              <select class="form-select">
+                <option value="">Ninguno</option>
+                <option>Juan Pérez Morales</option>
+                <option>Ana García Rojas</option>
+                <option>Carlos Mendoza Villca</option>
+                <option>Laura Choque Aguilar</option>
+                <option>Pedro Flores Ramírez</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Descripción / Etiquetas</label>
+            <input class="form-input" placeholder="Ej: Control mensual, pre-tratamiento...">
+          </div>
+          <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-secondary)">
+            <input type="checkbox"> Compartir con el paciente por WhatsApp
+          </label>
+        `,
+        onSubmit: () => showToast('Archivo subido correctamente', 'success'),
+      });
+    }
+  </script>
+</body>
+</html>

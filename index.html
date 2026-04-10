@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sonrisas — Iniciar sesión</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+  <div class="login-shell">
+    <div class="login-card">
+      <div class="login-brand">
+        <div class="login-brand-mark">S</div>
+        <div>
+          <div style="font-weight:800;font-size:16px;letter-spacing:-0.01em">Sonrisas</div>
+          <div style="font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.04em;font-weight:600">Clínica Dental · SaaS</div>
+        </div>
+      </div>
+
+      <div class="login-title">Bienvenido de vuelta</div>
+      <div class="login-sub">Ingresa a tu panel para gestionar pacientes, agenda y tratamientos.</div>
+
+      <form class="demo-form" onsubmit="event.preventDefault(); window.location.href='pages/dashboard.html';">
+        <div class="form-group">
+          <label class="form-label">Correo electrónico</label>
+          <input type="email" class="form-input" value="maria.fernandez@sonrisas.bo" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Contraseña</label>
+          <input type="password" class="form-input" value="••••••••••" required>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin:6px 0 18px;font-size:12.5px">
+          <label style="display:flex;align-items:center;gap:6px;color:var(--text-secondary);cursor:pointer">
+            <input type="checkbox" checked> Recordarme
+          </label>
+          <a href="#" style="color:var(--text);font-weight:600" onclick="event.preventDefault()">¿Olvidaste tu contraseña?</a>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;padding:11px">
+          Iniciar sesión
+          <i data-lucide="arrow-right"></i>
+        </button>
+      </form>
+
+      <div class="login-divider">o</div>
+      <button class="btn btn-secondary" style="width:100%;justify-content:center;padding:10px" onclick="window.location.href='pages/dashboard.html'">
+        <i data-lucide="sparkles"></i>
+        Entrar en modo demo
+      </button>
+
+      <div class="login-tip">
+        Prototipo BORING · Sin funcionalidad real.<br>
+        Podés cambiar de rol (Admin / Odontólogo / Recepción) una vez adentro.
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

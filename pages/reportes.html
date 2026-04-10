@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reportes — Sonrisas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/main.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside id="sidebar" class="sidebar"></aside>
+    <div class="main-area">
+      <header id="topbar" class="topbar"></header>
+      <main class="content">
+
+        <div class="page-head">
+          <div>
+            <h1>Reportes</h1>
+            <p>Visión financiera y operativa · Abril 2026</p>
+          </div>
+          <div class="page-head-actions">
+            <select class="form-select" style="width:200px">
+              <option>Este mes (Abril 2026)</option>
+              <option>Marzo 2026</option>
+              <option>Últimos 30 días</option>
+              <option>Últimos 90 días</option>
+            </select>
+            <button class="btn btn-primary" onclick="showToast('Generando reporte PDF','info')"><i data-lucide="file-text"></i> Exportar PDF</button>
+          </div>
+        </div>
+
+        <div class="bento" style="margin-bottom:20px">
+          <div class="stat-card col-3">
+            <div class="stat-label">Ingresos totales<div class="stat-icon"><i data-lucide="wallet"></i></div></div>
+            <div class="stat-value">Bs 48.6K</div>
+            <div class="stat-delta up"><i data-lucide="trending-up"></i> +8.3%<span class="stat-delta-note">vs mes anterior</span></div>
+          </div>
+          <div class="stat-card col-3">
+            <div class="stat-label">Ticket promedio<div class="stat-icon"><i data-lucide="receipt"></i></div></div>
+            <div class="stat-value">Bs 382</div>
+            <div class="stat-delta up"><i data-lucide="trending-up"></i> +4.1%</div>
+          </div>
+          <div class="stat-card col-3">
+            <div class="stat-label">Tratamientos<div class="stat-icon"><i data-lucide="activity"></i></div></div>
+            <div class="stat-value">127</div>
+            <div class="stat-delta up"><i data-lucide="trending-up"></i> +15</div>
+          </div>
+          <div class="stat-card col-3">
+            <div class="stat-label">Pacientes nuevos<div class="stat-icon"><i data-lucide="user-plus"></i></div></div>
+            <div class="stat-value">42</div>
+            <div class="stat-delta up"><i data-lucide="trending-up"></i> +22%</div>
+          </div>
+        </div>
+
+        <div class="bento" style="margin-bottom:20px">
+          <div class="card col-8">
+            <div class="card-head">
+              <div>
+                <div class="card-title">Ingresos diarios — Abril 2026</div>
+                <div class="card-subtitle">Bs 48.6K acumulado al 14 de abril</div>
+              </div>
+            </div>
+            <div class="bar-chart" style="height:220px">
+              <div class="bar-chart-col"><div class="bar-chart-bar" style="height:35%" data-value="Bs 1.1K"></div><div class="bar-chart-label">1</div></div>
+              <div class="bar-chart-col"><div class="bar-chart-bar" style="height:52%" data-value="Bs 1.6K"></div><div class="bar-chart-label">2</div></div>
+              <div class="bar-chart-col"><div class="bar-chart-bar" style="height:41%" data-value="Bs 1.3K"></div><div class="bar-chart-label">3</div></div>
+              <div class="bar-chart-col"><div class="bar-chart-bar" style="height:68%" data-value="Bs 2.1K"></div><div class="bar-chart-label">4</div></div>
+              <div class="bar-chart-col"><div class="bar-chart-bar" style="height:22%" data-value="Bs 0.7K"></div><div class="bar-chart-label">5</div></div>
+              <div class="bar-chart-col"><div class="bar-chart-bar" style="height:78%" data-value="Bs 2.4K"></div><div class="bar-chart-label">6</div></div>
+              <div class="bar-chart-col"><div class="bar-chart-bar" style="height:84%" data-value="Bs 2.6K"></div><div class="bar-chart-label">7</div></div>
+              <div class="bar-chart-col"><div class="bar-chart-bar" style="height:62%" data-value="Bs 1.9K"></div><div class="bar-chart-label">8</div></div>
+              <div class="bar-chart-col"><div class="bar-chart-bar" style="height:71%" data-value="Bs 2.2K"></div><div class="bar-chart-label">9</div></div>
+              <div class="bar-chart-col"><div class="bar-chart-bar" style="height:94%" data-value="Bs 2.9K"></div><div class="bar-chart-label">10</div></div>
+              <div class="bar-chart-col"><div class="bar-chart-bar" style="height:55%" data-value="Bs 1.7K"></div><div class="bar-chart-label">11</div></div>
+              <div class="bar-chart-col"><div class="bar-chart-bar" style="height:88%" data-value="Bs 2.7K"></div><div class="bar-chart-label">12</div></div>
+              <div class="bar-chart-col"><div class="bar-chart-bar" style="height:75%" data-value="Bs 2.3K"></div><div class="bar-chart-label">13</div></div>
+              <div class="bar-chart-col"><div class="bar-chart-bar" style="height:82%" data-value="Bs 2.5K"></div><div class="bar-chart-label">14</div></div>
+              <div class="bar-chart-col muted"><div class="bar-chart-bar" style="height:12%"></div><div class="bar-chart-label">15</div></div>
+              <div class="bar-chart-col muted"><div class="bar-chart-bar" style="height:12%"></div><div class="bar-chart-label">16</div></div>
+              <div class="bar-chart-col muted"><div class="bar-chart-bar" style="height:12%"></div><div class="bar-chart-label">17</div></div>
+            </div>
+          </div>
+
+          <div class="card col-4">
+            <div class="card-head">
+              <div class="card-title">Métodos de pago</div>
+            </div>
+            <div class="donut">
+              <svg viewBox="0 0 42 42">
+                <circle cx="21" cy="21" r="15.915" fill="none" stroke="#E4E4E4" stroke-width="6"/>
+                <circle cx="21" cy="21" r="15.915" fill="none" stroke="#18181B" stroke-width="6" stroke-dasharray="42 100" stroke-dashoffset="0"/>
+                <circle cx="21" cy="21" r="15.915" fill="none" stroke="#6B6B6B" stroke-width="6" stroke-dasharray="28 100" stroke-dashoffset="-42"/>
+                <circle cx="21" cy="21" r="15.915" fill="none" stroke="#A3A3A3" stroke-width="6" stroke-dasharray="18 100" stroke-dashoffset="-70"/>
+              </svg>
+              <div class="donut-center">
+                <div class="donut-value">Bs 48.6K</div>
+                <div class="donut-label">total mes</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-top:18px;font-size:12.5px">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <span style="display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:3px;background:#18181B"></span>Efectivo</span>
+                <strong>42% · Bs 20.4K</strong>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <span style="display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:3px;background:#6B6B6B"></span>QR / Transferencia</span>
+                <strong>28% · Bs 13.6K</strong>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <span style="display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:3px;background:#A3A3A3"></span>Tarjeta</span>
+                <strong>18% · Bs 8.7K</strong>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <span style="display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:3px;background:#E4E4E4"></span>Otros</span>
+                <strong>12% · Bs 5.9K</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bento">
+          <div class="card-solid col-6">
+            <div class="card-head"><div class="card-title">Tratamientos más frecuentes</div></div>
+            <div class="progress-row">
+              <div class="progress-head"><span class="progress-name">Limpieza dental</span><span class="progress-value">38 · Bs 9.5K</span></div>
+              <div class="progress-track"><div class="progress-fill" style="width:88%"></div></div>
+            </div>
+            <div class="progress-row">
+              <div class="progress-head"><span class="progress-name">Resina</span><span class="progress-value">24 · Bs 8.4K</span></div>
+              <div class="progress-track"><div class="progress-fill" style="width:68%"></div></div>
+            </div>
+            <div class="progress-row">
+              <div class="progress-head"><span class="progress-name">Consulta general</span><span class="progress-value">22 · Bs 2.2K</span></div>
+              <div class="progress-track"><div class="progress-fill" style="width:52%"></div></div>
+            </div>
+            <div class="progress-row">
+              <div class="progress-head"><span class="progress-name">Endodoncia</span><span class="progress-value">9 · Bs 10.8K</span></div>
+              <div class="progress-track"><div class="progress-fill" style="width:42%"></div></div>
+            </div>
+            <div class="progress-row">
+              <div class="progress-head"><span class="progress-name">Corona porcelana</span><span class="progress-value">6 · Bs 15.0K</span></div>
+              <div class="progress-track"><div class="progress-fill" style="width:36%"></div></div>
+            </div>
+            <div class="progress-row">
+              <div class="progress-head"><span class="progress-name">Blanqueamiento</span><span class="progress-value">4 · Bs 3.2K</span></div>
+              <div class="progress-track"><div class="progress-fill" style="width:24%"></div></div>
+            </div>
+          </div>
+
+          <div class="card-solid col-6">
+            <div class="card-head"><div class="card-title">Ingresos por profesional</div></div>
+            <table class="data" style="border:none">
+              <thead><tr><th>Profesional</th><th style="text-align:right">Citas</th><th style="text-align:right">Ingresos</th><th style="text-align:right">Ocupación</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><div class="cell-user"><div class="avatar">MF</div><div><div class="cell-user-name">Dra. M. Fernández</div><div class="cell-user-sub">Ortodoncia</div></div></div></td>
+                  <td style="text-align:right">56</td>
+                  <td style="text-align:right;font-weight:700">Bs 22.4K</td>
+                  <td style="text-align:right"><span class="badge badge-success">92%</span></td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#DBEAFE,#93C5FD)">AG</div><div><div class="cell-user-name">Dr. A. Gutiérrez</div><div class="cell-user-sub">Endodoncia</div></div></div></td>
+                  <td style="text-align:right">42</td>
+                  <td style="text-align:right;font-weight:700">Bs 17.2K</td>
+                  <td style="text-align:right"><span class="badge badge-success">78%</span></td>
+                </tr>
+                <tr>
+                  <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#FEF3C7,#FCD34D)">SR</div><div><div class="cell-user-name">Dr. S. Rojas</div><div class="cell-user-sub">General</div></div></div></td>
+                  <td style="text-align:right">29</td>
+                  <td style="text-align:right;font-weight:700">Bs 9.0K</td>
+                  <td style="text-align:right"><span class="badge badge-warning">64%</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="../js/app.js"></script>
+  <script>initLayout({ page: 'reportes', breadcrumb: 'Gestión', heading: 'Reportes' });</script>
+</body>
+</html>

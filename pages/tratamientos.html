@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tratamientos — Sonrisas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/main.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside id="sidebar" class="sidebar"></aside>
+    <div class="main-area">
+      <header id="topbar" class="topbar"></header>
+      <main class="content">
+
+        <div class="page-head">
+          <div>
+            <h1>Catálogo de tratamientos</h1>
+            <p>Define los tratamientos, precios y duraciones que ofrece tu clínica</p>
+          </div>
+          <div class="page-head-actions">
+            <button class="btn btn-primary" onclick="openNewTratamientoModal()"><i data-lucide="plus"></i> Nuevo tratamiento</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <div class="table-toolbar">
+            <div class="table-toolbar-left">
+              <div class="search-inline">
+                <i data-lucide="search"></i>
+                <input placeholder="Buscar tratamiento...">
+              </div>
+              <div class="filter-chip active">Todos</div>
+              <div class="filter-chip">General</div>
+              <div class="filter-chip">Endodoncia</div>
+              <div class="filter-chip">Ortodoncia</div>
+              <div class="filter-chip">Estética</div>
+              <div class="filter-chip">Cirugía</div>
+            </div>
+          </div>
+
+          <table class="data">
+            <thead>
+              <tr>
+                <th>Tratamiento</th>
+                <th>Categoría</th>
+                <th>Duración</th>
+                <th style="text-align:right">Precio</th>
+                <th>Realizados (mes)</th>
+                <th>Estado</th>
+                <th style="text-align:right">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div style="font-weight:600;font-size:13px">Consulta general</div>
+                  <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Evaluación inicial y diagnóstico</div>
+                </td>
+                <td><span class="badge badge-neutral">General</span></td>
+                <td>30 min</td>
+                <td style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">Bs 100</td>
+                <td>22</td>
+                <td><span class="badge badge-success">Activo</span></td>
+                <td><div class="cell-actions"><button><i data-lucide="pencil"></i></button><button><i data-lucide="copy"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr>
+                <td>
+                  <div style="font-weight:600;font-size:13px">Limpieza dental (tartrectomía)</div>
+                  <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Limpieza supragingival con ultrasonido</div>
+                </td>
+                <td><span class="badge badge-neutral">General</span></td>
+                <td>45 min</td>
+                <td style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">Bs 250</td>
+                <td>38</td>
+                <td><span class="badge badge-success">Activo</span></td>
+                <td><div class="cell-actions"><button><i data-lucide="pencil"></i></button><button><i data-lucide="copy"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr>
+                <td>
+                  <div style="font-weight:600;font-size:13px">Resina compuesta</div>
+                  <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Obturación por pieza</div>
+                </td>
+                <td><span class="badge badge-neutral">General</span></td>
+                <td>40 min</td>
+                <td style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">Bs 350</td>
+                <td>24</td>
+                <td><span class="badge badge-success">Activo</span></td>
+                <td><div class="cell-actions"><button><i data-lucide="pencil"></i></button><button><i data-lucide="copy"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr>
+                <td>
+                  <div style="font-weight:600;font-size:13px">Endodoncia unirradicular</div>
+                  <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Tratamiento de conducto en diente anterior</div>
+                </td>
+                <td><span class="badge badge-info">Endodoncia</span></td>
+                <td>90 min</td>
+                <td style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">Bs 1.200</td>
+                <td>9</td>
+                <td><span class="badge badge-success">Activo</span></td>
+                <td><div class="cell-actions"><button><i data-lucide="pencil"></i></button><button><i data-lucide="copy"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr>
+                <td>
+                  <div style="font-weight:600;font-size:13px">Corona porcelana</div>
+                  <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Rehabilitación con corona cerámica</div>
+                </td>
+                <td><span class="badge badge-info">Prótesis</span></td>
+                <td>120 min</td>
+                <td style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">Bs 2.500</td>
+                <td>6</td>
+                <td><span class="badge badge-success">Activo</span></td>
+                <td><div class="cell-actions"><button><i data-lucide="pencil"></i></button><button><i data-lucide="copy"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr>
+                <td>
+                  <div style="font-weight:600;font-size:13px">Extracción simple</div>
+                  <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Exodoncia de pieza no complicada</div>
+                </td>
+                <td><span class="badge badge-error">Cirugía</span></td>
+                <td>30 min</td>
+                <td style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">Bs 200</td>
+                <td>12</td>
+                <td><span class="badge badge-success">Activo</span></td>
+                <td><div class="cell-actions"><button><i data-lucide="pencil"></i></button><button><i data-lucide="copy"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr>
+                <td>
+                  <div style="font-weight:600;font-size:13px">Blanqueamiento dental</div>
+                  <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Sesión en clínica con lámpara LED</div>
+                </td>
+                <td><span class="badge badge-warning">Estética</span></td>
+                <td>60 min</td>
+                <td style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">Bs 800</td>
+                <td>4</td>
+                <td><span class="badge badge-success">Activo</span></td>
+                <td><div class="cell-actions"><button><i data-lucide="pencil"></i></button><button><i data-lucide="copy"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr>
+                <td>
+                  <div style="font-weight:600;font-size:13px">Ortodoncia — instalación</div>
+                  <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Brackets metálicos completos</div>
+                </td>
+                <td><span class="badge badge-info">Ortodoncia</span></td>
+                <td>120 min</td>
+                <td style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">Bs 3.500</td>
+                <td>2</td>
+                <td><span class="badge badge-success">Activo</span></td>
+                <td><div class="cell-actions"><button><i data-lucide="pencil"></i></button><button><i data-lucide="copy"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr>
+                <td>
+                  <div style="font-weight:600;font-size:13px">Ortodoncia — control mensual</div>
+                  <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Ajuste y cambio de ligas</div>
+                </td>
+                <td><span class="badge badge-info">Ortodoncia</span></td>
+                <td>30 min</td>
+                <td style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">Bs 450</td>
+                <td>18</td>
+                <td><span class="badge badge-success">Activo</span></td>
+                <td><div class="cell-actions"><button><i data-lucide="pencil"></i></button><button><i data-lucide="copy"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+    initLayout({ page: 'tratamientos', breadcrumb: 'Gestión', heading: 'Catálogo de tratamientos' });
+
+    /* ═══ FILTERING ═══ */
+    let tratCatFilter = 'all';
+    let tratSearchQuery = '';
+
+    const tratRows = () => [...document.querySelectorAll('table.data tbody tr')];
+
+    function getCatFromRow(row) {
+      const badge = row.querySelector('.badge');
+      return badge ? badge.textContent.trim() : '';
+    }
+
+    function applyTratFilters() {
+      let visible = 0;
+      tratRows().forEach(row => {
+        const cat = getCatFromRow(row);
+        const text = row.textContent.toLowerCase();
+        let show = true;
+        if (tratCatFilter !== 'all' && cat !== tratCatFilter) show = false;
+        if (tratSearchQuery && !text.includes(tratSearchQuery.toLowerCase())) show = false;
+        row.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+    }
+
+    // Filter chips
+    document.querySelectorAll('.filter-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        chip.parentElement.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        const t = chip.textContent.trim();
+        if (t === 'Todos') tratCatFilter = 'all';
+        else tratCatFilter = t;
+        applyTratFilters();
+      });
+    });
+
+    // Search
+    document.querySelector('.search-inline input').addEventListener('input', function() {
+      tratSearchQuery = this.value.trim();
+      applyTratFilters();
+    });
+  </script>
+</body>
+</html>

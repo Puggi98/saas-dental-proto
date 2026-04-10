@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Superadmin — Clínicas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/main.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside id="sidebar" class="sidebar"></aside>
+    <div class="main-area">
+      <header id="topbar" class="topbar"></header>
+      <main class="content">
+
+        <div class="page-head">
+          <div>
+            <h1>Clínicas (Tenants)</h1>
+            <p>47 clínicas registradas · 44 activas · 3 en trial</p>
+          </div>
+          <div class="page-head-actions">
+            <button class="btn btn-secondary" onclick="showToast('Export de tenants','info')"><i data-lucide="download"></i> Exportar</button>
+            <button class="btn btn-primary" onclick="openNewTenantModal()"><i data-lucide="building-2"></i> Nueva clínica</button>
+          </div>
+        </div>
+
+        <div class="bento" style="margin-bottom:18px">
+          <div class="stat-card col-3">
+            <div class="stat-label">Total tenants</div>
+            <div class="stat-value" style="font-size:26px">47</div>
+          </div>
+          <div class="stat-card col-3">
+            <div class="stat-label">Activos</div>
+            <div class="stat-value" style="font-size:26px">44</div>
+          </div>
+          <div class="stat-card col-3">
+            <div class="stat-label">En trial</div>
+            <div class="stat-value" style="font-size:26px;color:var(--info)">3</div>
+          </div>
+          <div class="stat-card col-3">
+            <div class="stat-label">Suspendidos</div>
+            <div class="stat-value" style="font-size:26px;color:var(--error)">2</div>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <div class="table-toolbar">
+            <div class="table-toolbar-left">
+              <div class="search-inline"><i data-lucide="search"></i><input placeholder="Buscar por nombre, NIT, ciudad..."></div>
+              <div class="filter-chip active">Todos</div>
+              <div class="filter-chip">Activos</div>
+              <div class="filter-chip">Trial</div>
+              <div class="filter-chip">Pro Multi</div>
+              <div class="filter-chip">Pro</div>
+              <div class="filter-chip">Starter</div>
+              <div class="filter-chip">Suspendidos</div>
+            </div>
+            <button class="btn btn-secondary btn-sm"><i data-lucide="sliders-horizontal"></i> Más filtros</button>
+          </div>
+
+          <table class="data">
+            <thead>
+              <tr>
+                <th>Clínica</th>
+                <th>Ciudad</th>
+                <th>Plan</th>
+                <th style="text-align:right">Usuarios</th>
+                <th style="text-align:right">Pacientes</th>
+                <th style="text-align:right">MRR</th>
+                <th>Alta</th>
+                <th>Estado</th>
+                <th style="text-align:right">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><div class="cell-user"><div class="avatar">SO</div><div><div class="cell-user-name">Clínica Dental Sonrisas</div><div class="cell-user-sub">NIT 1234567890</div></div></div></td>
+                <td>Santa Cruz</td>
+                <td><span class="badge badge-dark">Pro Multi</span></td>
+                <td style="text-align:right">7 / 10</td>
+                <td style="text-align:right">384 / 3.000</td>
+                <td style="text-align:right;font-weight:700">Bs 420</td>
+                <td>ene 2024</td>
+                <td><span class="badge badge-success">Activo</span></td>
+                <td><div class="cell-actions"><button onclick="showToast('Impersonando Sonrisas','info')" title="Impersonar"><i data-lucide="user-check"></i></button><button><i data-lucide="eye"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr>
+                <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#DBEAFE,#93C5FD)">OM</div><div><div class="cell-user-name">Odonto Miraflores</div><div class="cell-user-sub">NIT 2345678901</div></div></div></td>
+                <td>La Paz</td>
+                <td><span class="badge badge-dark">Pro Multi</span></td>
+                <td style="text-align:right">9 / 10</td>
+                <td style="text-align:right">521 / 3.000</td>
+                <td style="text-align:right;font-weight:700">Bs 420</td>
+                <td>mar 2024</td>
+                <td><span class="badge badge-success">Activo</span></td>
+                <td><div class="cell-actions"><button><i data-lucide="user-check"></i></button><button><i data-lucide="eye"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr>
+                <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#DCFCE7,#86EFAC)">DC</div><div><div class="cell-user-name">Dental Care Equipetrol</div><div class="cell-user-sub">NIT 3456789012</div></div></div></td>
+                <td>Santa Cruz</td>
+                <td><span class="badge badge-dark">Pro Multi</span></td>
+                <td style="text-align:right">5 / 10</td>
+                <td style="text-align:right">298 / 3.000</td>
+                <td style="text-align:right;font-weight:700">Bs 420</td>
+                <td>may 2024</td>
+                <td><span class="badge badge-success">Activo</span></td>
+                <td><div class="cell-actions"><button><i data-lucide="user-check"></i></button><button><i data-lucide="eye"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr>
+                <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#FEF3C7,#FCD34D)">CR</div><div><div class="cell-user-name">Clínica Rivera</div><div class="cell-user-sub">NIT 4567890123</div></div></div></td>
+                <td>Cochabamba</td>
+                <td><span class="badge badge-info">Pro</span></td>
+                <td style="text-align:right">4 / 5</td>
+                <td style="text-align:right">412 / 1.500</td>
+                <td style="text-align:right;font-weight:700">Bs 280</td>
+                <td>jul 2024</td>
+                <td><span class="badge badge-success">Activo</span></td>
+                <td><div class="cell-actions"><button><i data-lucide="user-check"></i></button><button><i data-lucide="eye"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr>
+                <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#EDE9FE,#C4B5FD)">SD</div><div><div class="cell-user-name">Sonrisas del Sur</div><div class="cell-user-sub">NIT 5678901234</div></div></div></td>
+                <td>Tarija</td>
+                <td><span class="badge badge-info">Pro</span></td>
+                <td style="text-align:right">3 / 5</td>
+                <td style="text-align:right">2.847 / 3.000</td>
+                <td style="text-align:right;font-weight:700">Bs 280</td>
+                <td>ago 2024</td>
+                <td><span class="badge badge-warning">Cerca límite</span></td>
+                <td><div class="cell-actions"><button><i data-lucide="user-check"></i></button><button><i data-lucide="eye"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr>
+                <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#FCE7F3,#F9A8D4)">OD</div><div><div class="cell-user-name">Odontoélite</div><div class="cell-user-sub">NIT 6789012345</div></div></div></td>
+                <td>Santa Cruz</td>
+                <td><span class="badge badge-info">Pro</span></td>
+                <td style="text-align:right">3 / 5</td>
+                <td style="text-align:right">156 / 1.500</td>
+                <td style="text-align:right;font-weight:700">Bs 280</td>
+                <td>sep 2024</td>
+                <td><span class="badge badge-success">Activo</span></td>
+                <td><div class="cell-actions"><button><i data-lucide="user-check"></i></button><button><i data-lucide="eye"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr>
+                <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#CFFAFE,#67E8F9)">DN</div><div><div class="cell-user-name">Dental Norte</div><div class="cell-user-sub">NIT 7890123456</div></div></div></td>
+                <td>El Alto</td>
+                <td><span class="badge badge-info">Pro</span></td>
+                <td style="text-align:right">2 / 5</td>
+                <td style="text-align:right">142 / 1.500</td>
+                <td style="text-align:right;font-weight:700">Bs 280</td>
+                <td>oct 2024</td>
+                <td><span class="badge badge-success">Activo</span></td>
+                <td><div class="cell-actions"><button><i data-lucide="user-check"></i></button><button><i data-lucide="eye"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr>
+                <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#FEE2E2,#FCA5A5)">DE</div><div><div class="cell-user-name">Dental Express</div><div class="cell-user-sub">NIT 8901234567</div></div></div></td>
+                <td>La Paz</td>
+                <td><span class="badge badge-info">Pro</span></td>
+                <td style="text-align:right">2 / 5</td>
+                <td style="text-align:right">89 / 1.500</td>
+                <td style="text-align:right;font-weight:700">Bs 280</td>
+                <td>nov 2024</td>
+                <td><span class="badge badge-error">Sin actividad</span></td>
+                <td><div class="cell-actions"><button><i data-lucide="user-check"></i></button><button><i data-lucide="mail"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr>
+                <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#FEF3C7,#FCD34D)">OS</div><div><div class="cell-user-name">Odonto Sur</div><div class="cell-user-sub">NIT 9012345678</div></div></div></td>
+                <td>Sucre</td>
+                <td><span class="badge badge-dark">Pro Multi</span></td>
+                <td style="text-align:right">6 / 10</td>
+                <td style="text-align:right">267 / 3.000</td>
+                <td style="text-align:right;font-weight:700">Bs 420</td>
+                <td>dic 2024</td>
+                <td><span class="badge badge-warning">Pago fallido</span></td>
+                <td><div class="cell-actions"><button><i data-lucide="user-check"></i></button><button><i data-lucide="credit-card"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr>
+                <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#DBEAFE,#93C5FD)">DP</div><div><div class="cell-user-name">Dental Premium</div><div class="cell-user-sub">NIT 0123456789</div></div></div></td>
+                <td>Santa Cruz</td>
+                <td><span class="badge badge-info">Pro</span></td>
+                <td style="text-align:right">1 / 5</td>
+                <td style="text-align:right">12 / 1.500</td>
+                <td style="text-align:right;font-weight:700">Bs 280</td>
+                <td>abr 2026</td>
+                <td><span class="badge badge-success">Activo</span></td>
+                <td><div class="cell-actions"><button><i data-lucide="user-check"></i></button><button><i data-lucide="eye"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr>
+                <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#DCFCE7,#86EFAC)">OF</div><div><div class="cell-user-name">Odonto Familiar</div><div class="cell-user-sub">NIT 1122334455</div></div></div></td>
+                <td>Potosí</td>
+                <td><span class="badge badge-neutral">Starter</span></td>
+                <td style="text-align:right">1 / 2</td>
+                <td style="text-align:right">4 / 500</td>
+                <td style="text-align:right;font-weight:700">Bs 150</td>
+                <td>abr 2026</td>
+                <td><span class="badge badge-info">Trial 14d</span></td>
+                <td><div class="cell-actions"><button><i data-lucide="user-check"></i></button><button><i data-lucide="eye"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr>
+                <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#EDE9FE,#C4B5FD)">CE</div><div><div class="cell-user-name">Clínica Estética Bucal</div><div class="cell-user-sub">NIT 2233445566</div></div></div></td>
+                <td>La Paz</td>
+                <td><span class="badge badge-dark">Pro Multi</span></td>
+                <td style="text-align:right">2 / 10</td>
+                <td style="text-align:right">18 / 3.000</td>
+                <td style="text-align:right;font-weight:700">Bs 420</td>
+                <td>abr 2026</td>
+                <td><span class="badge badge-success">Activo</span></td>
+                <td><div class="cell-actions"><button><i data-lucide="user-check"></i></button><button><i data-lucide="eye"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div style="padding:14px 18px;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--text-secondary);border-top:1px solid var(--border)">
+            <div>Mostrando 1–12 de 47 clínicas</div>
+            <div style="display:flex;gap:4px">
+              <button class="icon-btn" style="width:32px;height:32px" disabled><i data-lucide="chevron-left"></i></button>
+              <button class="btn btn-primary btn-sm" style="min-width:32px;justify-content:center">1</button>
+              <button class="btn btn-ghost btn-sm" style="min-width:32px;justify-content:center">2</button>
+              <button class="btn btn-ghost btn-sm" style="min-width:32px;justify-content:center">3</button>
+              <button class="btn btn-ghost btn-sm" style="min-width:32px;justify-content:center">4</button>
+              <button class="icon-btn" style="width:32px;height:32px"><i data-lucide="chevron-right"></i></button>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+    if (getRole() !== 'superadmin') setRole('superadmin');
+    initLayout({ page: 'superadmin-tenants', breadcrumb: 'Plataforma SaaS', heading: 'Gestión de clínicas' });
+
+    function openNewTenantModal() {
+      openGenericModal({
+        title: 'Nueva clínica',
+        subtitle: 'Provisiona un nuevo tenant en la plataforma',
+        size: 'lg',
+        submitLabel: 'Crear tenant',
+        body: `
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Nombre comercial</label><input class="form-input" placeholder="Ej: Clínica Dental XYZ" required></div>
+            <div class="form-group"><label class="form-label">NIT</label><input class="form-input" required></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Ciudad</label><select class="form-select"><option>Santa Cruz</option><option>La Paz</option><option>Cochabamba</option><option>Tarija</option><option>Sucre</option><option>Potosí</option><option>Oruro</option><option>Beni</option></select></div>
+            <div class="form-group"><label class="form-label">Plan</label><select class="form-select"><option>Trial (14 días)</option><option>Starter — Bs 150/mes</option><option>Pro — Bs 280/mes</option><option>Pro Multi — Bs 420/mes</option></select></div>
+          </div>
+          <div style="padding:12px;background:var(--bg-alt);border-radius:var(--r-md);font-size:12px;margin-bottom:14px">
+            <strong>Usuario admin inicial</strong>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Nombre admin</label><input class="form-input" required></div>
+            <div class="form-group"><label class="form-label">Email admin</label><input class="form-input" type="email" required></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Subdominio</label>
+            <div style="display:flex;align-items:center;gap:6px">
+              <input class="form-input" placeholder="clinica-xyz" style="flex:1">
+              <span style="color:var(--text-secondary);font-size:13px">.sonrisas.bo</span>
+            </div>
+          </div>
+        `,
+        onSubmit: () => showToast('Tenant creado · Email de bienvenida enviado', 'success'),
+      });
+    }
+  </script>
+</body>
+</html>

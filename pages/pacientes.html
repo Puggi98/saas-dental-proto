@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pacientes — Sonrisas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/main.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside id="sidebar" class="sidebar"></aside>
+    <div class="main-area">
+      <header id="topbar" class="topbar"></header>
+      <main class="content">
+
+        <div class="page-head">
+          <div>
+            <h1>Pacientes</h1>
+            <p>384 pacientes registrados · 12 nuevos esta semana</p>
+          </div>
+          <div class="page-head-actions">
+            <button class="btn btn-secondary" onclick="showToast('Importar CSV','info')">
+              <i data-lucide="upload"></i> Importar
+            </button>
+            <button class="btn btn-primary" onclick="openNewPacienteModal()">
+              <i data-lucide="user-plus"></i> Nuevo paciente
+            </button>
+          </div>
+        </div>
+
+        <div class="bento" style="margin-bottom:18px">
+          <div class="stat-card col-3">
+            <div class="stat-label">Total</div>
+            <div class="stat-value" style="font-size:26px">384</div>
+          </div>
+          <div class="stat-card col-3">
+            <div class="stat-label">Activos (últ. 6m)</div>
+            <div class="stat-value" style="font-size:26px">267</div>
+          </div>
+          <div class="stat-card col-3">
+            <div class="stat-label">Nuevos este mes</div>
+            <div class="stat-value" style="font-size:26px">42</div>
+          </div>
+          <div class="stat-card col-3">
+            <div class="stat-label">Con saldo pendiente</div>
+            <div class="stat-value" style="font-size:26px;color:var(--error)">18</div>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <div class="table-toolbar">
+            <div class="table-toolbar-left">
+              <div class="search-inline">
+                <i data-lucide="search"></i>
+                <input placeholder="Buscar por nombre, CI, teléfono...">
+              </div>
+              <div class="filter-chip active" onclick="showToast('Filtro: Todos','info')">Todos</div>
+              <div class="filter-chip" onclick="showToast('Filtro: Activos','info')">Activos</div>
+              <div class="filter-chip" onclick="showToast('Filtro: Con saldo','info')">Con saldo</div>
+              <div class="filter-chip" onclick="showToast('Filtro: Nuevos','info')"><i data-lucide="sparkles"></i> Nuevos</div>
+            </div>
+            <button class="btn btn-secondary btn-sm"><i data-lucide="sliders-horizontal"></i> Más filtros</button>
+          </div>
+
+          <table class="data">
+            <thead>
+              <tr>
+                <th>Paciente</th>
+                <th>CI</th>
+                <th>Teléfono</th>
+                <th>Última visita</th>
+                <th>Próxima cita</th>
+                <th>Estado</th>
+                <th style="text-align:right">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr onclick="window.location.href='paciente-detalle.html'">
+                <td>
+                  <div class="cell-user">
+                    <div class="avatar">JP</div>
+                    <div>
+                      <div class="cell-user-name">Juan Pérez Morales</div>
+                      <div class="cell-user-sub">juan.perez@gmail.com</div>
+                    </div>
+                  </div>
+                </td>
+                <td>6123456 SC</td>
+                <td>+591 712-34567</td>
+                <td>10 abr 2026</td>
+                <td>14 abr · 08:30</td>
+                <td><span class="badge badge-success">Activo</span></td>
+                <td><div class="cell-actions" onclick="event.stopPropagation()"><button><i data-lucide="phone"></i></button><button><i data-lucide="calendar-plus"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr onclick="window.location.href='paciente-detalle.html'">
+                <td>
+                  <div class="cell-user">
+                    <div class="avatar" style="background:linear-gradient(135deg,#FEE2E2,#FCA5A5)">AG</div>
+                    <div>
+                      <div class="cell-user-name">Ana García Rojas</div>
+                      <div class="cell-user-sub">ana.garcia@outlook.com</div>
+                    </div>
+                  </div>
+                </td>
+                <td>7234567 LP</td>
+                <td>+591 723-45678</td>
+                <td>2 abr 2026</td>
+                <td>14 abr · 09:30</td>
+                <td><span class="badge badge-success">Activo</span></td>
+                <td><div class="cell-actions" onclick="event.stopPropagation()"><button><i data-lucide="phone"></i></button><button><i data-lucide="calendar-plus"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr onclick="window.location.href='paciente-detalle.html'">
+                <td>
+                  <div class="cell-user">
+                    <div class="avatar" style="background:linear-gradient(135deg,#DBEAFE,#93C5FD)">CM</div>
+                    <div>
+                      <div class="cell-user-name">Carlos Mendoza Villca</div>
+                      <div class="cell-user-sub">cmendoza@gmail.com</div>
+                    </div>
+                  </div>
+                </td>
+                <td>5987654 CB</td>
+                <td>+591 734-56789</td>
+                <td>28 mar 2026</td>
+                <td>14 abr · 11:00</td>
+                <td><span class="badge badge-warning">Tratamiento activo</span></td>
+                <td><div class="cell-actions" onclick="event.stopPropagation()"><button><i data-lucide="phone"></i></button><button><i data-lucide="calendar-plus"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr onclick="window.location.href='paciente-detalle.html'">
+                <td>
+                  <div class="cell-user">
+                    <div class="avatar" style="background:linear-gradient(135deg,#DCFCE7,#86EFAC)">LC</div>
+                    <div>
+                      <div class="cell-user-name">Laura Choque Aguilar</div>
+                      <div class="cell-user-sub">laura.choque@hotmail.com</div>
+                    </div>
+                  </div>
+                </td>
+                <td>8123456 OR</td>
+                <td>+591 745-67890</td>
+                <td>5 abr 2026</td>
+                <td>14 abr · 14:00</td>
+                <td><span class="badge badge-success">Activo</span></td>
+                <td><div class="cell-actions" onclick="event.stopPropagation()"><button><i data-lucide="phone"></i></button><button><i data-lucide="calendar-plus"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr onclick="window.location.href='paciente-detalle.html'">
+                <td>
+                  <div class="cell-user">
+                    <div class="avatar" style="background:linear-gradient(135deg,#EDE9FE,#C4B5FD)">PF</div>
+                    <div>
+                      <div class="cell-user-name">Pedro Flores Ramírez</div>
+                      <div class="cell-user-sub">pedro.flores@gmail.com</div>
+                    </div>
+                  </div>
+                </td>
+                <td>9345678 TJ</td>
+                <td>+591 756-78901</td>
+                <td>—</td>
+                <td>14 abr · 16:30</td>
+                <td><span class="badge badge-info">Nuevo</span></td>
+                <td><div class="cell-actions" onclick="event.stopPropagation()"><button><i data-lucide="phone"></i></button><button><i data-lucide="calendar-plus"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr onclick="window.location.href='paciente-detalle.html'">
+                <td>
+                  <div class="cell-user">
+                    <div class="avatar" style="background:linear-gradient(135deg,#FEF3C7,#FCD34D)">CV</div>
+                    <div>
+                      <div class="cell-user-name">Carmen Vargas Suárez</div>
+                      <div class="cell-user-sub">carmen.vargas@gmail.com</div>
+                    </div>
+                  </div>
+                </td>
+                <td>4567890 BN</td>
+                <td>+591 767-89012</td>
+                <td>13 abr 2026</td>
+                <td>17 abr · 10:00</td>
+                <td><span class="badge badge-error">Saldo pendiente</span></td>
+                <td><div class="cell-actions" onclick="event.stopPropagation()"><button><i data-lucide="phone"></i></button><button><i data-lucide="calendar-plus"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr onclick="window.location.href='paciente-detalle.html'">
+                <td>
+                  <div class="cell-user">
+                    <div class="avatar" style="background:linear-gradient(135deg,#CFFAFE,#67E8F9)">RI</div>
+                    <div>
+                      <div class="cell-user-name">Roberto Ibáñez Torres</div>
+                      <div class="cell-user-sub">r.ibanez@outlook.com</div>
+                    </div>
+                  </div>
+                </td>
+                <td>3678901 PN</td>
+                <td>+591 778-90123</td>
+                <td>13 abr 2026</td>
+                <td>—</td>
+                <td><span class="badge badge-success">Activo</span></td>
+                <td><div class="cell-actions" onclick="event.stopPropagation()"><button><i data-lucide="phone"></i></button><button><i data-lucide="calendar-plus"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr onclick="window.location.href='paciente-detalle.html'">
+                <td>
+                  <div class="cell-user">
+                    <div class="avatar" style="background:linear-gradient(135deg,#FCE7F3,#F9A8D4)">VR</div>
+                    <div>
+                      <div class="cell-user-name">Valeria Rivera Quispe</div>
+                      <div class="cell-user-sub">valeria.r@gmail.com</div>
+                    </div>
+                  </div>
+                </td>
+                <td>2789012 SC</td>
+                <td>+591 789-01234</td>
+                <td>12 abr 2026</td>
+                <td>17 abr · 15:30</td>
+                <td><span class="badge badge-success">Activo</span></td>
+                <td><div class="cell-actions" onclick="event.stopPropagation()"><button><i data-lucide="phone"></i></button><button><i data-lucide="calendar-plus"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div style="padding:14px 18px;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--text-secondary);border-top:1px solid var(--border)">
+            <div>Mostrando 1–8 de 384 pacientes</div>
+            <div style="display:flex;gap:4px">
+              <button class="icon-btn" style="width:32px;height:32px" disabled><i data-lucide="chevron-left"></i></button>
+              <button class="btn btn-primary btn-sm" style="min-width:32px;justify-content:center">1</button>
+              <button class="btn btn-ghost btn-sm" style="min-width:32px;justify-content:center">2</button>
+              <button class="btn btn-ghost btn-sm" style="min-width:32px;justify-content:center">3</button>
+              <button class="btn btn-ghost btn-sm" style="min-width:32px;justify-content:center">...</button>
+              <button class="btn btn-ghost btn-sm" style="min-width:32px;justify-content:center">48</button>
+              <button class="icon-btn" style="width:32px;height:32px"><i data-lucide="chevron-right"></i></button>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="../js/app.js"></script>
+  <script>initLayout({ page: 'pacientes', breadcrumb: 'Operación', heading: 'Pacientes' });</script>
+</body>
+</html>

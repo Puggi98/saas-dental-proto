@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Usuarios — Sonrisas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/main.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside id="sidebar" class="sidebar"></aside>
+    <div class="main-area">
+      <header id="topbar" class="topbar"></header>
+      <main class="content">
+
+        <div class="page-head">
+          <div>
+            <h1>Usuarios y permisos</h1>
+            <p>Gestiona quién accede a la plataforma y con qué rol</p>
+          </div>
+          <div class="page-head-actions">
+            <button class="btn btn-primary" onclick="openInvitarUsuarioModal()"><i data-lucide="user-plus"></i> Invitar usuario</button>
+          </div>
+        </div>
+
+        <div class="bento" style="margin-bottom:18px">
+          <div class="stat-card col-4">
+            <div class="stat-label">Usuarios activos</div>
+            <div class="stat-value" style="font-size:26px">7</div>
+          </div>
+          <div class="stat-card col-4">
+            <div class="stat-label">Invitaciones pendientes</div>
+            <div class="stat-value" style="font-size:26px">2</div>
+          </div>
+          <div class="stat-card col-4">
+            <div class="stat-label">Último acceso</div>
+            <div class="stat-value" style="font-size:18px">Hace 3 min</div>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <div class="table-toolbar">
+            <div class="table-toolbar-left">
+              <div class="search-inline"><i data-lucide="search"></i><input placeholder="Buscar usuario..."></div>
+              <div class="filter-chip active">Todos</div>
+              <div class="filter-chip">Admin</div>
+              <div class="filter-chip">Odontólogo</div>
+              <div class="filter-chip">Recepción</div>
+            </div>
+          </div>
+          <table class="data">
+            <thead>
+              <tr>
+                <th>Usuario</th>
+                <th>Rol</th>
+                <th>Especialidad</th>
+                <th>Último acceso</th>
+                <th>Estado</th>
+                <th style="text-align:right">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="users-tbody">
+              <tr data-role="Admin Clínica" data-name="Dra. María Fernández" data-email="maria.fernandez@sonrisas.bo" data-specialty="Ortodoncia" data-status="Activo" data-initials="MF">
+                <td><div class="cell-user"><div class="avatar">MF</div><div><div class="cell-user-name">Dra. María Fernández</div><div class="cell-user-sub">maria.fernandez@sonrisas.bo</div></div></div></td>
+                <td><span class="badge badge-dark">Admin Clínica</span></td>
+                <td>Ortodoncia</td>
+                <td>Hace 3 min</td>
+                <td><span class="badge badge-success">Activo</span></td>
+                <td><div class="cell-actions"><button onclick="editUser(this.closest('tr'))"><i data-lucide="pencil"></i></button><button onclick="userActions(this.closest('tr'))"><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr data-role="Odontólogo" data-name="Dr. Andrés Gutiérrez" data-email="andres.gutierrez@sonrisas.bo" data-specialty="Endodoncia" data-status="Activo" data-initials="AG">
+                <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#DBEAFE,#93C5FD)">AG</div><div><div class="cell-user-name">Dr. Andrés Gutiérrez</div><div class="cell-user-sub">andres.gutierrez@sonrisas.bo</div></div></div></td>
+                <td><span class="badge badge-info">Odontólogo</span></td>
+                <td>Endodoncia</td>
+                <td>Hace 12 min</td>
+                <td><span class="badge badge-success">Activo</span></td>
+                <td><div class="cell-actions"><button onclick="editUser(this.closest('tr'))"><i data-lucide="pencil"></i></button><button onclick="userActions(this.closest('tr'))"><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr data-role="Odontólogo" data-name="Dr. Sebastián Rojas" data-email="sebastian.rojas@sonrisas.bo" data-specialty="Odontología general" data-status="Activo" data-initials="SR">
+                <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#FEF3C7,#FCD34D)">SR</div><div><div class="cell-user-name">Dr. Sebastián Rojas</div><div class="cell-user-sub">sebastian.rojas@sonrisas.bo</div></div></div></td>
+                <td><span class="badge badge-info">Odontólogo</span></td>
+                <td>Odontología general</td>
+                <td>Hace 1 h</td>
+                <td><span class="badge badge-success">Activo</span></td>
+                <td><div class="cell-actions"><button onclick="editUser(this.closest('tr'))"><i data-lucide="pencil"></i></button><button onclick="userActions(this.closest('tr'))"><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr data-role="Recepción" data-name="Sofía Medrano" data-email="sofia.medrano@sonrisas.bo" data-specialty="" data-status="Activo" data-initials="SM">
+                <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#DCFCE7,#86EFAC)">SM</div><div><div class="cell-user-name">Sofía Medrano</div><div class="cell-user-sub">sofia.medrano@sonrisas.bo</div></div></div></td>
+                <td><span class="badge badge-warning">Recepción</span></td>
+                <td>—</td>
+                <td>Hace 5 min</td>
+                <td><span class="badge badge-success">Activo</span></td>
+                <td><div class="cell-actions"><button onclick="editUser(this.closest('tr'))"><i data-lucide="pencil"></i></button><button onclick="userActions(this.closest('tr'))"><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr data-role="Recepción" data-name="Lucía Tórrez" data-email="lucia.torrez@sonrisas.bo" data-specialty="" data-status="Activo" data-initials="LT">
+                <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#FCE7F3,#F9A8D4)">LT</div><div><div class="cell-user-name">Lucía Tórrez</div><div class="cell-user-sub">lucia.torrez@sonrisas.bo</div></div></div></td>
+                <td><span class="badge badge-warning">Recepción</span></td>
+                <td>—</td>
+                <td>Ayer</td>
+                <td><span class="badge badge-success">Activo</span></td>
+                <td><div class="cell-actions"><button onclick="editUser(this.closest('tr'))"><i data-lucide="pencil"></i></button><button onclick="userActions(this.closest('tr'))"><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+              <tr data-role="Odontólogo" data-name="Daniela Ríos" data-email="daniela.rios@sonrisas.bo" data-specialty="Periodoncia" data-status="Invitado" data-initials="DR">
+                <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#EDE9FE,#C4B5FD)">DR</div><div><div class="cell-user-name">Daniela Ríos</div><div class="cell-user-sub">daniela.rios@sonrisas.bo</div></div></div></td>
+                <td><span class="badge badge-info">Odontólogo</span></td>
+                <td>Periodoncia</td>
+                <td>Nunca</td>
+                <td><span class="badge badge-neutral">Invitado</span></td>
+                <td><div class="cell-actions"><button onclick="editUser(this.closest('tr'))"><i data-lucide="pencil"></i></button><button onclick="userActions(this.closest('tr'))"><i data-lucide="more-horizontal"></i></button></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+    initLayout({ page: 'admin-usuarios', breadcrumb: 'Administración', heading: 'Usuarios y permisos' });
+
+    /* ═══ FILTERING ═══ */
+    const userRows = () => [...document.querySelectorAll('#users-tbody tr')];
+
+    document.querySelectorAll('.filter-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        chip.parentElement.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        const t = chip.textContent.trim();
+        userRows().forEach(row => {
+          row.style.display = (t === 'Todos' || row.dataset.role === t) ? '' : 'none';
+        });
+      });
+    });
+
+    document.querySelector('.search-inline input').addEventListener('input', function() {
+      const q = this.value.trim().toLowerCase();
+      userRows().forEach(row => {
+        row.style.display = (!q || row.textContent.toLowerCase().includes(q)) ? '' : 'none';
+      });
+    });
+
+    /* ═══ EDIT USER MODAL ═══ */
+    const ROLE_BADGES = {
+      'Admin Clínica': 'badge-dark',
+      'Odontólogo': 'badge-info',
+      'Recepción': 'badge-warning',
+    };
+    const STATUS_BADGES = {
+      'Activo': 'badge-success',
+      'Invitado': 'badge-neutral',
+      'Suspendido': 'badge-error',
+      'Inactivo': 'badge-neutral',
+    };
+
+    function editUser(row) {
+      const d = row.dataset;
+      openGenericModal({
+        title: 'Editar usuario',
+        subtitle: d.name,
+        size: 'lg',
+        submitLabel: 'Guardar cambios',
+        body: `
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;padding:14px;background:var(--bg-alt);border-radius:var(--r-md)">
+            <div class="avatar" style="width:48px;height:48px;font-size:16px">${d.initials}</div>
+            <div>
+              <div style="font-weight:700;font-size:14px">${d.name}</div>
+              <div style="font-size:12px;color:var(--text-tertiary)">${d.email}</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Nombre completo</label>
+              <input class="form-input" id="edit-name" value="${d.name}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input class="form-input" type="email" id="edit-email" value="${d.email}">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Rol</label>
+              <select class="form-select" id="edit-role">
+                <option ${d.role==='Admin Clínica'?'selected':''}>Admin Clínica</option>
+                <option ${d.role==='Odontólogo'?'selected':''}>Odontólogo</option>
+                <option ${d.role==='Recepción'?'selected':''}>Recepción</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Especialidad</label>
+              <select class="form-select" id="edit-specialty">
+                <option value="" ${!d.specialty?'selected':''}>— Ninguna</option>
+                <option ${d.specialty==='Ortodoncia'?'selected':''}>Ortodoncia</option>
+                <option ${d.specialty==='Endodoncia'?'selected':''}>Endodoncia</option>
+                <option ${d.specialty==='Odontología general'?'selected':''}>Odontología general</option>
+                <option ${d.specialty==='Periodoncia'?'selected':''}>Periodoncia</option>
+                <option ${d.specialty==='Cirugía oral'?'selected':''}>Cirugía oral</option>
+                <option ${d.specialty==='Odontopediatría'?'selected':''}>Odontopediatría</option>
+                <option ${d.specialty==='Prótesis'?'selected':''}>Prótesis</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Estado</label>
+              <select class="form-select" id="edit-status">
+                <option ${d.status==='Activo'?'selected':''}>Activo</option>
+                <option ${d.status==='Invitado'?'selected':''}>Invitado</option>
+                <option ${d.status==='Suspendido'?'selected':''}>Suspendido</option>
+                <option ${d.status==='Inactivo'?'selected':''}>Inactivo</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Teléfono</label>
+              <input class="form-input" value="+591 7XX-XXXXX">
+            </div>
+          </div>
+          <div style="margin-top:10px;padding:14px;border:1px solid var(--border-strong);border-radius:var(--r-md)">
+            <div style="font-weight:600;font-size:13px;margin-bottom:10px">Permisos adicionales</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <label style="display:flex;align-items:center;gap:10px;font-size:12.5px"><input type="checkbox" ${d.role==='Admin Clínica'?'checked':''}> Puede editar configuración de la clínica</label>
+              <label style="display:flex;align-items:center;gap:10px;font-size:12.5px"><input type="checkbox" ${d.role!=='Recepción'?'checked':''}> Puede ver historias clínicas</label>
+              <label style="display:flex;align-items:center;gap:10px;font-size:12.5px"><input type="checkbox" ${d.role==='Admin Clínica'?'checked':''}> Puede gestionar otros usuarios</label>
+              <label style="display:flex;align-items:center;gap:10px;font-size:12.5px"><input type="checkbox" checked> Puede registrar cobros</label>
+            </div>
+          </div>
+        `,
+        onSubmit: () => {
+          const newName = document.getElementById('edit-name').value;
+          const newEmail = document.getElementById('edit-email').value;
+          const newRole = document.getElementById('edit-role').value;
+          const newSpecialty = document.getElementById('edit-specialty').value;
+          const newStatus = document.getElementById('edit-status').value;
+
+          // Update row data attributes
+          row.dataset.name = newName;
+          row.dataset.email = newEmail;
+          row.dataset.role = newRole;
+          row.dataset.specialty = newSpecialty;
+          row.dataset.status = newStatus;
+
+          // Update visible cells
+          const cells = row.querySelectorAll('td');
+          cells[0].querySelector('.cell-user-name').textContent = newName;
+          cells[0].querySelector('.cell-user-sub').textContent = newEmail;
+
+          const roleBadge = cells[1].querySelector('.badge');
+          roleBadge.textContent = newRole;
+          roleBadge.className = 'badge ' + (ROLE_BADGES[newRole] || 'badge-neutral');
+
+          cells[2].textContent = newSpecialty || '—';
+
+          const statusBadge = cells[4].querySelector('.badge');
+          statusBadge.textContent = newStatus;
+          statusBadge.className = 'badge ' + (STATUS_BADGES[newStatus] || 'badge-neutral');
+
+          showToast(`${newName} actualizado`, 'success');
+        },
+      });
+    }
+
+    /* ═══ USER ACTIONS MENU ═══ */
+    function userActions(row) {
+      const d = row.dataset;
+      const isInvited = d.status === 'Invitado';
+      const isActive = d.status === 'Activo';
+
+      openGenericModal({
+        title: 'Acciones — ' + d.name,
+        subtitle: d.email,
+        submitLabel: 'Cerrar',
+        body: `
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div class="agenda-item" style="cursor:pointer" onclick="closeGenericModal();editUser(document.querySelector('tr[data-email=&quot;${d.email}&quot;]'))">
+              <div style="width:36px;height:36px;border-radius:10px;background:var(--bg-alt);display:flex;align-items:center;justify-content:center"><i data-lucide="pencil" style="width:16px;height:16px"></i></div>
+              <div><div class="agenda-patient-name">Editar usuario</div><div class="agenda-patient-meta">Cambiar rol, especialidad, estado</div></div>
+              <i data-lucide="chevron-right" style="width:16px;height:16px;color:var(--text-tertiary)"></i>
+            </div>
+            ${isInvited ? `
+            <div class="agenda-item" style="cursor:pointer" onclick="closeGenericModal();showToast('Invitación reenviada a ${d.email}','success')">
+              <div style="width:36px;height:36px;border-radius:10px;background:var(--info-light);display:flex;align-items:center;justify-content:center"><i data-lucide="send" style="width:16px;height:16px;color:var(--info)"></i></div>
+              <div><div class="agenda-patient-name">Reenviar invitación</div><div class="agenda-patient-meta">Envía un nuevo email con link de acceso</div></div>
+              <i data-lucide="chevron-right" style="width:16px;height:16px;color:var(--text-tertiary)"></i>
+            </div>` : ''}
+            ${isActive ? `
+            <div class="agenda-item" style="cursor:pointer" onclick="closeGenericModal();suspendUser('${d.email}')">
+              <div style="width:36px;height:36px;border-radius:10px;background:var(--warning-light);display:flex;align-items:center;justify-content:center"><i data-lucide="pause-circle" style="width:16px;height:16px;color:var(--warning)"></i></div>
+              <div><div class="agenda-patient-name">Suspender acceso</div><div class="agenda-patient-meta">El usuario no podrá iniciar sesión</div></div>
+              <i data-lucide="chevron-right" style="width:16px;height:16px;color:var(--text-tertiary)"></i>
+            </div>` : ''}
+            <div class="agenda-item" style="cursor:pointer" onclick="closeGenericModal();showToast('Email de reset enviado','success')">
+              <div style="width:36px;height:36px;border-radius:10px;background:var(--bg-alt);display:flex;align-items:center;justify-content:center"><i data-lucide="key" style="width:16px;height:16px"></i></div>
+              <div><div class="agenda-patient-name">Resetear contraseña</div><div class="agenda-patient-meta">Envía email para restablecer</div></div>
+              <i data-lucide="chevron-right" style="width:16px;height:16px;color:var(--text-tertiary)"></i>
+            </div>
+            <div class="agenda-item" style="cursor:pointer;border-color:var(--error)" onclick="closeGenericModal();removeUser('${d.email}')">
+              <div style="width:36px;height:36px;border-radius:10px;background:var(--error-light);display:flex;align-items:center;justify-content:center"><i data-lucide="trash-2" style="width:16px;height:16px;color:var(--error)"></i></div>
+              <div><div class="agenda-patient-name" style="color:var(--error)">Eliminar usuario</div><div class="agenda-patient-meta">Acción irreversible</div></div>
+              <i data-lucide="chevron-right" style="width:16px;height:16px;color:var(--text-tertiary)"></i>
+            </div>
+          </div>
+        `,
+        onSubmit: () => {},
+      });
+    }
+
+    function suspendUser(email) {
+      const row = document.querySelector(`tr[data-email="${email}"]`);
+      if (!row) return;
+      row.dataset.status = 'Suspendido';
+      const statusBadge = row.querySelectorAll('td')[4].querySelector('.badge');
+      statusBadge.textContent = 'Suspendido';
+      statusBadge.className = 'badge badge-error';
+      showToast('Usuario suspendido', 'success');
+    }
+
+    function removeUser(email) {
+      const row = document.querySelector(`tr[data-email="${email}"]`);
+      if (!row) return;
+      row.style.transition = 'opacity 0.3s';
+      row.style.opacity = '0';
+      setTimeout(() => { row.remove(); showToast('Usuario eliminado', 'success'); }, 300);
+    }
+  </script>
+</body>
+</html>
