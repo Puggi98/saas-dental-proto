@@ -484,41 +484,48 @@ function openNewPacienteModal() {
 
 /* ── Modal: Registrar cobro ── */
 function openNewCobroModal(preselectPaciente = '') {
+  const PACIENTES = [
+    { name: 'Juan Pérez Morales', initials: 'JP', key: 'jp' },
+    { name: 'Ana García Rojas', initials: 'AG', key: 'ag' },
+    { name: 'Carlos Mendoza Villca', initials: 'CM', key: 'cm' },
+    { name: 'Laura Choque Aguilar', initials: 'LC', key: 'lc' },
+    { name: 'Pedro Flores Ramírez', initials: 'PF', key: 'pf' },
+    { name: 'Carmen Vargas Suárez', initials: 'CV', key: 'cv' },
+    { name: 'Roberto Ibáñez Torres', initials: 'RI', key: 'ri' },
+    { name: 'Valeria Rivera Quispe', initials: 'VR', key: 'vr' },
+  ];
+  const patOpts = PACIENTES.map(p => `<option value="${p.key}" ${preselectPaciente===p.key?'selected':''}>${p.name}</option>`).join('');
+
   openGenericModal({
     title: 'Registrar cobro',
-    subtitle: 'Registra un pago y genera comprobante imprimible',
+    subtitle: 'Registra un pago y opcionalmente emite factura electrónica',
     size: 'lg',
     submitLabel: 'Registrar pago',
     body: `
       <div class="form-group">
         <label class="form-label">Paciente</label>
-        <select class="form-select" required>
+        <select class="form-select" id="cobro-paciente" required>
           <option value="">Selecciona un paciente...</option>
-          <option ${preselectPaciente==='jp'?'selected':''}>Juan Pérez Morales</option>
-          <option>Ana García Rojas</option>
-          <option>Carlos Mendoza Villca</option>
-          <option>Laura Choque Aguilar</option>
-          <option>Pedro Flores Ramírez</option>
-          <option>Carmen Vargas Suárez</option>
+          ${patOpts}
         </select>
       </div>
       <div class="form-group">
         <label class="form-label">Tratamiento / Concepto</label>
-        <select class="form-select">
-          <option>Limpieza dental — Bs 250</option>
-          <option>Consulta general — Bs 100</option>
-          <option>Resina — Bs 350</option>
-          <option>Endodoncia unirradicular — Bs 1.200</option>
-          <option>Corona porcelana — Bs 2.500</option>
-          <option>Blanqueamiento — Bs 800</option>
-          <option>Ortodoncia control — Bs 450</option>
-          <option>Extracción simple — Bs 200</option>
+        <select class="form-select" id="cobro-concepto" onchange="cobroConceptoChanged()">
+          <option data-price="250">Limpieza dental — Bs 250</option>
+          <option data-price="100">Consulta general — Bs 100</option>
+          <option data-price="350">Resina — Bs 350</option>
+          <option data-price="1200">Endodoncia unirradicular — Bs 1.200</option>
+          <option data-price="2500">Corona porcelana — Bs 2.500</option>
+          <option data-price="800">Blanqueamiento — Bs 800</option>
+          <option data-price="450">Ortodoncia control — Bs 450</option>
+          <option data-price="200">Extracción simple — Bs 200</option>
         </select>
       </div>
       <div class="form-row-3">
         <div class="form-group">
           <label class="form-label">Método de pago</label>
-          <select class="form-select">
+          <select class="form-select" id="cobro-metodo">
             <option>Efectivo</option>
             <option>QR</option>
             <option>Transferencia</option>
@@ -527,23 +534,150 @@ function openNewCobroModal(preselectPaciente = '') {
         </div>
         <div class="form-group">
           <label class="form-label">Monto (Bs)</label>
-          <input class="form-input" type="number" value="250" required>
+          <input class="form-input" type="number" id="cobro-monto" value="250" required>
         </div>
         <div class="form-group">
           <label class="form-label">Fecha</label>
-          <input class="form-input" type="date" value="2026-04-14" required>
+          <input class="form-input" type="date" id="cobro-fecha" value="2026-04-14" required>
         </div>
       </div>
-      <div class="form-group">
+
+      <div style="margin-top:14px;padding:16px;border:1.5px solid var(--border-strong);border-radius:var(--r-md);background:var(--bg-alt)">
+        <label style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;margin-bottom:0" onclick="toggleFacturaSection()">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:36px;height:36px;border-radius:10px;background:#1E3A5F;display:flex;align-items:center;justify-content:center">
+              <span style="color:#FFF;font-weight:800;font-size:10px">SIN</span>
+            </div>
+            <div>
+              <div style="font-weight:700;font-size:13px">Emitir factura electrónica</div>
+              <div style="font-size:11px;color:var(--text-tertiary)">Facturación Computarizada en Línea — SIN Bolivia</div>
+            </div>
+          </div>
+          <input type="checkbox" id="cobro-facturar" style="width:18px;height:18px">
+        </label>
+        <div id="factura-fields" style="display:none;margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">NIT / CI del comprador</label>
+              <input class="form-input" id="cobro-nit" placeholder="Ej: 6123456">
+              <div class="form-hint">Usa 0 para "sin NIT" (ventas menores)</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Razón social / Nombre</label>
+              <input class="form-input" id="cobro-razon" placeholder="Se autocompleta con el paciente">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Actividad económica</label>
+              <select class="form-select">
+                <option>Servicios de salud dental</option>
+                <option>Servicios médicos</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Leyenda (SIN)</label>
+              <select class="form-select" style="font-size:10.5px">
+                <option>"La reproducción total o parcial y/o el uso no autorizado..."</option>
+                <option>"Esta factura contribuye al desarrollo del país..."</option>
+                <option>"Ley N° 453: Tienes derecho a recibir información..."</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:center;padding:10px;background:var(--surface-solid);border-radius:var(--r-md);font-size:11.5px;color:var(--text-secondary);margin-top:4px">
+            <i data-lucide="info" style="width:14px;height:14px;color:var(--info);flex-shrink:0"></i>
+            <span>N° Factura <strong>#1039</strong> · CUFD válido · Dosificación vigente (1001–2000)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-top:14px">
         <label class="form-label">Notas (opcional)</label>
         <textarea class="form-textarea" placeholder="Observaciones del cobro..."></textarea>
       </div>
-      <label style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text-secondary);margin-top:6px">
-        <input type="checkbox" checked> Imprimir comprobante al guardar
-      </label>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-top:6px">
+        <label style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text-secondary)">
+          <input type="checkbox" checked> Imprimir comprobante al guardar
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text-secondary)">
+          <input type="checkbox" id="cobro-whatsapp"> Enviar comprobante por WhatsApp al paciente
+        </label>
+      </div>
     `,
-    onSubmit: () => showToast('Pago registrado · Comprobante generado', 'success'),
+    onSubmit: () => {
+      const pacSelect = document.getElementById('cobro-paciente');
+      const pacKey = pacSelect.value;
+      const pacName = pacSelect.options[pacSelect.selectedIndex]?.text || 'Paciente';
+      const pacData = PACIENTES.find(p => p.key === pacKey) || { initials: 'XX' };
+      const concepto = document.getElementById('cobro-concepto');
+      const conceptoText = concepto.options[concepto.selectedIndex]?.text?.split(' — ')[0] || 'Tratamiento';
+      const metodo = document.getElementById('cobro-metodo').value;
+      const monto = document.getElementById('cobro-monto').value;
+      const emitirFactura = document.getElementById('cobro-facturar')?.checked;
+
+      // Insert row into cobros table if on cobros page
+      const tbody = document.querySelector('table.data tbody');
+      if (tbody && location.pathname.includes('cobros')) {
+        const nextNum = '#0' + (422 + tbody.querySelectorAll('tr').length);
+        const now = new Date();
+        const fechaStr = `${now.getDate()} abr · ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+        const badgeClass = { 'Efectivo': 'badge-neutral', 'QR': 'badge-info', 'Transferencia': 'badge-info', 'Tarjeta': 'badge-info' };
+        const newRow = document.createElement('tr');
+        newRow.style.animation = 'slideIn 0.3s ease-out';
+        newRow.innerHTML = `
+          <td style="font-variant-numeric:tabular-nums;font-weight:600">${nextNum}</td>
+          <td><div class="cell-user"><div class="avatar">${pacData.initials}</div><div><div class="cell-user-name">${pacName}</div></div></div></td>
+          <td>${conceptoText}${emitirFactura?' <span style="color:#1E3A5F;font-weight:700;font-size:10px">+ FACTURA</span>':''}</td>
+          <td>—</td>
+          <td><span class="badge ${badgeClass[metodo] || 'badge-neutral'}">${metodo}</span></td>
+          <td>${fechaStr}</td>
+          <td style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">Bs ${Number(monto).toLocaleString('es-BO')}</td>
+          <td><span class="badge badge-success">Pagado</span></td>
+          <td><div class="cell-actions"><button onclick="showToast('Comprobante impreso','success')"><i data-lucide="printer"></i></button><button onclick="showToast('PDF descargado','success')"><i data-lucide="download"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+        `;
+        tbody.insertBefore(newRow, tbody.firstChild);
+        if (window.lucide) lucide.createIcons();
+      }
+
+      if (emitirFactura) {
+        showToast('Pago registrado · Factura #1039 emitida al SIN', 'success');
+        setTimeout(() => showToast('Factura enviada por email al paciente', 'success'), 1200);
+      } else {
+        showToast('Pago registrado · Comprobante generado', 'success');
+      }
+    },
   });
+
+  // Auto-fill razón social when patient changes
+  setTimeout(() => {
+    const pacSelect = document.getElementById('cobro-paciente');
+    const razon = document.getElementById('cobro-razon');
+    if (pacSelect && razon) {
+      pacSelect.addEventListener('change', () => {
+        razon.value = pacSelect.options[pacSelect.selectedIndex]?.text || '';
+      });
+      if (pacSelect.value) razon.value = pacSelect.options[pacSelect.selectedIndex]?.text || '';
+    }
+  }, 150);
+}
+
+function toggleFacturaSection() {
+  const checkbox = document.getElementById('cobro-facturar');
+  const fields = document.getElementById('factura-fields');
+  if (checkbox && fields) {
+    // Toggle happens naturally via click, but we need to sync display
+    setTimeout(() => {
+      fields.style.display = checkbox.checked ? 'block' : 'none';
+      if (checkbox.checked && window.lucide) lucide.createIcons();
+    }, 10);
+  }
+}
+
+function cobroConceptoChanged() {
+  const sel = document.getElementById('cobro-concepto');
+  const price = sel?.options[sel.selectedIndex]?.dataset?.price;
+  const monto = document.getElementById('cobro-monto');
+  if (price && monto) monto.value = price;
 }
 
 /* ── Modal: Nuevo tratamiento (catálogo) ── */
