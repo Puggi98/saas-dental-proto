@@ -75,7 +75,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
+              <tr data-id="sonrisas" onclick="openClinicDetail('sonrisas')" style="cursor:pointer">
                 <td><div class="cell-user"><div class="avatar">SO</div><div><div class="cell-user-name">Clínica Dental Sonrisas</div><div class="cell-user-sub">NIT 1234567890</div></div></div></td>
                 <td>Santa Cruz</td>
                 <td><span class="badge badge-dark">Pro Multi</span></td>
@@ -84,9 +84,9 @@
                 <td style="text-align:right;font-weight:700">Bs 420</td>
                 <td>ene 2024</td>
                 <td><span class="badge badge-success">Activo</span></td>
-                <td><div class="cell-actions"><button onclick="showToast('Impersonando Sonrisas','info')" title="Impersonar"><i data-lucide="user-check"></i></button><button><i data-lucide="eye"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
+                <td><div class="cell-actions" onclick="event.stopPropagation()"><button onclick="showToast('Impersonando Sonrisas','info')"><i data-lucide="user-check"></i></button><button onclick="openClinicDetail('sonrisas')"><i data-lucide="eye"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
               </tr>
-              <tr>
+              <tr data-id="miraflores" onclick="openClinicDetail('miraflores')" style="cursor:pointer">
                 <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#DBEAFE,#93C5FD)">OM</div><div><div class="cell-user-name">Odonto Miraflores</div><div class="cell-user-sub">NIT 2345678901</div></div></div></td>
                 <td>La Paz</td>
                 <td><span class="badge badge-dark">Pro Multi</span></td>
@@ -97,7 +97,7 @@
                 <td><span class="badge badge-success">Activo</span></td>
                 <td><div class="cell-actions"><button><i data-lucide="user-check"></i></button><button><i data-lucide="eye"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
               </tr>
-              <tr>
+              <tr data-id="dentalcare" onclick="openClinicDetail('dentalcare')" style="cursor:pointer">
                 <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#DCFCE7,#86EFAC)">DC</div><div><div class="cell-user-name">Dental Care Equipetrol</div><div class="cell-user-sub">NIT 3456789012</div></div></div></td>
                 <td>Santa Cruz</td>
                 <td><span class="badge badge-dark">Pro Multi</span></td>
@@ -108,7 +108,7 @@
                 <td><span class="badge badge-success">Activo</span></td>
                 <td><div class="cell-actions"><button><i data-lucide="user-check"></i></button><button><i data-lucide="eye"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
               </tr>
-              <tr>
+              <tr data-id="rivera" onclick="openClinicDetail('rivera')" style="cursor:pointer">
                 <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#FEF3C7,#FCD34D)">CR</div><div><div class="cell-user-name">Clínica Rivera</div><div class="cell-user-sub">NIT 4567890123</div></div></div></td>
                 <td>Cochabamba</td>
                 <td><span class="badge badge-info">Pro</span></td>
@@ -119,7 +119,7 @@
                 <td><span class="badge badge-success">Activo</span></td>
                 <td><div class="cell-actions"><button><i data-lucide="user-check"></i></button><button><i data-lucide="eye"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
               </tr>
-              <tr>
+              <tr data-id="sur" onclick="openClinicDetail('sur')" style="cursor:pointer">
                 <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#EDE9FE,#C4B5FD)">SD</div><div><div class="cell-user-name">Sonrisas del Sur</div><div class="cell-user-sub">NIT 5678901234</div></div></div></td>
                 <td>Tarija</td>
                 <td><span class="badge badge-info">Pro</span></td>
@@ -130,7 +130,7 @@
                 <td><span class="badge badge-warning">Cerca límite</span></td>
                 <td><div class="cell-actions"><button><i data-lucide="user-check"></i></button><button><i data-lucide="eye"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
               </tr>
-              <tr>
+              <tr data-id="elite" onclick="openClinicDetail('elite')" style="cursor:pointer">
                 <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#FCE7F3,#F9A8D4)">OD</div><div><div class="cell-user-name">Odontoélite</div><div class="cell-user-sub">NIT 6789012345</div></div></div></td>
                 <td>Santa Cruz</td>
                 <td><span class="badge badge-info">Pro</span></td>
@@ -141,7 +141,7 @@
                 <td><span class="badge badge-success">Activo</span></td>
                 <td><div class="cell-actions"><button><i data-lucide="user-check"></i></button><button><i data-lucide="eye"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
               </tr>
-              <tr>
+              <tr data-id="norte" onclick="openClinicDetail('norte')" style="cursor:pointer">
                 <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#CFFAFE,#67E8F9)">DN</div><div><div class="cell-user-name">Dental Norte</div><div class="cell-user-sub">NIT 7890123456</div></div></div></td>
                 <td>El Alto</td>
                 <td><span class="badge badge-info">Pro</span></td>
@@ -152,7 +152,7 @@
                 <td><span class="badge badge-success">Activo</span></td>
                 <td><div class="cell-actions"><button><i data-lucide="user-check"></i></button><button><i data-lucide="eye"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
               </tr>
-              <tr>
+              <tr data-id="express" onclick="openClinicDetail('express')" style="cursor:pointer">
                 <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#FEE2E2,#FCA5A5)">DE</div><div><div class="cell-user-name">Dental Express</div><div class="cell-user-sub">NIT 8901234567</div></div></div></td>
                 <td>La Paz</td>
                 <td><span class="badge badge-info">Pro</span></td>
@@ -163,7 +163,7 @@
                 <td><span class="badge badge-error">Sin actividad</span></td>
                 <td><div class="cell-actions"><button><i data-lucide="user-check"></i></button><button><i data-lucide="mail"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
               </tr>
-              <tr>
+              <tr data-id="osur" onclick="openClinicDetail('osur')" style="cursor:pointer">
                 <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#FEF3C7,#FCD34D)">OS</div><div><div class="cell-user-name">Odonto Sur</div><div class="cell-user-sub">NIT 9012345678</div></div></div></td>
                 <td>Sucre</td>
                 <td><span class="badge badge-dark">Pro Multi</span></td>
@@ -174,7 +174,7 @@
                 <td><span class="badge badge-warning">Pago fallido</span></td>
                 <td><div class="cell-actions"><button><i data-lucide="user-check"></i></button><button><i data-lucide="credit-card"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
               </tr>
-              <tr>
+              <tr data-id="premium" onclick="openClinicDetail('premium')" style="cursor:pointer">
                 <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#DBEAFE,#93C5FD)">DP</div><div><div class="cell-user-name">Dental Premium</div><div class="cell-user-sub">NIT 0123456789</div></div></div></td>
                 <td>Santa Cruz</td>
                 <td><span class="badge badge-info">Pro</span></td>
@@ -185,7 +185,7 @@
                 <td><span class="badge badge-success">Activo</span></td>
                 <td><div class="cell-actions"><button><i data-lucide="user-check"></i></button><button><i data-lucide="eye"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
               </tr>
-              <tr>
+              <tr data-id="familiar" onclick="openClinicDetail('familiar')" style="cursor:pointer">
                 <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#DCFCE7,#86EFAC)">OF</div><div><div class="cell-user-name">Odonto Familiar</div><div class="cell-user-sub">NIT 1122334455</div></div></div></td>
                 <td>Potosí</td>
                 <td><span class="badge badge-neutral">Starter</span></td>
@@ -196,7 +196,7 @@
                 <td><span class="badge badge-info">Trial 14d</span></td>
                 <td><div class="cell-actions"><button><i data-lucide="user-check"></i></button><button><i data-lucide="eye"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
               </tr>
-              <tr>
+              <tr data-id="estetica" onclick="openClinicDetail('estetica')" style="cursor:pointer">
                 <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#EDE9FE,#C4B5FD)">CE</div><div><div class="cell-user-name">Clínica Estética Bucal</div><div class="cell-user-sub">NIT 2233445566</div></div></div></td>
                 <td>La Paz</td>
                 <td><span class="badge badge-dark">Pro Multi</span></td>
@@ -232,6 +232,155 @@
   <script>
     if (getRole() !== 'superadmin') setRole('superadmin');
     initLayout({ page: 'superadmin-tenants', breadcrumb: 'Plataforma SaaS', heading: 'Gestión de clínicas' });
+
+    /* ═══ CLINIC DATA ═══ */
+    const CLINICS = {
+      sonrisas: { name:'Clínica Dental Sonrisas', nit:'1234567890', city:'Santa Cruz', plan:'Pro Multi', mrr:'Bs 420', users:'7 / 10', patients:'384', maxPat:'3.000', status:'Activo', initials:'SO', alta:'15 enero 2024', vence:'15 mayo 2026', admin:'Dra. María Fernández', adminEmail:'maria.fernandez@sonrisas.bo', phone:'+591 3 345-6789', email:'contacto@sonrisas.bo', dir:'Av. San Martín #2450, Equipetrol', citasMes:148, citasTotal:2847, consultasTotal:4210, ingresoTotal:'Bs 127.4K', ingresoMes:'Bs 8.2K', storage:'14.2 GB / 50 GB', lastLogin:'Hace 3 min', whatsapp:'Vinculado', gcal:'Vinculado', telegram:'No', facturas:'38 emitidas (abril)', profesionales:5, sillones:3, domain:'sonrisas.sonrisas.bo', createdDaysAgo:817 },
+      miraflores: { name:'Odonto Miraflores', nit:'2345678901', city:'La Paz', plan:'Pro Multi', mrr:'Bs 420', users:'9 / 10', patients:'521', maxPat:'3.000', status:'Activo', initials:'OM', alta:'8 marzo 2024', vence:'8 junio 2026', admin:'Dr. Carlos Mamani', adminEmail:'carlos@odontomiraflores.bo', phone:'+591 2 214-5678', email:'info@odontomiraflores.bo', dir:'Av. 6 de Agosto #2180, Sopocachi', citasMes:186, citasTotal:3920, consultasTotal:5180, ingresoTotal:'Bs 164.2K', ingresoMes:'Bs 11.4K', storage:'22.8 GB / 50 GB', lastLogin:'Hace 12 min', whatsapp:'Vinculado', gcal:'No', telegram:'No', facturas:'42 emitidas (abril)', profesionales:6, sillones:4, domain:'miraflores.sonrisas.bo', createdDaysAgo:763 },
+      dentalcare: { name:'Dental Care Equipetrol', nit:'3456789012', city:'Santa Cruz', plan:'Pro Multi', mrr:'Bs 420', users:'5 / 10', patients:'298', maxPat:'3.000', status:'Activo', initials:'DC', alta:'20 mayo 2024', vence:'20 agosto 2026', admin:'Dra. Paola Suárez', adminEmail:'paola@dentalcare.bo', phone:'+591 3 312-9876', email:'recepcion@dentalcare.bo', dir:'C/ Beni #380, Equipetrol Norte', citasMes:112, citasTotal:1840, consultasTotal:2460, ingresoTotal:'Bs 89.6K', ingresoMes:'Bs 6.8K', storage:'8.4 GB / 50 GB', lastLogin:'Hace 45 min', whatsapp:'Vinculado', gcal:'Vinculado', telegram:'Vinculado', facturas:'28 emitidas (abril)', profesionales:4, sillones:3, domain:'dentalcare.sonrisas.bo', createdDaysAgo:690 },
+      rivera: { name:'Clínica Rivera', nit:'4567890123', city:'Cochabamba', plan:'Pro', mrr:'Bs 280', users:'4 / 5', patients:'412', maxPat:'1.500', status:'Activo', initials:'CR', alta:'10 julio 2024', vence:'10 octubre 2026', admin:'Dr. Roberto Rivera', adminEmail:'roberto@clinicarivera.bo', phone:'+591 4 425-1234', email:'info@clinicarivera.bo', dir:'Av. América #1200, Cochabamba', citasMes:98, citasTotal:2180, consultasTotal:3020, ingresoTotal:'Bs 72.8K', ingresoMes:'Bs 5.2K', storage:'6.2 GB / 20 GB', lastLogin:'Hace 2 h', whatsapp:'Vinculado', gcal:'No', telegram:'No', facturas:'22 emitidas (abril)', profesionales:3, sillones:2, domain:'rivera.sonrisas.bo', createdDaysAgo:639 },
+      sur: { name:'Sonrisas del Sur', nit:'5678901234', city:'Tarija', plan:'Pro', mrr:'Bs 280', users:'3 / 5', patients:'2.847', maxPat:'3.000', status:'Cerca límite', initials:'SD', alta:'5 agosto 2024', vence:'5 noviembre 2026', admin:'Dra. Lucía Tórrez', adminEmail:'lucia@sonrisasdelsur.bo', phone:'+591 4 664-5678', email:'contacto@sonrisasdelsur.bo', dir:'Av. La Madrid #890, Tarija', citasMes:74, citasTotal:1620, consultasTotal:2280, ingresoTotal:'Bs 54.2K', ingresoMes:'Bs 3.8K', storage:'18.4 GB / 20 GB', lastLogin:'Ayer 17:42', whatsapp:'No', gcal:'No', telegram:'No', facturas:'16 emitidas (abril)', profesionales:2, sillones:2, domain:'sur.sonrisas.bo', createdDaysAgo:613 },
+      elite: { name:'Odontoélite', nit:'6789012345', city:'Santa Cruz', plan:'Pro', mrr:'Bs 280', users:'3 / 5', patients:'156', maxPat:'1.500', status:'Activo', initials:'OD', alta:'15 septiembre 2024', vence:'15 diciembre 2026', admin:'Dr. Andrés Velasco', adminEmail:'andres@odontoelite.bo', phone:'+591 3 356-7890', email:'info@odontoelite.bo', dir:'C/ Junín #220, Centro', citasMes:62, citasTotal:890, consultasTotal:1120, ingresoTotal:'Bs 38.4K', ingresoMes:'Bs 3.2K', storage:'3.8 GB / 20 GB', lastLogin:'Hace 1 h', whatsapp:'Vinculado', gcal:'No', telegram:'No', facturas:'14 emitidas (abril)', profesionales:2, sillones:2, domain:'odontoelite.sonrisas.bo', createdDaysAgo:572 },
+      norte: { name:'Dental Norte', nit:'7890123456', city:'El Alto', plan:'Pro', mrr:'Bs 280', users:'2 / 5', patients:'142', maxPat:'1.500', status:'Activo', initials:'DN', alta:'1 octubre 2024', vence:'1 enero 2027', admin:'Dra. Sandra Quispe', adminEmail:'sandra@dentalnorte.bo', phone:'+591 2 284-1234', email:'info@dentalnorte.bo', dir:'Av. 6 de Marzo #4500, El Alto', citasMes:48, citasTotal:680, consultasTotal:920, ingresoTotal:'Bs 28.6K', ingresoMes:'Bs 2.4K', storage:'2.6 GB / 20 GB', lastLogin:'Hace 3 h', whatsapp:'Vinculado', gcal:'No', telegram:'No', facturas:'10 emitidas (abril)', profesionales:2, sillones:1, domain:'dentalnorte.sonrisas.bo', createdDaysAgo:556 },
+      express: { name:'Dental Express', nit:'8901234567', city:'La Paz', plan:'Pro', mrr:'Bs 280', users:'2 / 5', patients:'89', maxPat:'1.500', status:'Sin actividad', initials:'DE', alta:'12 noviembre 2024', vence:'12 febrero 2027', admin:'Dr. Miguel Fernández', adminEmail:'miguel@dentalexpress.bo', phone:'+591 2 220-5678', email:'admin@dentalexpress.bo', dir:'C/ Loayza #340, La Paz', citasMes:0, citasTotal:312, consultasTotal:480, ingresoTotal:'Bs 14.2K', ingresoMes:'Bs 0', storage:'1.2 GB / 20 GB', lastLogin:'14 días sin login', whatsapp:'No', gcal:'No', telegram:'No', facturas:'0 emitidas (abril)', profesionales:1, sillones:1, domain:'express.sonrisas.bo', createdDaysAgo:514 },
+      osur: { name:'Odonto Sur', nit:'9012345678', city:'Sucre', plan:'Pro Multi', mrr:'Bs 420', users:'6 / 10', patients:'267', maxPat:'3.000', status:'Pago fallido', initials:'OS', alta:'3 diciembre 2024', vence:'3 marzo 2027', admin:'Dr. Fernando Rojas', adminEmail:'fernando@odontosur.bo', phone:'+591 4 645-9012', email:'info@odontosur.bo', dir:'C/ España #180, Sucre', citasMes:92, citasTotal:1480, consultasTotal:2040, ingresoTotal:'Bs 62.8K', ingresoMes:'Bs 4.6K', storage:'11.6 GB / 50 GB', lastLogin:'Hace 6 h', whatsapp:'Vinculado', gcal:'Vinculado', telegram:'No', facturas:'20 emitidas (abril)', profesionales:4, sillones:3, domain:'odontosur.sonrisas.bo', createdDaysAgo:493 },
+      premium: { name:'Dental Premium', nit:'0123456789', city:'Santa Cruz', plan:'Pro', mrr:'Bs 280', users:'1 / 5', patients:'12', maxPat:'1.500', status:'Activo', initials:'DP', alta:'6 abril 2026', vence:'6 julio 2026', admin:'Dra. Valentina Cruz', adminEmail:'valentina@dentalpremium.bo', phone:'+591 3 378-1234', email:'info@dentalpremium.bo', dir:'Av. Monseñor Rivero #1800', citasMes:8, citasTotal:8, consultasTotal:6, ingresoTotal:'Bs 2.1K', ingresoMes:'Bs 2.1K', storage:'0.2 GB / 20 GB', lastLogin:'Hace 20 min', whatsapp:'No', gcal:'No', telegram:'No', facturas:'2 emitidas (abril)', profesionales:1, sillones:1, domain:'premium.sonrisas.bo', createdDaysAgo:5 },
+      familiar: { name:'Odonto Familiar', nit:'1122334455', city:'Potosí', plan:'Starter (Trial)', mrr:'Bs 0', users:'1 / 2', patients:'4', maxPat:'500', status:'Trial 10d', initials:'OF', alta:'8 abril 2026', vence:'22 abril 2026', admin:'Dr. Hugo Mamani', adminEmail:'hugo@odontofamiliar.bo', phone:'+591 4 622-3456', email:'info@odontofamiliar.bo', dir:'C/ Bolívar #420, Potosí', citasMes:2, citasTotal:2, consultasTotal:1, ingresoTotal:'Bs 0', ingresoMes:'Bs 0', storage:'0.02 GB / 5 GB', lastLogin:'Ayer', whatsapp:'No', gcal:'No', telegram:'No', facturas:'0 emitidas', profesionales:1, sillones:1, domain:'familiar.sonrisas.bo', createdDaysAgo:3 },
+      estetica: { name:'Clínica Estética Bucal', nit:'2233445566', city:'La Paz', plan:'Pro Multi', mrr:'Bs 420', users:'2 / 10', patients:'18', maxPat:'3.000', status:'Activo', initials:'CE', alta:'5 abril 2026', vence:'5 julio 2026', admin:'Dra. Carolina Paz', adminEmail:'carolina@esteticabucal.bo', phone:'+591 2 244-7890', email:'recepcion@esteticabucal.bo', dir:'Av. Arce #2560, Sopocachi', citasMes:14, citasTotal:14, consultasTotal:10, ingresoTotal:'Bs 4.8K', ingresoMes:'Bs 4.8K', storage:'0.4 GB / 50 GB', lastLogin:'Hace 1 h', whatsapp:'Vinculado', gcal:'No', telegram:'No', facturas:'4 emitidas (abril)', profesionales:2, sillones:2, domain:'esteticabucal.sonrisas.bo', createdDaysAgo:6 },
+    };
+
+    /* ═══ CLINIC DETAIL MODAL ═══ */
+    function openClinicDetail(id) {
+      const c = CLINICS[id];
+      if (!c) return;
+      const planBadge = c.plan.includes('Multi') ? 'badge-dark' : c.plan.includes('Pro') ? 'badge-info' : 'badge-neutral';
+      const statusBadge = c.status==='Activo'?'badge-success': c.status.includes('Trial')?'badge-info': c.status==='Pago fallido'?'badge-error': c.status==='Sin actividad'?'badge-error':'badge-warning';
+      const patPct = Math.round((parseInt(c.patients.replace(/\./g,'')) / parseInt(c.maxPat.replace(/\./g,''))) * 100);
+      const intCheck = (v) => v === 'Vinculado' ? '<span style="color:var(--success);font-weight:600">Vinculado</span>' : '<span style="color:var(--text-tertiary)">No configurado</span>';
+
+      openGenericModal({
+        title: c.name,
+        subtitle: `${c.city} · NIT ${c.nit} · ${c.domain}`,
+        size: 'lg',
+        submitLabel: 'Cerrar',
+        body: `
+          <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px">
+            <span class="badge ${planBadge}">${c.plan}</span>
+            <span class="badge ${statusBadge}">${c.status}</span>
+            <span class="badge badge-neutral">Desde ${c.alta}</span>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:18px">
+            <div style="padding:12px;background:var(--bg-alt);border-radius:var(--r-md);text-align:center">
+              <div style="font-size:22px;font-weight:800;letter-spacing:-0.02em">${c.patients}</div>
+              <div style="font-size:10.5px;color:var(--text-tertiary);font-weight:600;text-transform:uppercase">Pacientes</div>
+            </div>
+            <div style="padding:12px;background:var(--bg-alt);border-radius:var(--r-md);text-align:center">
+              <div style="font-size:22px;font-weight:800;letter-spacing:-0.02em">${c.citasMes}</div>
+              <div style="font-size:10.5px;color:var(--text-tertiary);font-weight:600;text-transform:uppercase">Citas / mes</div>
+            </div>
+            <div style="padding:12px;background:var(--bg-alt);border-radius:var(--r-md);text-align:center">
+              <div style="font-size:22px;font-weight:800;letter-spacing:-0.02em">${c.consultasTotal.toLocaleString()}</div>
+              <div style="font-size:10.5px;color:var(--text-tertiary);font-weight:600;text-transform:uppercase">Consultas total</div>
+            </div>
+            <div style="padding:12px;background:var(--bg-alt);border-radius:var(--r-md);text-align:center">
+              <div style="font-size:22px;font-weight:800;letter-spacing:-0.02em">${c.ingresoTotal}</div>
+              <div style="font-size:10.5px;color:var(--text-tertiary);font-weight:600;text-transform:uppercase">Ingreso total</div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+            <div>
+              <div style="font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-tertiary);margin-bottom:10px">Suscripción</div>
+              <div style="display:flex;flex-direction:column;gap:8px;font-size:12.5px">
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">Plan</span><strong>${c.plan} · ${c.mrr}/mes</strong></div>
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">Fecha de alta</span><strong>${c.alta}</strong></div>
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">Vencimiento</span><strong>${c.vence}</strong></div>
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">Días como cliente</span><strong>${c.createdDaysAgo} días</strong></div>
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">Facturas (mes)</span><strong>${c.facturas}</strong></div>
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">Ingreso este mes</span><strong>${c.ingresoMes}</strong></div>
+              </div>
+            </div>
+            <div>
+              <div style="font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-tertiary);margin-bottom:10px">Operación</div>
+              <div style="display:flex;flex-direction:column;gap:8px;font-size:12.5px">
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">Usuarios</span><strong>${c.users}</strong></div>
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">Profesionales</span><strong>${c.profesionales}</strong></div>
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">Sillones</span><strong>${c.sillones}</strong></div>
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">Citas totales</span><strong>${c.citasTotal.toLocaleString()}</strong></div>
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">Último acceso</span><strong>${c.lastLogin}</strong></div>
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">Almacenamiento</span><strong>${c.storage}</strong></div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-bottom:16px">
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;margin-bottom:6px">
+              <span style="color:var(--text-secondary)">Pacientes: ${c.patients} / ${c.maxPat}</span>
+              <strong>${patPct}%</strong>
+            </div>
+            <div class="progress-track" style="height:6px"><div class="progress-fill" style="width:${patPct}%;${patPct>90?'background:var(--error)':patPct>70?'background:var(--warning)':''}"></div></div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+            <div>
+              <div style="font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-tertiary);margin-bottom:10px">Contacto</div>
+              <div style="display:flex;flex-direction:column;gap:8px;font-size:12.5px">
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">Admin</span><strong>${c.admin}</strong></div>
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">Email admin</span><strong>${c.adminEmail}</strong></div>
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">Teléfono</span><strong>${c.phone}</strong></div>
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">Dirección</span><strong style="text-align:right;max-width:220px">${c.dir}</strong></div>
+              </div>
+            </div>
+            <div>
+              <div style="font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-tertiary);margin-bottom:10px">Integraciones</div>
+              <div style="display:flex;flex-direction:column;gap:8px;font-size:12.5px">
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">WhatsApp</span>${intCheck(c.whatsapp)}</div>
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">Google Calendar</span>${intCheck(c.gcal)}</div>
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">Telegram</span>${intCheck(c.telegram)}</div>
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">Dominio</span><strong style="font-family:monospace;font-size:11px">${c.domain}</strong></div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap;padding-top:14px;border-top:1px solid var(--border)">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="showToast('Impersonando ${c.name}','info')"><i data-lucide="user-check"></i> Impersonar</button>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="showToast('Email enviado a ${c.admin}','success')"><i data-lucide="mail"></i> Contactar admin</button>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="showToast('Facturación abierta','info')"><i data-lucide="file-text"></i> Ver facturas</button>
+            ${c.status==='Sin actividad'?'<button type="button" class="btn btn-secondary btn-sm" style="color:var(--warning)" onclick="showToast(\'Alerta de churn enviada\',\'info\')"><i data-lucide="alert-triangle"></i> Alerta churn</button>':''}
+            ${c.status==='Pago fallido'?'<button type="button" class="btn btn-secondary btn-sm" style="color:var(--error)" onclick="showToast(\'Reintento de cobro lanzado\',\'success\')"><i data-lucide="refresh-cw"></i> Reintentar cobro</button>':''}
+          </div>
+        `,
+        onSubmit: () => {},
+      });
+    }
+
+    /* ═══ FILTERING ═══ */
+    document.querySelectorAll('.filter-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        chip.parentElement.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        const t = chip.textContent.trim();
+        document.querySelectorAll('table.data tbody tr').forEach(row => {
+          const text = row.textContent;
+          let show = true;
+          if (t === 'Activos') show = text.includes('Activo');
+          else if (t === 'Trial') show = text.includes('Trial');
+          else if (t === 'Pro Multi') show = text.includes('Pro Multi');
+          else if (t === 'Pro') show = text.includes('Pro') && !text.includes('Pro Multi');
+          else if (t === 'Starter') show = text.includes('Starter');
+          else if (t === 'Suspendidos') show = text.includes('Sin actividad') || text.includes('Pago fallido');
+          row.style.display = show ? '' : 'none';
+        });
+      });
+    });
+
+    document.querySelector('.search-inline input').addEventListener('input', function() {
+      const q = this.value.trim().toLowerCase();
+      document.querySelectorAll('table.data tbody tr').forEach(row => {
+        row.style.display = (!q || row.textContent.toLowerCase().includes(q)) ? '' : 'none';
+      });
+    });
 
     function openNewTenantModal() {
       openGenericModal({
