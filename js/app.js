@@ -14,8 +14,8 @@ const NAV_BY_ROLE = {
   superadmin: [
     { section: 'Plataforma SaaS', items: [
       { id: 'superadmin-dashboard', label: 'Overview',   icon: 'globe',       href: 'superadmin-dashboard.html' },
-      { id: 'superadmin-tenants',   label: 'Clínicas',   icon: 'building-2',  href: 'superadmin-tenants.html', badge: '47' },
-      { id: 'superadmin-billing',   label: 'Facturación', icon: 'credit-card', href: 'superadmin-tenants.html' },
+      { id: 'superadmin-tenants',   label: 'Clínicas',   icon: 'building-2',  href: 'superadmin-tenants.html' },
+      { id: 'superadmin-billing',   label: 'Facturación', icon: 'credit-card', href: 'superadmin-billing.html' },
     ]},
     { section: 'Mi clínica (impersonando Sonrisas)', items: [
       { id: 'dashboard',   label: 'Dashboard',   icon: 'layout-dashboard', href: 'dashboard.html' },
