@@ -7,6 +7,46 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../styles/main.css">
+  <style>
+    .factura-preview {
+      background: #FFF;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--r-md);
+      padding: 28px;
+      font-size: 12px;
+      color: #111;
+      max-height: 520px;
+      overflow-y: auto;
+    }
+    .factura-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 2px solid #111;
+      padding-bottom: 14px;
+      margin-bottom: 14px;
+    }
+    .factura-header-left { max-width: 55%; }
+    .factura-header-right { text-align: right; }
+    .factura-title { font-size: 16px; font-weight: 800; margin-bottom: 2px; }
+    .factura-subtitle { font-size: 10px; color: #666; }
+    .factura-nit { font-size: 13px; font-weight: 700; }
+    .factura-auth { font-size: 9px; color: #666; margin-top: 6px; font-family: monospace; word-break: break-all; }
+    .factura-table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    .factura-table th { background: #F5F5F5; text-align: left; padding: 6px 10px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; border: 1px solid #DDD; }
+    .factura-table td { padding: 6px 10px; border: 1px solid #DDD; font-size: 11px; }
+    .factura-table .right { text-align: right; }
+    .factura-totals { display: flex; justify-content: flex-end; }
+    .factura-totals table { border-collapse: collapse; }
+    .factura-totals td { padding: 4px 12px; font-size: 11px; }
+    .factura-totals .total-row { font-weight: 800; font-size: 13px; border-top: 2px solid #111; }
+    .factura-leyenda { margin-top: 14px; padding: 10px; background: #FAFAFA; border: 1px dashed #CCC; border-radius: 6px; font-size: 9.5px; color: #666; text-align: center; font-style: italic; }
+    .factura-qr { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 14px; }
+    .factura-literal { font-size: 10px; color: #444; font-style: italic; }
+    .sin-status { display: flex; align-items: center; gap: 10px; padding: 14px; border-radius: var(--r-md); }
+    .sin-status.connected { background: var(--success-light); border: 1px solid rgba(34,197,94,0.2); }
+    .sin-status.disconnected { background: var(--error-light); border: 1px solid rgba(239,68,68,0.2); }
+  </style>
 </head>
 <body>
   <div class="app-shell">
@@ -17,54 +57,97 @@
 
         <div class="page-head">
           <div>
-            <h1>Facturación de la plataforma</h1>
-            <p>Ingresos recurrentes, cobros y facturas de todos los tenants · Abril 2026</p>
+            <h1>Facturación</h1>
+            <p>Facturación electrónica SIN Bolivia · Impuestos Nacionales · Abril 2026</p>
           </div>
           <div class="page-head-actions">
             <select class="form-select" style="width:200px">
               <option>Abril 2026</option><option>Marzo 2026</option><option>Febrero 2026</option><option>Enero 2026</option>
             </select>
-            <button class="btn btn-secondary" onclick="showToast('Exportando reporte','info')"><i data-lucide="download"></i> Exportar</button>
+            <button class="btn btn-secondary" onclick="showToast('Libro de ventas exportado','success')"><i data-lucide="download"></i> Libro de ventas</button>
+            <button class="btn btn-primary" onclick="openGenerarFacturaModal()"><i data-lucide="file-plus"></i> Generar factura</button>
           </div>
         </div>
 
-        <!-- KPIs -->
+        <!-- SIN Integration Status -->
+        <div class="bento" style="margin-bottom:18px">
+          <div class="col-12">
+            <div class="card-solid" style="padding:16px">
+              <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px">
+                <div style="display:flex;align-items:center;gap:14px">
+                  <div style="width:46px;height:46px;border-radius:12px;background:#1E3A5F;display:flex;align-items:center;justify-content:center">
+                    <span style="color:#FFF;font-weight:800;font-size:12px">SIN</span>
+                  </div>
+                  <div>
+                    <div style="font-weight:700;font-size:14px">Servicio de Impuestos Nacionales — Facturación en Línea</div>
+                    <div style="font-size:12px;color:var(--text-secondary)">Modalidad: <strong>Facturación Computarizada en Línea</strong> · SIAT conectado</div>
+                  </div>
+                </div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap">
+                  <div class="sin-status connected">
+                    <div style="width:8px;height:8px;border-radius:50%;background:var(--success)"></div>
+                    <div>
+                      <div style="font-weight:600;font-size:11px">CUIS activo</div>
+                      <div style="font-size:9.5px;color:var(--text-tertiary)">Código: BX4F...8K2M</div>
+                    </div>
+                  </div>
+                  <div class="sin-status connected">
+                    <div style="width:8px;height:8px;border-radius:50%;background:var(--success)"></div>
+                    <div>
+                      <div style="font-weight:600;font-size:11px">CUFD válido</div>
+                      <div style="font-size:9.5px;color:var(--text-tertiary)">Renovado hoy 00:01</div>
+                    </div>
+                  </div>
+                  <div class="sin-status connected">
+                    <div style="width:8px;height:8px;border-radius:50%;background:var(--success)"></div>
+                    <div>
+                      <div style="font-weight:600;font-size:11px">Dosificación vigente</div>
+                      <div style="font-size:9.5px;color:var(--text-tertiary)">1001–2000 · Vence jul 2026</div>
+                    </div>
+                  </div>
+                </div>
+                <button class="btn btn-secondary btn-sm" onclick="showToast('Sincronizando con SIAT...','info')"><i data-lucide="refresh-cw"></i> Sincronizar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPIs fiscales -->
         <div class="bento" style="margin-bottom:20px">
           <div class="stat-card col-3">
-            <div class="stat-label">MRR total<div class="stat-icon"><i data-lucide="trending-up"></i></div></div>
+            <div class="stat-label">Facturado (mes)<div class="stat-icon"><i data-lucide="file-text"></i></div></div>
             <div class="stat-value">Bs 23.4K</div>
-            <div class="stat-delta up"><i data-lucide="trending-up"></i> +14.2% <span class="stat-delta-note">vs marzo</span></div>
+            <div class="stat-delta up"><i data-lucide="trending-up"></i> +14.2%</div>
           </div>
           <div class="stat-card col-3">
-            <div class="stat-label">ARR proyectado<div class="stat-icon"><i data-lucide="calculator"></i></div></div>
-            <div class="stat-value">Bs 280K</div>
-            <div class="stat-delta up"><i data-lucide="trending-up"></i> +38% <span class="stat-delta-note">YoY</span></div>
+            <div class="stat-label">IVA 13% (débito)<div class="stat-icon" style="background:#1E3A5F"><i data-lucide="percent"></i></div></div>
+            <div class="stat-value">Bs 3.04K</div>
+            <div class="stat-delta-note">Sobre Bs 23.4K facturado</div>
           </div>
           <div class="stat-card col-3">
-            <div class="stat-label">Cobrado este mes<div class="stat-icon" style="background:var(--success)"><i data-lucide="circle-check"></i></div></div>
-            <div class="stat-value">Bs 21.8K</div>
-            <div class="stat-delta-note">93% de Bs 23.4K facturado</div>
+            <div class="stat-label">IT 3%<div class="stat-icon" style="background:#1E3A5F"><i data-lucide="landmark"></i></div></div>
+            <div class="stat-value">Bs 702</div>
+            <div class="stat-delta-note">Impuesto a las Transacciones</div>
           </div>
           <div class="stat-card col-3">
-            <div class="stat-label">Pendiente de cobro<div class="stat-icon" style="background:var(--warning)"><i data-lucide="alert-circle"></i></div></div>
-            <div class="stat-value" style="color:var(--warning)">Bs 1.6K</div>
-            <div class="stat-delta-note">3 tenants con pago fallido</div>
+            <div class="stat-label">Facturas emitidas<div class="stat-icon" style="background:var(--success)"><i data-lucide="check-circle"></i></div></div>
+            <div class="stat-value">38</div>
+            <div class="stat-delta-note">34 válidas · 3 anuladas · 1 pendiente</div>
           </div>
         </div>
 
-        <!-- Revenue chart + breakdown -->
+        <!-- Revenue chart + fiscal summary -->
         <div class="bento" style="margin-bottom:20px">
           <div class="card col-8">
             <div class="card-head">
               <div>
-                <div class="card-title">Evolución de MRR</div>
-                <div class="card-subtitle">Últimos 12 meses</div>
+                <div class="card-title">Ingresos facturados por mes</div>
+                <div class="card-subtitle">Libro de ventas IVA — últimos 12 meses</div>
               </div>
               <div style="display:flex;gap:8px">
-                <span class="filter-chip active">MRR</span>
-                <span class="filter-chip">Cobrado</span>
-                <span class="filter-chip">Nuevos</span>
-                <span class="filter-chip">Churn</span>
+                <span class="filter-chip active">Facturado</span>
+                <span class="filter-chip">IVA</span>
+                <span class="filter-chip">IT</span>
               </div>
             </div>
             <div class="bar-chart" style="height:220px">
@@ -85,291 +168,213 @@
 
           <div class="col-4" style="display:flex;flex-direction:column;gap:16px">
             <div class="card">
-              <div class="card-head"><div class="card-title">MRR por plan</div></div>
-              <div class="donut">
-                <svg viewBox="0 0 42 42">
-                  <circle cx="21" cy="21" r="15.915" fill="none" stroke="#E4E4E4" stroke-width="6"/>
-                  <circle cx="21" cy="21" r="15.915" fill="none" stroke="#18181B" stroke-width="6" stroke-dasharray="48 100"/>
-                  <circle cx="21" cy="21" r="15.915" fill="none" stroke="#6B6B6B" stroke-width="6" stroke-dasharray="32 100" stroke-dashoffset="-48"/>
-                  <circle cx="21" cy="21" r="15.915" fill="none" stroke="#A3A3A3" stroke-width="6" stroke-dasharray="20 100" stroke-dashoffset="-80"/>
-                </svg>
-                <div class="donut-center">
-                  <div class="donut-value">Bs 23.4K</div>
-                  <div class="donut-label">MRR</div>
-                </div>
-              </div>
-              <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px;font-size:12px">
-                <div style="display:flex;align-items:center;justify-content:space-between">
-                  <span style="display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:3px;background:#18181B"></span>Pro Multi (23)</span>
-                  <strong>Bs 9.66K · 41%</strong>
-                </div>
-                <div style="display:flex;align-items:center;justify-content:space-between">
-                  <span style="display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:3px;background:#6B6B6B"></span>Pro (15)</span>
-                  <strong>Bs 4.20K · 18%</strong>
-                </div>
-                <div style="display:flex;align-items:center;justify-content:space-between">
-                  <span style="display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:3px;background:#A3A3A3"></span>Starter (9)</span>
-                  <strong>Bs 1.35K · 6%</strong>
-                </div>
+              <div class="card-head"><div class="card-title">Resumen fiscal — Abril</div></div>
+              <div style="display:flex;flex-direction:column;gap:10px;font-size:13px">
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">Ingresos brutos</span><strong>Bs 23.400</strong></div>
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">IVA Débito Fiscal (13%)</span><strong>Bs 3.042</strong></div>
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">IVA Crédito Fiscal</span><strong style="color:var(--success)">-Bs 1.280</strong></div>
+                <div style="display:flex;justify-content:space-between;padding-top:8px;border-top:1px solid var(--border)"><span style="font-weight:700">IVA a pagar</span><strong style="font-size:15px">Bs 1.762</strong></div>
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">IT (3%)</span><strong>Bs 702</strong></div>
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">IT compensado con IUE</span><strong style="color:var(--success)">-Bs 702</strong></div>
+                <div style="display:flex;justify-content:space-between;padding-top:8px;border-top:1px solid var(--border)"><span style="font-weight:700">IT a pagar</span><strong style="font-size:15px">Bs 0</strong></div>
               </div>
             </div>
 
             <div class="card">
-              <div class="card-head"><div class="card-title">Métricas clave</div></div>
-              <div style="display:flex;flex-direction:column;gap:12px">
-                <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--text-secondary)">ARPU</span><strong>Bs 498</strong></div>
-                <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--text-secondary)">LTV estimado</span><strong>Bs 20.7K</strong></div>
-                <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--text-secondary)">Churn mensual</span><strong style="color:var(--success)">2.4%</strong></div>
-                <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--text-secondary)">Net Revenue Retention</span><strong style="color:var(--success)">112%</strong></div>
-                <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--text-secondary)">Expansión (upgrades)</span><strong>+Bs 1.4K</strong></div>
+              <div class="card-head"><div class="card-title">Dosificación</div></div>
+              <div style="display:flex;flex-direction:column;gap:8px;font-size:12.5px">
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">Rango autorizado</span><strong>1001 – 2000</strong></div>
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">Última factura emitida</span><strong>#1038</strong></div>
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">Disponibles</span><strong>962</strong></div>
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">Fecha límite</span><strong>15 jul 2026</strong></div>
+                <div class="progress-track" style="height:6px;margin-top:4px"><div class="progress-fill" style="width:4%"></div></div>
+                <div style="font-size:10.5px;color:var(--text-tertiary)">3.8% usado del rango</div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Facturas del mes -->
-        <div class="bento" style="margin-bottom:20px">
-          <div class="col-12">
-            <div class="table-wrap">
-              <div class="table-toolbar">
-                <div class="table-toolbar-left">
-                  <div class="search-inline"><i data-lucide="search"></i><input placeholder="Buscar clínica, factura, NIT..." id="billing-search"></div>
-                  <div class="filter-chip active">Todos</div>
-                  <div class="filter-chip">Cobrados</div>
-                  <div class="filter-chip">Pendientes</div>
-                  <div class="filter-chip">Fallidos</div>
-                  <div class="filter-chip">Gratis / Trial</div>
-                </div>
-                <button class="btn btn-secondary btn-sm" onclick="showToast('Facturación masiva enviada','success')"><i data-lucide="send"></i> Enviar facturas</button>
-              </div>
+        <!-- Tabla de facturas -->
+        <div class="table-wrap" style="margin-bottom:20px">
+          <div class="table-toolbar">
+            <div class="table-toolbar-left">
+              <div class="search-inline"><i data-lucide="search"></i><input placeholder="Buscar por NIT, razón social, N° factura..." id="billing-search"></div>
+              <div class="filter-chip active">Todas</div>
+              <div class="filter-chip">Válidas</div>
+              <div class="filter-chip">Anuladas</div>
+              <div class="filter-chip">Pendientes</div>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="showToast('Libro de ventas IVA generado','success')"><i data-lucide="file-spreadsheet"></i> Libro de ventas</button>
+          </div>
 
-              <table class="data">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Clínica</th>
-                    <th>Plan</th>
-                    <th style="text-align:right">Monto</th>
-                    <th>Método</th>
-                    <th>Fecha cobro</th>
-                    <th>Estado</th>
-                    <th style="text-align:right">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody id="billing-tbody">
-                  <tr data-status="cobrado">
-                    <td style="font-variant-numeric:tabular-nums;font-weight:600">#F-2604-001</td>
-                    <td><div class="cell-user"><div class="avatar">SO</div><div><div class="cell-user-name">Clínica Dental Sonrisas</div><div class="cell-user-sub">NIT 1234567890</div></div></div></td>
-                    <td><span class="badge badge-dark">Pro Multi</span></td>
-                    <td style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">Bs 420</td>
-                    <td>Visa ••4821</td>
-                    <td>8 abr 2026</td>
-                    <td><span class="badge badge-success">Cobrado</span></td>
-                    <td><div class="cell-actions"><button onclick="showToast('Factura descargada','success')"><i data-lucide="download"></i></button><button onclick="showToast('Email reenviado','success')"><i data-lucide="send"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
-                  </tr>
-                  <tr data-status="cobrado">
-                    <td style="font-variant-numeric:tabular-nums;font-weight:600">#F-2604-002</td>
-                    <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#DBEAFE,#93C5FD)">OM</div><div><div class="cell-user-name">Odonto Miraflores</div><div class="cell-user-sub">NIT 2345678901</div></div></div></td>
-                    <td><span class="badge badge-dark">Pro Multi</span></td>
-                    <td style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">Bs 420</td>
-                    <td>QR Banco Unión</td>
-                    <td>8 abr 2026</td>
-                    <td><span class="badge badge-success">Cobrado</span></td>
-                    <td><div class="cell-actions"><button onclick="showToast('Factura descargada','success')"><i data-lucide="download"></i></button><button onclick="showToast('Email reenviado','success')"><i data-lucide="send"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
-                  </tr>
-                  <tr data-status="cobrado">
-                    <td style="font-variant-numeric:tabular-nums;font-weight:600">#F-2604-003</td>
-                    <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#DCFCE7,#86EFAC)">DC</div><div><div class="cell-user-name">Dental Care Equipetrol</div><div class="cell-user-sub">NIT 3456789012</div></div></div></td>
-                    <td><span class="badge badge-dark">Pro Multi</span></td>
-                    <td style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">Bs 420</td>
-                    <td>Transferencia</td>
-                    <td>8 abr 2026</td>
-                    <td><span class="badge badge-success">Cobrado</span></td>
-                    <td><div class="cell-actions"><button onclick="showToast('Factura descargada','success')"><i data-lucide="download"></i></button><button onclick="showToast('Email reenviado','success')"><i data-lucide="send"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
-                  </tr>
-                  <tr data-status="cobrado">
-                    <td style="font-variant-numeric:tabular-nums;font-weight:600">#F-2604-004</td>
-                    <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#FEF3C7,#FCD34D)">CR</div><div><div class="cell-user-name">Clínica Rivera</div><div class="cell-user-sub">NIT 4567890123</div></div></div></td>
-                    <td><span class="badge badge-info">Pro</span></td>
-                    <td style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">Bs 280</td>
-                    <td>Visa ••1234</td>
-                    <td>8 abr 2026</td>
-                    <td><span class="badge badge-success">Cobrado</span></td>
-                    <td><div class="cell-actions"><button onclick="showToast('Factura descargada','success')"><i data-lucide="download"></i></button><button onclick="showToast('Email reenviado','success')"><i data-lucide="send"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
-                  </tr>
-                  <tr data-status="cobrado">
-                    <td style="font-variant-numeric:tabular-nums;font-weight:600">#F-2604-005</td>
-                    <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#EDE9FE,#C4B5FD)">SD</div><div><div class="cell-user-name">Sonrisas del Sur</div><div class="cell-user-sub">NIT 5678901234</div></div></div></td>
-                    <td><span class="badge badge-info">Pro</span></td>
-                    <td style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">Bs 280</td>
-                    <td>QR Banco Unión</td>
-                    <td>9 abr 2026</td>
-                    <td><span class="badge badge-success">Cobrado</span></td>
-                    <td><div class="cell-actions"><button onclick="showToast('Factura descargada','success')"><i data-lucide="download"></i></button><button onclick="showToast('Email reenviado','success')"><i data-lucide="send"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
-                  </tr>
-                  <tr data-status="pendiente">
-                    <td style="font-variant-numeric:tabular-nums;font-weight:600">#F-2604-006</td>
-                    <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#FCE7F3,#F9A8D4)">OD</div><div><div class="cell-user-name">Odontoélite</div><div class="cell-user-sub">NIT 6789012345</div></div></div></td>
-                    <td><span class="badge badge-info">Pro</span></td>
-                    <td style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">Bs 280</td>
-                    <td>—</td>
-                    <td>Vence 15 abr</td>
-                    <td><span class="badge badge-warning">Pendiente</span></td>
-                    <td><div class="cell-actions"><button onclick="showToast('Recordatorio enviado','success')"><i data-lucide="bell"></i></button><button onclick="showToast('Link de pago copiado','success')"><i data-lucide="link"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
-                  </tr>
-                  <tr data-status="fallido">
-                    <td style="font-variant-numeric:tabular-nums;font-weight:600">#F-2604-007</td>
-                    <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#FEF3C7,#FCD34D)">OS</div><div><div class="cell-user-name">Odonto Sur</div><div class="cell-user-sub">NIT 9012345678</div></div></div></td>
-                    <td><span class="badge badge-dark">Pro Multi</span></td>
-                    <td style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">Bs 420</td>
-                    <td><span style="color:var(--error)">Visa ••7890 (declinada)</span></td>
-                    <td>8 abr (reintento 12 abr)</td>
-                    <td><span class="badge badge-error">Fallido</span></td>
-                    <td><div class="cell-actions"><button onclick="showToast('Reintento de cobro lanzado','success')"><i data-lucide="refresh-cw"></i></button><button onclick="showToast('Email enviado para actualizar método','success')"><i data-lucide="credit-card"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
-                  </tr>
-                  <tr data-status="fallido">
-                    <td style="font-variant-numeric:tabular-nums;font-weight:600">#F-2604-008</td>
-                    <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#FEE2E2,#FCA5A5)">DE</div><div><div class="cell-user-name">Dental Express</div><div class="cell-user-sub">NIT 8901234567</div></div></div></td>
-                    <td><span class="badge badge-info">Pro</span></td>
-                    <td style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">Bs 280</td>
-                    <td><span style="color:var(--error)">Sin método</span></td>
-                    <td>—</td>
-                    <td><span class="badge badge-error">Fallido</span></td>
-                    <td><div class="cell-actions"><button onclick="showToast('Cobro manual registrado','success')"><i data-lucide="wallet"></i></button><button onclick="showToast('Email enviado','success')"><i data-lucide="mail"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
-                  </tr>
-                  <tr data-status="trial">
-                    <td style="font-variant-numeric:tabular-nums;font-weight:600">—</td>
-                    <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#DCFCE7,#86EFAC)">OF</div><div><div class="cell-user-name">Odonto Familiar</div><div class="cell-user-sub">NIT 1122334455</div></div></div></td>
-                    <td><span class="badge badge-neutral">Starter (Trial)</span></td>
-                    <td style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums;color:var(--text-tertiary)">Bs 0</td>
-                    <td>—</td>
-                    <td>Trial hasta 20 abr</td>
-                    <td><span class="badge badge-info">Trial 10d</span></td>
-                    <td><div class="cell-actions"><button onclick="showToast('Email de conversión enviado','success')"><i data-lucide="sparkles"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
-                  </tr>
-                  <tr data-status="cobrado">
-                    <td style="font-variant-numeric:tabular-nums;font-weight:600">#F-2604-009</td>
-                    <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#CFFAFE,#67E8F9)">DN</div><div><div class="cell-user-name">Dental Norte</div><div class="cell-user-sub">NIT 7890123456</div></div></div></td>
-                    <td><span class="badge badge-info">Pro</span></td>
-                    <td style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">Bs 280</td>
-                    <td>Transferencia</td>
-                    <td>8 abr 2026</td>
-                    <td><span class="badge badge-success">Cobrado</span></td>
-                    <td><div class="cell-actions"><button onclick="showToast('Factura descargada','success')"><i data-lucide="download"></i></button><button onclick="showToast('Email reenviado','success')"><i data-lucide="send"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
-                  </tr>
-                  <tr data-status="cobrado">
-                    <td style="font-variant-numeric:tabular-nums;font-weight:600">#F-2604-010</td>
-                    <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#EDE9FE,#C4B5FD)">CE</div><div><div class="cell-user-name">Clínica Estética Bucal</div><div class="cell-user-sub">NIT 2233445566</div></div></div></td>
-                    <td><span class="badge badge-dark">Pro Multi</span></td>
-                    <td style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">Bs 420</td>
-                    <td>Visa ••5678</td>
-                    <td>8 abr 2026</td>
-                    <td><span class="badge badge-success">Cobrado</span></td>
-                    <td><div class="cell-actions"><button onclick="showToast('Factura descargada','success')"><i data-lucide="download"></i></button><button onclick="showToast('Email reenviado','success')"><i data-lucide="send"></i></button><button><i data-lucide="more-horizontal"></i></button></div></td>
-                  </tr>
-                </tbody>
-              </table>
+          <table class="data">
+            <thead>
+              <tr>
+                <th>N° Factura</th>
+                <th>CUF</th>
+                <th>Cliente / NIT</th>
+                <th>Concepto</th>
+                <th style="text-align:right">Importe</th>
+                <th style="text-align:right">IVA 13%</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th style="text-align:right">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="billing-tbody">
+              <tr data-status="valida">
+                <td style="font-weight:700;font-variant-numeric:tabular-nums">1038</td>
+                <td style="font-family:monospace;font-size:9.5px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="4F8A2C6E9B1D3F7A5C8E2B4D6F8A1C3E">4F8A2C...1C3E</td>
+                <td><div class="cell-user"><div class="avatar">SO</div><div><div class="cell-user-name">Clínica Dental Sonrisas</div><div class="cell-user-sub">NIT 1234567890</div></div></div></td>
+                <td>Suscripción Pro Multi — Abril 2026</td>
+                <td style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">Bs 420,00</td>
+                <td style="text-align:right;font-variant-numeric:tabular-nums">Bs 54,60</td>
+                <td>8 abr 2026</td>
+                <td><span class="badge badge-success">Válida</span></td>
+                <td><div class="cell-actions"><button onclick="openVerFacturaModal(1038)" title="Ver factura"><i data-lucide="eye"></i></button><button onclick="showToast('PDF descargado','success')" title="Descargar PDF"><i data-lucide="download"></i></button><button onclick="showToast('Email reenviado','success')" title="Reenviar"><i data-lucide="send"></i></button></div></td>
+              </tr>
+              <tr data-status="valida">
+                <td style="font-weight:700;font-variant-numeric:tabular-nums">1037</td>
+                <td style="font-family:monospace;font-size:9.5px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">7B3D5F...9A2E</td>
+                <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#DBEAFE,#93C5FD)">OM</div><div><div class="cell-user-name">Odonto Miraflores</div><div class="cell-user-sub">NIT 2345678901</div></div></div></td>
+                <td>Suscripción Pro Multi — Abril 2026</td>
+                <td style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">Bs 420,00</td>
+                <td style="text-align:right;font-variant-numeric:tabular-nums">Bs 54,60</td>
+                <td>8 abr 2026</td>
+                <td><span class="badge badge-success">Válida</span></td>
+                <td><div class="cell-actions"><button onclick="openVerFacturaModal(1037)"><i data-lucide="eye"></i></button><button onclick="showToast('PDF descargado','success')"><i data-lucide="download"></i></button><button onclick="showToast('Email reenviado','success')"><i data-lucide="send"></i></button></div></td>
+              </tr>
+              <tr data-status="valida">
+                <td style="font-weight:700;font-variant-numeric:tabular-nums">1036</td>
+                <td style="font-family:monospace;font-size:9.5px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">2E6A8C...4F7B</td>
+                <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#DCFCE7,#86EFAC)">DC</div><div><div class="cell-user-name">Dental Care Equipetrol</div><div class="cell-user-sub">NIT 3456789012</div></div></div></td>
+                <td>Suscripción Pro Multi — Abril 2026</td>
+                <td style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">Bs 420,00</td>
+                <td style="text-align:right;font-variant-numeric:tabular-nums">Bs 54,60</td>
+                <td>8 abr 2026</td>
+                <td><span class="badge badge-success">Válida</span></td>
+                <td><div class="cell-actions"><button onclick="openVerFacturaModal(1036)"><i data-lucide="eye"></i></button><button onclick="showToast('PDF descargado','success')"><i data-lucide="download"></i></button><button onclick="showToast('Email reenviado','success')"><i data-lucide="send"></i></button></div></td>
+              </tr>
+              <tr data-status="valida">
+                <td style="font-weight:700;font-variant-numeric:tabular-nums">1035</td>
+                <td style="font-family:monospace;font-size:9.5px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">9C1E3A...6D8F</td>
+                <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#FEF3C7,#FCD34D)">CR</div><div><div class="cell-user-name">Clínica Rivera</div><div class="cell-user-sub">NIT 4567890123</div></div></div></td>
+                <td>Suscripción Pro — Abril 2026</td>
+                <td style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">Bs 280,00</td>
+                <td style="text-align:right;font-variant-numeric:tabular-nums">Bs 36,40</td>
+                <td>8 abr 2026</td>
+                <td><span class="badge badge-success">Válida</span></td>
+                <td><div class="cell-actions"><button onclick="openVerFacturaModal(1035)"><i data-lucide="eye"></i></button><button onclick="showToast('PDF descargado','success')"><i data-lucide="download"></i></button><button onclick="showToast('Email reenviado','success')"><i data-lucide="send"></i></button></div></td>
+              </tr>
+              <tr data-status="anulada">
+                <td style="font-weight:700;font-variant-numeric:tabular-nums;text-decoration:line-through;color:var(--text-tertiary)">1034</td>
+                <td style="font-family:monospace;font-size:9.5px;color:var(--text-tertiary)">5A7C9E...2B4D</td>
+                <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#FEE2E2,#FCA5A5)">DE</div><div><div class="cell-user-name" style="text-decoration:line-through;color:var(--text-tertiary)">Dental Express</div><div class="cell-user-sub">NIT 8901234567</div></div></div></td>
+                <td style="color:var(--text-tertiary)">Suscripción Pro — Abril 2026 (dato incorrecto)</td>
+                <td style="text-align:right;font-variant-numeric:tabular-nums;color:var(--text-tertiary)">Bs 280,00</td>
+                <td style="text-align:right;font-variant-numeric:tabular-nums;color:var(--text-tertiary)">Bs 36,40</td>
+                <td style="color:var(--text-tertiary)">7 abr 2026</td>
+                <td><span class="badge badge-error">Anulada</span></td>
+                <td><div class="cell-actions"><button onclick="showToast('Factura anulada — solo lectura','info')"><i data-lucide="eye"></i></button></div></td>
+              </tr>
+              <tr data-status="valida">
+                <td style="font-weight:700;font-variant-numeric:tabular-nums">1033</td>
+                <td style="font-family:monospace;font-size:9.5px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">8F2D4A...7C1E</td>
+                <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#EDE9FE,#C4B5FD)">SD</div><div><div class="cell-user-name">Sonrisas del Sur</div><div class="cell-user-sub">NIT 5678901234</div></div></div></td>
+                <td>Suscripción Pro — Abril 2026</td>
+                <td style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">Bs 280,00</td>
+                <td style="text-align:right;font-variant-numeric:tabular-nums">Bs 36,40</td>
+                <td>8 abr 2026</td>
+                <td><span class="badge badge-success">Válida</span></td>
+                <td><div class="cell-actions"><button onclick="openVerFacturaModal(1033)"><i data-lucide="eye"></i></button><button onclick="showToast('PDF descargado','success')"><i data-lucide="download"></i></button><button onclick="showToast('Email reenviado','success')"><i data-lucide="send"></i></button></div></td>
+              </tr>
+              <tr data-status="pendiente">
+                <td style="font-weight:700;font-variant-numeric:tabular-nums;color:var(--warning)">—</td>
+                <td style="font-size:10px;color:var(--text-tertiary)">Sin emitir</td>
+                <td><div class="cell-user"><div class="avatar" style="background:linear-gradient(135deg,#FCE7F3,#F9A8D4)">OD</div><div><div class="cell-user-name">Odontoélite</div><div class="cell-user-sub">NIT 6789012345</div></div></div></td>
+                <td>Suscripción Pro — Abril 2026</td>
+                <td style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">Bs 280,00</td>
+                <td style="text-align:right;font-variant-numeric:tabular-nums;color:var(--text-tertiary)">—</td>
+                <td style="color:var(--warning);font-weight:600">Pago pendiente</td>
+                <td><span class="badge badge-warning">Pendiente</span></td>
+                <td><div class="cell-actions"><button onclick="openGenerarFacturaModal('Odontoélite','6789012345','280')" title="Generar factura"><i data-lucide="file-plus"></i></button><button onclick="showToast('Recordatorio enviado','success')"><i data-lucide="bell"></i></button></div></td>
+              </tr>
+            </tbody>
+          </table>
 
-              <div style="padding:14px 18px;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--text-secondary);border-top:1px solid var(--border)">
-                <div id="billing-count">Mostrando 10 facturas · Abril 2026</div>
-                <div style="display:flex;align-items:center;gap:14px">
-                  <strong style="font-size:13px">Total: Bs 3.500</strong>
-                  <span style="color:var(--success);font-weight:600">Cobrado: Bs 2.800</span>
-                  <span style="color:var(--warning);font-weight:600">Pendiente: Bs 280</span>
-                  <span style="color:var(--error);font-weight:600">Fallido: Bs 700</span>
-                </div>
-              </div>
+          <div style="padding:14px 18px;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--text-secondary);border-top:1px solid var(--border)">
+            <div id="billing-count">7 facturas · Abril 2026</div>
+            <div style="display:flex;align-items:center;gap:14px">
+              <strong style="font-size:13px">Total facturado: Bs 2.380</strong>
+              <span style="color:var(--success);font-weight:600">Válidas: 5</span>
+              <span style="color:var(--error);font-weight:600">Anuladas: 1</span>
+              <span style="color:var(--warning);font-weight:600">Pendientes: 1</span>
             </div>
           </div>
         </div>
 
-        <!-- Métodos de pago + Upgrades/Downgrades -->
+        <!-- Bottom row -->
         <div class="bento">
           <div class="card-solid col-4">
-            <div class="card-head"><div class="card-title">Métodos de pago</div></div>
-            <div class="progress-row">
-              <div class="progress-head"><span class="progress-name">Tarjeta de crédito</span><span class="progress-value">22 · 47%</span></div>
-              <div class="progress-track"><div class="progress-fill" style="width:85%"></div></div>
+            <div class="card-head"><div class="card-title">Configuración SIN</div></div>
+            <div style="display:flex;flex-direction:column;gap:12px;font-size:12.5px">
+              <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">Razón social</span><strong>Sonrisas SaaS SRL</strong></div>
+              <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">NIT emisor</span><strong>1020304050</strong></div>
+              <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">Modalidad</span><strong>Computarizada en Línea</strong></div>
+              <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">Actividad económica</span><strong>Servicios informáticos</strong></div>
+              <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">Sucursal</span><strong>Casa matriz — Santa Cruz</strong></div>
+              <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">Punto de venta</span><strong>PV-001</strong></div>
             </div>
-            <div class="progress-row">
-              <div class="progress-head"><span class="progress-name">QR Banco Unión</span><span class="progress-value">12 · 26%</span></div>
-              <div class="progress-track"><div class="progress-fill" style="width:52%"></div></div>
-            </div>
-            <div class="progress-row">
-              <div class="progress-head"><span class="progress-name">Transferencia bancaria</span><span class="progress-value">8 · 17%</span></div>
-              <div class="progress-track"><div class="progress-fill" style="width:34%"></div></div>
-            </div>
-            <div class="progress-row">
-              <div class="progress-head"><span class="progress-name">Sin método</span><span class="progress-value">5 · 10%</span></div>
-              <div class="progress-track"><div class="progress-fill" style="width:20%;background:var(--error)"></div></div>
-            </div>
+            <button class="btn btn-secondary" style="width:100%;justify-content:center;margin-top:14px" onclick="showToast('Configuración SIN abierta','info')"><i data-lucide="settings"></i> Configurar conexión SIN</button>
           </div>
 
           <div class="card-solid col-4">
-            <div class="card-head"><div class="card-title">Movimientos de plan (mes)</div></div>
+            <div class="card-head"><div class="card-title">Actividad de facturación</div></div>
             <div style="display:flex;flex-direction:column;gap:10px">
               <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--success-light);border-radius:10px">
-                <div style="width:32px;height:32px;border-radius:9px;background:var(--success);display:flex;align-items:center;justify-content:center;color:#FFF"><i data-lucide="arrow-up" style="width:16px;height:16px"></i></div>
-                <div style="flex:1">
-                  <div style="font-weight:600;font-size:13px">3 upgrades</div>
-                  <div style="font-size:11px;color:var(--text-secondary)">Starter → Pro (2) · Pro → Pro Multi (1)</div>
+                <div style="width:28px;height:28px;border-radius:8px;background:var(--success);display:flex;align-items:center;justify-content:center;color:#FFF"><i data-lucide="check" style="width:14px;height:14px"></i></div>
+                <div style="flex:1;font-size:12px">
+                  <strong>Factura #1038 emitida</strong>
+                  <div style="color:var(--text-tertiary);font-size:10.5px">Sonrisas · Bs 420 · hoy 08:15</div>
                 </div>
-                <strong style="color:var(--success)">+Bs 820</strong>
               </div>
-              <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--info-light);border-radius:10px">
-                <div style="width:32px;height:32px;border-radius:9px;background:var(--info);display:flex;align-items:center;justify-content:center;color:#FFF"><i data-lucide="user-plus" style="width:16px;height:16px"></i></div>
-                <div style="flex:1">
-                  <div style="font-weight:600;font-size:13px">6 nuevos tenants</div>
-                  <div style="font-size:11px;color:var(--text-secondary)">3 Trial · 2 Pro · 1 Pro Multi</div>
+              <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--success-light);border-radius:10px">
+                <div style="width:28px;height:28px;border-radius:8px;background:var(--success);display:flex;align-items:center;justify-content:center;color:#FFF"><i data-lucide="check" style="width:14px;height:14px"></i></div>
+                <div style="flex:1;font-size:12px">
+                  <strong>Factura #1037 emitida</strong>
+                  <div style="color:var(--text-tertiary);font-size:10.5px">Odonto Miraflores · Bs 420 · hoy 08:14</div>
                 </div>
-                <strong style="color:var(--info)">+Bs 980</strong>
               </div>
               <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--error-light);border-radius:10px">
-                <div style="width:32px;height:32px;border-radius:9px;background:var(--error);display:flex;align-items:center;justify-content:center;color:#FFF"><i data-lucide="user-minus" style="width:16px;height:16px"></i></div>
-                <div style="flex:1">
-                  <div style="font-weight:600;font-size:13px">1 churn</div>
-                  <div style="font-size:11px;color:var(--text-secondary)">Dental Plus (Starter) · canceló</div>
+                <div style="width:28px;height:28px;border-radius:8px;background:var(--error);display:flex;align-items:center;justify-content:center;color:#FFF"><i data-lucide="x" style="width:14px;height:14px"></i></div>
+                <div style="flex:1;font-size:12px">
+                  <strong>Factura #1034 anulada</strong>
+                  <div style="color:var(--text-tertiary);font-size:10.5px">Dental Express · Dato incorrecto · 7 abr</div>
                 </div>
-                <strong style="color:var(--error)">-Bs 150</strong>
               </div>
-              <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--warning-light);border-radius:10px">
-                <div style="width:32px;height:32px;border-radius:9px;background:var(--warning);display:flex;align-items:center;justify-content:center;color:#FFF"><i data-lucide="arrow-down" style="width:16px;height:16px"></i></div>
-                <div style="flex:1">
-                  <div style="font-weight:600;font-size:13px">1 downgrade</div>
-                  <div style="font-size:11px;color:var(--text-secondary)">DentalMax Pro Multi → Pro</div>
+              <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--info-light);border-radius:10px">
+                <div style="width:28px;height:28px;border-radius:8px;background:var(--info);display:flex;align-items:center;justify-content:center;color:#FFF"><i data-lucide="refresh-cw" style="width:14px;height:14px"></i></div>
+                <div style="flex:1;font-size:12px">
+                  <strong>CUFD renovado automáticamente</strong>
+                  <div style="color:var(--text-tertiary);font-size:10.5px">hoy 00:01 · válido 24h</div>
                 </div>
-                <strong style="color:var(--warning)">-Bs 140</strong>
               </div>
             </div>
           </div>
 
           <div class="card-solid col-4">
-            <div class="card-head"><div class="card-title">Precios por plan</div></div>
-            <div style="display:flex;flex-direction:column;gap:12px">
-              <div style="padding:14px;border:1px solid var(--border);border-radius:var(--r-md)">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-                  <span class="badge badge-neutral">Starter</span>
-                  <strong style="font-size:16px">Bs 150<span style="font-size:11px;color:var(--text-tertiary);font-weight:500">/mes</span></strong>
-                </div>
-                <div style="font-size:11px;color:var(--text-secondary)">2 usuarios · 500 pacientes · 5 GB</div>
+            <div class="card-head"><div class="card-title">Leyendas vigentes (SIN)</div></div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="padding:10px;background:var(--bg-alt);border-radius:8px;font-size:11px;color:var(--text-secondary);line-height:1.5">
+                "La reproducción total o parcial y/o el uso no autorizado de esta nota fiscal, constituye un delito a ser sancionado penalmente."
               </div>
-              <div style="padding:14px;border:1.5px solid var(--accent);border-radius:var(--r-md);background:var(--bg-alt)">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-                  <span class="badge badge-info">Pro</span>
-                  <strong style="font-size:16px">Bs 280<span style="font-size:11px;color:var(--text-tertiary);font-weight:500">/mes</span></strong>
-                </div>
-                <div style="font-size:11px;color:var(--text-secondary)">5 usuarios · 1.500 pacientes · 20 GB</div>
-                <div style="font-size:10px;color:var(--accent);font-weight:600;margin-top:4px">MÁS POPULAR</div>
+              <div style="padding:10px;background:var(--bg-alt);border-radius:8px;font-size:11px;color:var(--text-secondary);line-height:1.5">
+                "Esta factura contribuye al desarrollo del país. El uso ilícito será sancionado de acuerdo a Ley."
               </div>
-              <div style="padding:14px;border:1px solid var(--border);border-radius:var(--r-md)">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-                  <span class="badge badge-dark">Pro Multi</span>
-                  <strong style="font-size:16px">Bs 420<span style="font-size:11px;color:var(--text-tertiary);font-weight:500">/mes</span></strong>
-                </div>
-                <div style="font-size:11px;color:var(--text-secondary)">10 usuarios · 3.000 pacientes · 50 GB</div>
+              <div style="padding:10px;background:var(--bg-alt);border-radius:8px;font-size:11px;color:var(--text-secondary);line-height:1.5">
+                "Ley N° 453: Tienes derecho a recibir información sobre las características y contenidos de los servicios que utilices."
               </div>
             </div>
-            <button class="btn btn-secondary" style="width:100%;justify-content:center;margin-top:14px" onclick="showToast('Editor de precios','info')"><i data-lucide="pencil"></i> Editar precios</button>
           </div>
         </div>
 
@@ -389,7 +394,7 @@
         chip.parentElement.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
         chip.classList.add('active');
         const t = chip.textContent.trim().toLowerCase();
-        const map = { 'todos': 'all', 'cobrados': 'cobrado', 'pendientes': 'pendiente', 'fallidos': 'fallido', 'gratis / trial': 'trial' };
+        const map = { 'todas': 'all', 'válidas': 'valida', 'anuladas': 'anulada', 'pendientes': 'pendiente' };
         const filter = map[t] || 'all';
         let visible = 0;
         document.querySelectorAll('#billing-tbody tr').forEach(row => {
@@ -397,7 +402,7 @@
           row.style.display = show ? '' : 'none';
           if (show) visible++;
         });
-        document.getElementById('billing-count').textContent = `Mostrando ${visible} factura${visible !== 1 ? 's' : ''}`;
+        document.getElementById('billing-count').textContent = `${visible} factura${visible !== 1 ? 's' : ''} · Abril 2026`;
       });
     });
 
@@ -408,6 +413,196 @@
         row.style.display = (!q || row.textContent.toLowerCase().includes(q)) ? '' : 'none';
       });
     });
+
+    /* ═══ GENERAR FACTURA MODAL ═══ */
+    function openGenerarFacturaModal(preNombre, preNit, preMonto) {
+      openGenericModal({
+        title: 'Generar factura electrónica',
+        subtitle: 'Facturación Computarizada en Línea — SIN Bolivia',
+        size: 'lg',
+        submitLabel: 'Emitir factura al SIN',
+        body: `
+          <div style="display:flex;align-items:center;gap:10px;padding:12px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:var(--r-md);margin-bottom:16px;font-size:12px;color:#1D4ED8">
+            <i data-lucide="info" style="width:16px;height:16px;flex-shrink:0"></i>
+            <span>La factura será enviada al SIAT en tiempo real. Una vez emitida, solo puede anularse dentro de las 24h siguientes.</span>
+          </div>
+          <div style="padding:10px 12px;background:var(--bg-alt);border-radius:var(--r-md);font-size:11.5px;font-weight:600;margin-bottom:14px;color:var(--text-secondary)">
+            DATOS DEL EMISOR (automáticos)
+          </div>
+          <div class="form-row-3">
+            <div class="form-group"><label class="form-label">NIT emisor</label><input class="form-input" value="1020304050" readonly style="background:var(--bg-alt)"></div>
+            <div class="form-group"><label class="form-label">Razón social</label><input class="form-input" value="Sonrisas SaaS SRL" readonly style="background:var(--bg-alt)"></div>
+            <div class="form-group"><label class="form-label">N° factura (auto)</label><input class="form-input" value="1039" readonly style="background:var(--bg-alt)"></div>
+          </div>
+          <div style="padding:10px 12px;background:var(--bg-alt);border-radius:var(--r-md);font-size:11.5px;font-weight:600;margin:14px 0;color:var(--text-secondary)">
+            DATOS DEL COMPRADOR
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">NIT / CI del comprador</label>
+              <input class="form-input" id="fac-nit" value="${preNit || ''}" placeholder="Ej: 1234567890" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Razón social / Nombre</label>
+              <input class="form-input" id="fac-razon" value="${preNombre || ''}" placeholder="Ej: Clínica Dental XYZ" required>
+            </div>
+          </div>
+          <div style="padding:10px 12px;background:var(--bg-alt);border-radius:var(--r-md);font-size:11.5px;font-weight:600;margin:14px 0;color:var(--text-secondary)">
+            DETALLE
+          </div>
+          <div class="form-row-3">
+            <div class="form-group" style="grid-column:span 2"><label class="form-label">Concepto</label>
+              <select class="form-select" id="fac-concepto">
+                <option value="420">Suscripción Plan Pro Multi — Mensual</option>
+                <option value="280" ${preMonto==='280'?'selected':''}>Suscripción Plan Pro — Mensual</option>
+                <option value="150">Suscripción Plan Starter — Mensual</option>
+                <option value="0">Personalizado</option>
+              </select>
+            </div>
+            <div class="form-group"><label class="form-label">Cantidad</label><input class="form-input" type="number" value="1" id="fac-qty"></div>
+          </div>
+          <div class="form-row-3">
+            <div class="form-group"><label class="form-label">Precio unitario (Bs)</label><input class="form-input" type="number" id="fac-precio" value="${preMonto || '420'}"></div>
+            <div class="form-group"><label class="form-label">Subtotal (Bs)</label><input class="form-input" id="fac-subtotal" value="${preMonto || '420'}" readonly style="background:var(--bg-alt)"></div>
+            <div class="form-group"><label class="form-label">IVA 13% (incluido)</label><input class="form-input" id="fac-iva" value="${((preMonto||420)*0.13).toFixed(2)}" readonly style="background:var(--bg-alt)"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Leyenda (asignada por SIN)</label>
+            <select class="form-select">
+              <option>"La reproducción total o parcial y/o el uso no autorizado de esta nota fiscal, constituye un delito a ser sancionado penalmente."</option>
+              <option>"Esta factura contribuye al desarrollo del país. El uso ilícito será sancionado de acuerdo a Ley."</option>
+              <option>"Ley N° 453: Tienes derecho a recibir información sobre las características y contenidos de los servicios que utilices."</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Método de pago</label>
+              <select class="form-select"><option>Tarjeta de crédito/débito</option><option>Transferencia bancaria</option><option>QR</option><option>Efectivo</option></select>
+            </div>
+            <div class="form-group"><label class="form-label">Fecha de emisión</label><input class="form-input" type="date" value="2026-04-14"></div>
+          </div>
+          <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-secondary);margin-top:6px"><input type="checkbox" checked> Enviar factura por email al comprador</label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-secondary);margin-top:4px"><input type="checkbox" checked> Enviar copia por WhatsApp</label>
+        `,
+        onSubmit: () => {
+          showToast('Factura #1039 emitida y enviada al SIN', 'success');
+          setTimeout(() => showToast('Email con factura PDF enviado al comprador', 'success'), 1500);
+        },
+      });
+
+      // Auto-calculate on change
+      setTimeout(() => {
+        const precio = document.getElementById('fac-precio');
+        const qty = document.getElementById('fac-qty');
+        const concepto = document.getElementById('fac-concepto');
+        const update = () => {
+          const p = parseFloat(precio?.value || 0);
+          const q = parseInt(qty?.value || 1);
+          const sub = p * q;
+          const iva = sub * 0.13;
+          if (document.getElementById('fac-subtotal')) document.getElementById('fac-subtotal').value = sub.toFixed(2);
+          if (document.getElementById('fac-iva')) document.getElementById('fac-iva').value = iva.toFixed(2);
+        };
+        precio?.addEventListener('input', update);
+        qty?.addEventListener('input', update);
+        concepto?.addEventListener('change', () => {
+          const val = concepto.value;
+          if (val !== '0' && precio) { precio.value = val; update(); }
+        });
+      }, 200);
+    }
+
+    /* ═══ VER FACTURA (preview) ═══ */
+    function openVerFacturaModal(num) {
+      ensureGenericModal();
+      const modalEl = document.querySelector('#generic-modal .modal');
+      modalEl.style.maxWidth = '640px';
+      document.getElementById('gen-title').textContent = `Factura N° ${num}`;
+      document.getElementById('gen-sub').textContent = 'Vista previa — Facturación Computarizada en Línea';
+      document.getElementById('gen-body').innerHTML = `
+        <div class="factura-preview">
+          <div class="factura-header">
+            <div class="factura-header-left">
+              <div class="factura-title">SONRISAS SAAS SRL</div>
+              <div style="font-size:11px;margin-bottom:6px">Casa Matriz — Santa Cruz de la Sierra</div>
+              <div style="font-size:10px;color:#666;line-height:1.5">
+                Av. Equipetrol #2450, Edificio Torres Business Center, Piso 8<br>
+                Tel: +591 3 345-6789 · info@sonrisas-saas.bo
+              </div>
+            </div>
+            <div class="factura-header-right">
+              <div style="font-size:18px;font-weight:800;color:#1E3A5F">FACTURA</div>
+              <div style="font-size:9px;color:#888;margin-bottom:8px">COMPUTARIZADA EN LÍNEA</div>
+              <div class="factura-nit">NIT: 1020304050</div>
+              <div style="font-size:11px;margin-top:4px">N° Factura: <strong>${num}</strong></div>
+              <div style="font-size:10px;color:#666">Código de Autorización:</div>
+              <div class="factura-auth">4F8A2C6E9B1D3F7A5C8E2B4D6F8A1C3E5A7B9D</div>
+            </div>
+          </div>
+
+          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:12px">
+            <div>
+              <div style="font-weight:700;margin-bottom:2px">DATOS DEL COMPRADOR</div>
+              <div>Razón Social: <strong>Clínica Dental Sonrisas</strong></div>
+              <div>NIT: <strong>1234567890</strong></div>
+            </div>
+            <div style="text-align:right">
+              <div>Fecha: <strong>8 de abril de 2026</strong></div>
+              <div>Actividad: <strong>Servicios informáticos</strong></div>
+              <div>Punto de venta: <strong>PV-001</strong></div>
+            </div>
+          </div>
+
+          <table class="factura-table">
+            <thead>
+              <tr><th>Cant.</th><th>Concepto</th><th class="right">P. Unitario</th><th class="right">Subtotal</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Suscripción Plan Pro Multi — Abril 2026<br><span style="font-size:9px;color:#888">Plataforma SaaS Gestión Dental · Hasta 10 usuarios · 3.000 pacientes</span></td>
+                <td class="right">Bs 420,00</td>
+                <td class="right"><strong>Bs 420,00</strong></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="factura-totals">
+            <table>
+              <tr><td style="color:#666">Subtotal:</td><td class="right"><strong>Bs 420,00</strong></td></tr>
+              <tr><td style="color:#666">Descuento:</td><td class="right">Bs 0,00</td></tr>
+              <tr class="total-row"><td>TOTAL (Bs):</td><td class="right">Bs 420,00</td></tr>
+            </table>
+          </div>
+
+          <div class="factura-literal">Son: <strong>Cuatrocientos veinte 00/100 Bolivianos</strong></div>
+
+          <div class="factura-qr">
+            <div>
+              <div style="font-size:9px;color:#888;margin-bottom:4px">Código de Control:</div>
+              <div style="font-family:monospace;font-size:10px;font-weight:700">7A-2B-9C-4D-8E</div>
+              <div style="font-size:9px;color:#888;margin-top:6px">CUF:</div>
+              <div style="font-family:monospace;font-size:8px;word-break:break-all;max-width:280px">4F8A2C6E9B1D3F7A5C8E2B4D6F8A1C3E5A7B9D1E2F3A4B5C6D7E8F</div>
+            </div>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://piloto.siat.impuestos.gob.bo/consulta/factura?cuf=4F8A2C6E&margin=0" width="100" height="100" style="border:1px solid #DDD;border-radius:4px">
+          </div>
+
+          <div class="factura-leyenda">
+            "La reproducción total o parcial y/o el uso no autorizado de esta nota fiscal,<br>constituye un delito a ser sancionado penalmente."
+          </div>
+
+          <div style="text-align:center;margin-top:10px;font-size:8.5px;color:#AAA">
+            Documento generado por Sonrisas SaaS · Facturación Computarizada en Línea · SIAT Bolivia
+          </div>
+        </div>
+      `;
+      document.getElementById('gen-actions').innerHTML = `
+        <button type="button" class="btn btn-ghost" onclick="closeGenericModal()">Cerrar</button>
+        <button type="button" class="btn btn-secondary" onclick="showToast('Email con factura reenviado','success')"><i data-lucide="send"></i> Reenviar</button>
+        <button type="button" class="btn btn-primary" onclick="showToast('Factura PDF descargada','success')"><i data-lucide="download"></i> Descargar PDF</button>
+      `;
+      if (window.lucide) lucide.createIcons();
+      document.getElementById('generic-modal').classList.add('open');
+    }
   </script>
 </body>
 </html>
