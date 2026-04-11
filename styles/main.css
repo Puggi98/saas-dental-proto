@@ -1251,6 +1251,14 @@ table.data tbody tr:last-child td {
   width: 100%;
   box-shadow: var(--shadow-xl);
   animation: modalIn 0.2s ease-out;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+.modal-body {
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
 }
 @keyframes modalIn {
   from { transform: scale(0.96) translateY(8px); opacity: 0; }
