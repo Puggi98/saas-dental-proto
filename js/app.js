@@ -413,7 +413,72 @@ function openNewCitaModal(preselect = '') {
         <textarea class="form-textarea" placeholder="Observaciones para el profesional..."></textarea>
       </div>
     `,
-    onSubmit: () => showToast('Cita creada · Paciente notificado', 'success'),
+    onSubmit: () => {
+      // Get form values
+      const pacSel = document.querySelector('#gen-form select');
+      const pacName = pacSel?.options[pacSel.selectedIndex]?.text || 'Paciente';
+      const allSelects = document.querySelectorAll('#gen-form select');
+      const profSel = allSelects[1];
+      const tratSel = allSelects[2];
+      const profName = profSel?.options[profSel.selectedIndex]?.text || '';
+      const tratText = tratSel?.options[tratSel.selectedIndex]?.text?.split(' · ')[0] || '';
+      const fechaInput = document.querySelector('#gen-form input[type="date"]');
+      const horaInput = document.querySelector('#gen-form input[type="time"]');
+      const fecha = fechaInput?.value || '2026-04-15';
+      const hora = horaInput?.value || '10:00';
+
+      // Format date for display
+      const months = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+      const d = new Date(fecha);
+      const fechaDisplay = `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+
+      // Insert into citas table on paciente-detalle page (tab 5)
+      if (location.pathname.includes('paciente-detalle')) {
+        const allTables = document.querySelectorAll('table.data');
+        // Citas table is the last one (tab 5)
+        const citasTable = allTables[allTables.length - 1];
+        if (citasTable) {
+          const tbody = citasTable.querySelector('tbody');
+          if (tbody) {
+            const newRow = document.createElement('tr');
+            newRow.style.animation = 'slideIn 0.3s ease-out';
+            newRow.innerHTML = `
+              <td>${fechaDisplay}</td>
+              <td>${hora}</td>
+              <td>${profName}</td>
+              <td>${tratText}</td>
+              <td><span class="badge badge-success">Confirmada</span></td>
+            `;
+            tbody.insertBefore(newRow, tbody.firstChild);
+          }
+        }
+      }
+
+      // Insert into agenda list on dashboard page
+      if (location.pathname.includes('dashboard')) {
+        const agendaList = document.querySelector('.agenda-list');
+        if (agendaList) {
+          const initials = pacName.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+          const item = document.createElement('div');
+          item.className = 'agenda-item';
+          item.style.animation = 'slideIn 0.3s ease-out';
+          item.innerHTML = `
+            <div><div class="agenda-time">${hora}</div><div class="agenda-time-end">45 min</div></div>
+            <div style="display:flex;align-items:center;gap:12px">
+              <div class="avatar">${initials}</div>
+              <div>
+                <div class="agenda-patient-name">${pacName}</div>
+                <div class="agenda-patient-meta">${tratText} · ${profName}</div>
+              </div>
+            </div>
+            <span class="badge badge-success">Confirmada</span>
+          `;
+          agendaList.appendChild(item);
+        }
+      }
+
+      showToast('Cita creada · Paciente notificado', 'success');
+    },
   });
 }
 
