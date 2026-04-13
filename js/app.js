@@ -15,7 +15,6 @@ const NAV_BY_ROLE = {
     { section: 'Plataforma SaaS', items: [
       { id: 'superadmin-dashboard', label: 'Overview',   icon: 'globe',       href: 'superadmin-dashboard.html' },
       { id: 'superadmin-tenants',   label: 'Clínicas',   icon: 'building-2',  href: 'superadmin-tenants.html' },
-      { id: 'superadmin-billing',   label: 'Facturación', icon: 'credit-card', href: 'superadmin-billing.html' },
     ]},
     { section: 'Mi clínica (impersonando Sonrisas)', items: [
       { id: 'dashboard',   label: 'Dashboard',   icon: 'layout-dashboard', href: 'dashboard.html' },
@@ -654,7 +653,7 @@ function openNewCobroModal(preselectPaciente = '') {
 
   openGenericModal({
     title: 'Registrar cobro',
-    subtitle: 'Registra un pago y opcionalmente emite factura electrónica',
+    subtitle: 'Registra un pago y genera comprobante',
     size: 'lg',
     submitLabel: 'Registrar pago',
     body: `
@@ -698,55 +697,6 @@ function openNewCobroModal(preselectPaciente = '') {
         </div>
       </div>
 
-      <div style="margin-top:14px;padding:16px;border:1.5px solid var(--border-strong);border-radius:var(--r-md);background:var(--bg-alt)">
-        <label style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;margin-bottom:0" onclick="toggleFacturaSection()">
-          <div style="display:flex;align-items:center;gap:10px">
-            <div style="width:36px;height:36px;border-radius:10px;background:#1E3A5F;display:flex;align-items:center;justify-content:center">
-              <span style="color:#FFF;font-weight:800;font-size:10px">SIN</span>
-            </div>
-            <div>
-              <div style="font-weight:700;font-size:13px">Emitir factura electrónica</div>
-              <div style="font-size:11px;color:var(--text-tertiary)">Facturación Computarizada en Línea — SIN Bolivia</div>
-            </div>
-          </div>
-          <input type="checkbox" id="cobro-facturar" style="width:18px;height:18px">
-        </label>
-        <div id="factura-fields" style="display:none;margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label">NIT / CI del comprador</label>
-              <input class="form-input" id="cobro-nit" placeholder="Ej: 6123456">
-              <div class="form-hint">Usa 0 para "sin NIT" (ventas menores)</div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Razón social / Nombre</label>
-              <input class="form-input" id="cobro-razon" placeholder="Se autocompleta con el paciente">
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label">Actividad económica</label>
-              <select class="form-select">
-                <option>Servicios de salud dental</option>
-                <option>Servicios médicos</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Leyenda (SIN)</label>
-              <select class="form-select" style="font-size:10.5px">
-                <option>"La reproducción total o parcial y/o el uso no autorizado..."</option>
-                <option>"Esta factura contribuye al desarrollo del país..."</option>
-                <option>"Ley N° 453: Tienes derecho a recibir información..."</option>
-              </select>
-            </div>
-          </div>
-          <div style="display:flex;gap:12px;align-items:center;padding:10px;background:var(--surface-solid);border-radius:var(--r-md);font-size:11.5px;color:var(--text-secondary);margin-top:4px">
-            <i data-lucide="info" style="width:14px;height:14px;color:var(--info);flex-shrink:0"></i>
-            <span>N° Factura <strong>#1039</strong> · CUFD válido · Dosificación vigente (1001–2000)</span>
-          </div>
-        </div>
-      </div>
-
       <div class="form-group" style="margin-top:14px">
         <label class="form-label">Notas (opcional)</label>
         <textarea class="form-textarea" placeholder="Observaciones del cobro..."></textarea>
@@ -769,8 +719,6 @@ function openNewCobroModal(preselectPaciente = '') {
       const conceptoText = concepto.options[concepto.selectedIndex]?.text?.split(' — ')[0] || 'Tratamiento';
       const metodo = document.getElementById('cobro-metodo').value;
       const monto = document.getElementById('cobro-monto').value;
-      const emitirFactura = document.getElementById('cobro-facturar')?.checked;
-
       // Insert row into cobros table if on cobros page
       const tbody = document.querySelector('table.data tbody');
       if (tbody && location.pathname.includes('cobros')) {
@@ -783,7 +731,7 @@ function openNewCobroModal(preselectPaciente = '') {
         newRow.innerHTML = `
           <td style="font-variant-numeric:tabular-nums;font-weight:600">${nextNum}</td>
           <td><div class="cell-user"><div class="avatar">${pacData.initials}</div><div><div class="cell-user-name">${pacName}</div></div></div></td>
-          <td>${conceptoText}${emitirFactura?' <span style="color:#1E3A5F;font-weight:700;font-size:10px">+ FACTURA</span>':''}</td>
+          <td>${conceptoText}</td>
           <td>—</td>
           <td><span class="badge ${badgeClass[metodo] || 'badge-neutral'}">${metodo}</span></td>
           <td>${fechaStr}</td>
@@ -795,38 +743,10 @@ function openNewCobroModal(preselectPaciente = '') {
         if (window.lucide) lucide.createIcons();
       }
 
-      if (emitirFactura) {
-        showToast('Pago registrado · Factura #1039 emitida al SIN', 'success');
-        setTimeout(() => showToast('Factura enviada por email al paciente', 'success'), 1200);
-      } else {
-        showToast('Pago registrado · Comprobante generado', 'success');
-      }
+      showToast('Pago registrado · Comprobante generado', 'success');
     },
   });
 
-  // Auto-fill razón social when patient changes
-  setTimeout(() => {
-    const pacSelect = document.getElementById('cobro-paciente');
-    const razon = document.getElementById('cobro-razon');
-    if (pacSelect && razon) {
-      pacSelect.addEventListener('change', () => {
-        razon.value = pacSelect.options[pacSelect.selectedIndex]?.text || '';
-      });
-      if (pacSelect.value) razon.value = pacSelect.options[pacSelect.selectedIndex]?.text || '';
-    }
-  }, 150);
-}
-
-function toggleFacturaSection() {
-  const checkbox = document.getElementById('cobro-facturar');
-  const fields = document.getElementById('factura-fields');
-  if (checkbox && fields) {
-    // Toggle happens naturally via click, but we need to sync display
-    setTimeout(() => {
-      fields.style.display = checkbox.checked ? 'block' : 'none';
-      if (checkbox.checked && window.lucide) lucide.createIcons();
-    }, 10);
-  }
 }
 
 function cobroConceptoChanged() {
