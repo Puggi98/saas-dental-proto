@@ -209,7 +209,8 @@
               const [hh,mm] = c.hora.split(':').map(Number);
               const top = (hh - 8) * 56 + (mm / 60) * 56;
               const height = Math.max(28, (c.dur / 60) * 56);
-              return `<div class="cal-event ${STATE_CLASS[c.estado]}" style="top:${top}px;height:${height}px" onclick="openCitaDetailModal(${JSON.stringify(c).replace(/"/g,'&quot;')})">
+              const idx = CITAS.indexOf(c);
+              return `<div class="cal-event ${STATE_CLASS[c.estado]}" style="top:${top}px;height:${height}px" onclick="openCitaDetailModal(${idx})">
                 <strong>${c.pac}</strong><span>${c.hora} · ${c.trat}</span>
               </div>`;
             }).join('')}
@@ -235,7 +236,8 @@
           const endStr = `${String(endH).padStart(2,'0')}:${String(endM).padStart(2,'0')}`;
           const stateColor = { 'programada':'#9CA3AF','confirmada':'#3B82F6','sala-espera':'#F59E0B','en-atencion':'#A855F7','finalizada':'#22C55E','no-asistio':'#EF4444' };
 
-          html += `<div class="day-card" style="border-left-color:${stateColor[c.estado]}" onclick="openCitaDetailModal(${JSON.stringify(c).replace(/"/g,'&quot;')})">
+          const idx = CITAS.indexOf(c);
+          html += `<div class="day-card" style="border-left-color:${stateColor[c.estado]}" onclick="openCitaDetailModal(${idx})">
             <div class="day-time">
               <div class="day-time-main">${c.hora}</div>
               <div class="day-time-dur">${endStr} · ${c.dur}min</div>
@@ -290,7 +292,8 @@
     }
 
     /* ═══ CITA DETAIL MODAL (click on event) ═══ */
-    function openCitaDetailModal(c) {
+    function openCitaDetailModal(idx) {
+      const c = CITAS[idx];
       const stateColor = { 'programada':'#9CA3AF','confirmada':'#3B82F6','sala-espera':'#F59E0B','en-atencion':'#A855F7','finalizada':'#22C55E','no-asistio':'#EF4444' };
       const stateOpts = Object.entries(STATE_LABELS).map(([k,v]) => `<option value="${k}" ${c.estado===k?'selected':''}>${v}</option>`).join('');
 
