@@ -1102,54 +1102,78 @@ table.data tbody tr:last-child td {
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
-.odonto-tooth-svg {
-  width: 32px;
-  height: 40px;
-  background: var(--tooth-sano);
-  border: 1.5px solid var(--border-darker);
-  border-radius: 6px 6px 4px 4px;
-  position: relative;
-  transition: all 0.15s;
+/* SVG tooth with 5 clickable faces */
+.odonto-svg {
+  display: block;
+  transition: transform 0.12s;
 }
-.odonto-tooth-svg::before {
-  content: '';
-  position: absolute;
-  top: 6px;
-  left: 5px;
-  right: 5px;
-  bottom: 6px;
-  border: 1px dashed rgba(0, 0, 0, 0.12);
-  border-radius: 4px;
+.odonto-tooth:hover .odonto-svg {
+  transform: scale(1.1);
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.12));
 }
-.odonto-tooth.lower .odonto-tooth-svg {
-  border-radius: 4px 4px 6px 6px;
+.odonto-svg polygon {
+  cursor: pointer;
+  transition: fill 0.15s, opacity 0.15s;
+  stroke-linejoin: round;
 }
-.odonto-tooth:hover .odonto-tooth-svg {
-  transform: scale(1.08);
-  box-shadow: var(--shadow-sm);
+.odonto-svg polygon:hover {
+  opacity: 0.75;
+  stroke: #475569;
+  stroke-width: 1.5;
 }
 
-.odonto-tooth[data-state="caries"] .odonto-tooth-svg {
-  background: var(--tooth-caries);
-  border-color: #B91C1C;
+/* Dentition toggle */
+.odonto-dentition-toggle {
+  display: flex;
+  background: var(--bg-alt);
+  border-radius: var(--r-md);
+  padding: 3px;
+  gap: 2px;
+  margin-bottom: 18px;
+  width: fit-content;
 }
-.odonto-tooth[data-state="restaurado"] .odonto-tooth-svg {
-  background: var(--tooth-restaurado);
-  border-color: #1E3A8A;
+.odonto-dentition-toggle button {
+  padding: 7px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-radius: 8px;
+  transition: all 0.15s;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
 }
-.odonto-tooth[data-state="ausente"] .odonto-tooth-svg {
-  background: repeating-linear-gradient(
-    45deg, var(--tooth-ausente), var(--tooth-ausente) 3px,
-    #A3A3A3 3px, #A3A3A3 6px);
-  border-color: #737373;
+.odonto-dentition-toggle button.active {
+  background: var(--surface-solid);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
 }
-.odonto-tooth[data-state="corona"] .odonto-tooth-svg {
-  background: var(--tooth-corona);
-  border-color: #B45309;
+.odonto-dentition-toggle button:hover:not(.active) {
+  color: var(--text);
 }
-.odonto-tooth[data-state="endodoncia"] .odonto-tooth-svg {
-  background: var(--tooth-endo);
-  border-color: #6B21A8;
+
+.odonto-gap {
+  width: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.odonto-gap::after {
+  content: '';
+  width: 1px;
+  height: 60%;
+  background: var(--border-strong);
+}
+
+.odonto-face-labels {
+  display: flex;
+  gap: 16px;
+  margin-top: 14px;
+  font-size: 10.5px;
+  color: var(--text-tertiary);
+  font-weight: 500;
+  justify-content: center;
 }
 
 .odonto-divider {

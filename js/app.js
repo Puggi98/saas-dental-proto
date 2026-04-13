@@ -263,27 +263,98 @@ document.addEventListener('submit', (e) => {
   }
 });
 
-/* ── Odontograma state cycling ── */
-const ODONTO_STATES = ['sano', 'caries', 'restaurado', 'endodoncia', 'corona', 'ausente'];
+/* ═══════════════════════════════════════════════════════
+   ODONTOGRAMA SVG — 5 caras por diente
+   ═══════════════════════════════════════════════════════ */
+const ODONTO_COLORS = {
+  sano: '#FFFFFF', caries: '#EF4444', restaurado: '#3B82F6',
+  endodoncia: '#A855F7', corona: '#F59E0B', ausente: '#D4D4D4',
+};
+const WHOLE_TOOTH_STATES = ['ausente', 'corona', 'endodoncia'];
 let currentTool = 'caries';
+let currentDentition = 'permanent';
+
+// Data model: { toothNum: { o,m,d,v,l, _whole? } }
+const odontoData = { permanent: {}, deciduous: {} };
+
+// FDI teeth definitions
+const PERM_UPPER_R = [18,17,16,15,14,13,12,11];
+const PERM_UPPER_L = [21,22,23,24,25,26,27,28];
+const PERM_LOWER_R = [41,42,43,44,45,46,47,48];
+const PERM_LOWER_L = [31,32,33,34,35,36,37,38];
+const DECID_UPPER_R = [55,54,53,52,51];
+const DECID_UPPER_L = [61,62,63,64,65];
+const DECID_LOWER_R = [81,82,83,84,85];
+const DECID_LOWER_L = [71,72,73,74,75];
+
+function getToothWidth(num) {
+  const pos = num % 10;
+  if (pos >= 6) return 42;   // molars
+  if (pos >= 4) return 36;   // premolars
+  if (pos === 3) return 30;  // canine
+  return 26;                  // incisors
+}
+
+function initToothData(nums, store) {
+  nums.forEach(n => {
+    if (!store[n]) store[n] = { o:'sano', m:'sano', d:'sano', v:'sano', l:'sano' };
+  });
+}
+
+function createToothSVG(num, isLower) {
+  const data = odontoData[currentDentition];
+  const t = data[num] || { o:'sano', m:'sano', d:'sano', v:'sano', l:'sano' };
+  const w = getToothWidth(num);
+  const h = 44;
+  // Inner rect proportions (25% inset)
+  const ix1 = Math.round(w * 0.25), ix2 = Math.round(w * 0.75);
+  const iy1 = 11, iy2 = 33;
+
+  const fill = (face) => {
+    if (t._whole) return ODONTO_COLORS[t._whole] || ODONTO_COLORS.sano;
+    return ODONTO_COLORS[t[face]] || ODONTO_COLORS.sano;
+  };
+  const stripe = t._whole === 'ausente';
+
+  return `<svg data-tooth="${num}" class="odonto-svg" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" style="cursor:pointer">
+    ${stripe ? `<defs><pattern id="stripe-${num}" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="3" height="6" fill="#A3A3A3"/></pattern></defs>` : ''}
+    <polygon data-face="v" points="0,0 ${w},0 ${ix2},${iy1} ${ix1},${iy1}" fill="${stripe ? `url(#stripe-${num})` : fill('v')}" stroke="#94a3b8" stroke-width="1"/>
+    <polygon data-face="l" points="${ix1},${iy2} ${ix2},${iy2} ${w},${h} 0,${h}" fill="${stripe ? `url(#stripe-${num})` : fill('l')}" stroke="#94a3b8" stroke-width="1"/>
+    <polygon data-face="m" points="0,0 ${ix1},${iy1} ${ix1},${iy2} 0,${h}" fill="${stripe ? `url(#stripe-${num})` : fill('m')}" stroke="#94a3b8" stroke-width="1"/>
+    <polygon data-face="d" points="${ix2},${iy1} ${w},0 ${w},${h} ${ix2},${iy2}" fill="${stripe ? `url(#stripe-${num})` : fill('d')}" stroke="#94a3b8" stroke-width="1"/>
+    <polygon data-face="o" points="${ix1},${iy1} ${ix2},${iy1} ${ix2},${iy2} ${ix1},${iy2}" fill="${stripe ? `url(#stripe-${num})` : fill('o')}" stroke="#94a3b8" stroke-width="1"/>
+  </svg>`;
+}
+
+function updateToothVisual(num) {
+  const svg = document.querySelector(`svg[data-tooth="${num}"]`);
+  if (!svg) return;
+  const t = odontoData[currentDentition][num];
+  if (!t) return;
+  const stripe = t._whole === 'ausente';
+  svg.querySelectorAll('polygon[data-face]').forEach(poly => {
+    const face = poly.dataset.face;
+    if (stripe) {
+      // Ensure pattern exists
+      if (!svg.querySelector(`#stripe-${num}`)) {
+        const defs = document.createElementNS('http://www.w3.org/2000/svg','defs');
+        defs.innerHTML = `<pattern id="stripe-${num}" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="3" height="6" fill="#A3A3A3"/></pattern>`;
+        svg.prepend(defs);
+      }
+      poly.setAttribute('fill', `url(#stripe-${num})`);
+    } else if (t._whole) {
+      poly.setAttribute('fill', ODONTO_COLORS[t._whole]);
+    } else {
+      poly.setAttribute('fill', ODONTO_COLORS[t[face]] || ODONTO_COLORS.sano);
+    }
+  });
+}
 
 function setOdontoTool(state) {
   currentTool = state;
   document.querySelectorAll('.odonto-tool').forEach(el => {
     el.classList.toggle('active', el.dataset.state === state);
   });
-  showToast(`Herramienta activa: ${state}`, 'info');
-}
-
-function handleToothClick(el) {
-  const current = el.dataset.state || 'sano';
-  if (currentTool === 'sano' || current === currentTool) {
-    el.dataset.state = 'sano';
-    showToast(`Diente ${el.dataset.num} — sano`, 'success');
-  } else {
-    el.dataset.state = currentTool;
-    showToast(`Diente ${el.dataset.num} — ${currentTool}`, 'success');
-  }
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -1433,53 +1504,101 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-/* ── Render odontograma FDI ── */
+/* ── Render odontograma FDI (SVG 5 faces) ── */
 function renderOdontograma(mountId) {
   const mount = document.getElementById(mountId);
   if (!mount) return;
-  // FDI notation
-  const upperRight = [18,17,16,15,14,13,12,11];
-  const upperLeft  = [21,22,23,24,25,26,27,28];
-  const lowerLeft  = [38,37,36,35,34,33,32,31];
-  const lowerRight = [48,47,46,45,44,43,42,41];
 
-  // Initial states (some pre-marked for realism)
-  const initial = {
-    16: 'caries', 26: 'restaurado', 36: 'corona', 46: 'endodoncia',
-    18: 'ausente', 28: 'ausente', 38: 'ausente', 48: 'ausente',
-    24: 'restaurado', 37: 'caries',
-  };
+  const isPerm = currentDentition === 'permanent';
+  const upperR = isPerm ? PERM_UPPER_R : DECID_UPPER_R;
+  const upperL = isPerm ? PERM_UPPER_L : DECID_UPPER_L;
+  const lowerR = isPerm ? PERM_LOWER_R : DECID_LOWER_R;
+  const lowerL = isPerm ? PERM_LOWER_L : DECID_LOWER_L;
+  const store = odontoData[currentDentition];
 
-  function tooth(num, lower=false) {
-    const state = initial[num] || 'sano';
-    return `
-      <div class="odonto-tooth ${lower?'lower':''}" data-num="${num}" data-state="${state}" onclick="handleToothClick(this)">
-        <span class="odonto-tooth-num">${num}</span>
-        <div class="odonto-tooth-svg"></div>
-      </div>
-    `;
+  // Initialize data for all teeth
+  [...upperR,...upperL,...lowerR,...lowerL].forEach(n => {
+    if (!store[n]) store[n] = { o:'sano', m:'sano', d:'sano', v:'sano', l:'sano' };
+  });
+
+  // Pre-seed permanent dentition with realistic data
+  if (isPerm && !store._seeded) {
+    store._seeded = true;
+    store[16] = { o:'caries', m:'sano', d:'caries', v:'sano', l:'sano' };
+    store[24] = { o:'restaurado', m:'restaurado', d:'sano', v:'sano', l:'sano' };
+    store[26] = { o:'restaurado', m:'sano', d:'restaurado', v:'sano', l:'sano' };
+    store[37] = { o:'caries', m:'sano', d:'sano', v:'sano', l:'sano' };
+    store[36] = { o:'sano', m:'sano', d:'sano', v:'sano', l:'sano', _whole:'corona' };
+    store[46] = { o:'sano', m:'sano', d:'sano', v:'sano', l:'sano', _whole:'endodoncia' };
+    store[18] = { o:'sano', m:'sano', d:'sano', v:'sano', l:'sano', _whole:'ausente' };
+    store[28] = { o:'sano', m:'sano', d:'sano', v:'sano', l:'sano', _whole:'ausente' };
+    store[38] = { o:'sano', m:'sano', d:'sano', v:'sano', l:'sano', _whole:'ausente' };
+    store[48] = { o:'sano', m:'sano', d:'sano', v:'sano', l:'sano', _whole:'ausente' };
   }
-  function tooth2(num, lower=false) {
-    const state = initial[num] || 'sano';
-    return `
-      <div class="odonto-tooth ${lower?'lower':''}" data-num="${num}" data-state="${state}" onclick="handleToothClick(this)">
-        <div class="odonto-tooth-svg"></div>
-        <span class="odonto-tooth-num">${num}</span>
-      </div>
-    `;
+
+  function toothHTML(num, isLower) {
+    return `<div class="odonto-tooth ${isLower?'lower':''}">
+      ${isLower ? '' : `<span class="odonto-tooth-num">${num}</span>`}
+      ${createToothSVG(num, isLower)}
+      ${isLower ? `<span class="odonto-tooth-num">${num}</span>` : ''}
+    </div>`;
   }
+
+  // Toggle UI
+  const toggleHTML = `
+    <div class="odonto-dentition-toggle">
+      <button class="${isPerm?'active':''}" onclick="switchDentition('permanent')">Permanente (${isPerm?'32':'32'})</button>
+      <button class="${!isPerm?'active':''}" onclick="switchDentition('deciduous')">Decidua (20)</button>
+    </div>
+  `;
+
+  // Face labels
+  const labelsHTML = `<div class="odonto-face-labels">
+    <span>V = Vestibular</span><span>L = Lingual</span><span>M = Mesial</span><span>D = Distal</span><span>O = Oclusal</span>
+  </div>`;
 
   mount.innerHTML = `
+    ${toggleHTML}
     <div class="odonto-row">
-      ${upperRight.map(n => tooth(n)).join('')}
-      <div style="width:10px"></div>
-      ${upperLeft.map(n => tooth(n)).join('')}
+      ${upperR.map(n => toothHTML(n, false)).join('')}
+      <div class="odonto-gap"></div>
+      ${upperL.map(n => toothHTML(n, false)).join('')}
     </div>
     <div class="odonto-divider"></div>
     <div class="odonto-row">
-      ${lowerRight.reverse().map(n => tooth2(n, true)).join('')}
-      <div style="width:10px"></div>
-      ${lowerLeft.reverse().map(n => tooth2(n, true)).join('')}
+      ${[...lowerR].reverse().map(n => toothHTML(n, true)).join('')}
+      <div class="odonto-gap"></div>
+      ${[...lowerL].reverse().map(n => toothHTML(n, true)).join('')}
     </div>
+    ${labelsHTML}
   `;
+
+  // Delegated click handler
+  mount.onclick = (e) => {
+    const poly = e.target.closest('polygon[data-face]');
+    if (!poly) return;
+    const svg = poly.closest('svg[data-tooth]');
+    if (!svg) return;
+    const num = parseInt(svg.dataset.tooth);
+    const face = poly.dataset.face;
+    const t = store[num];
+    if (!t) return;
+
+    if (currentTool === 'sano') {
+      if (t._whole) { delete t._whole; Object.keys(t).forEach(k => { if (k !== '_whole') t[k] = 'sano'; }); }
+      else { t[face] = 'sano'; }
+    } else if (WHOLE_TOOTH_STATES.includes(currentTool)) {
+      t._whole = currentTool;
+    } else {
+      if (t._whole) return; // can't paint face on whole-tooth state
+      t[face] = (t[face] === currentTool) ? 'sano' : currentTool;
+    }
+    updateToothVisual(num);
+  };
+}
+
+function switchDentition(type) {
+  currentDentition = type;
+  renderOdontograma('odontograma-mount');
+  if (window.lucide) lucide.createIcons();
 }
