@@ -5,9 +5,56 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Agenda — Sonrisas</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../styles/main.css">
+  <style>
+    /* State colors for 6 contractual states */
+    .ev-programada { background:#F3F4F6; border-color:#9CA3AF; color:#374151; }
+    .ev-confirmada { background:#DBEAFE; border-color:#3B82F6; color:#1E3A8A; }
+    .ev-sala-espera { background:#FEF3C7; border-color:#F59E0B; color:#78350F; }
+    .ev-en-atencion { background:#EDE9FE; border-color:#A855F7; color:#4C1D95; }
+    .ev-finalizada { background:#DCFCE7; border-color:#22C55E; color:#14532D; }
+    .ev-no-asistio { background:#FEE2E2; border-color:#EF4444; color:#991B1B; }
+
+    .state-dot { width:8px; height:8px; border-radius:50%; display:inline-block; }
+    .state-dot.programada { background:#9CA3AF; }
+    .state-dot.confirmada { background:#3B82F6; }
+    .state-dot.sala-espera { background:#F59E0B; }
+    .state-dot.en-atencion { background:#A855F7; }
+    .state-dot.finalizada { background:#22C55E; }
+    .state-dot.no-asistio { background:#EF4444; }
+
+    /* Day view */
+    .day-card {
+      display:flex; gap:16px; padding:16px; background:var(--surface-solid);
+      border:1px solid var(--border); border-radius:var(--r-md); border-left:4px solid;
+      transition:all 0.15s; cursor:pointer;
+    }
+    .day-card:hover { box-shadow:var(--shadow-sm); transform:translateX(2px); }
+    .day-time { width:70px; flex-shrink:0; }
+    .day-time-main { font-size:16px; font-weight:800; }
+    .day-time-dur { font-size:11px; color:var(--text-tertiary); }
+    .day-info { flex:1; min-width:0; }
+    .day-patient { font-size:14px; font-weight:700; margin-bottom:2px; }
+    .day-meta { font-size:12px; color:var(--text-secondary); }
+    .day-actions { display:flex; flex-direction:column; gap:6px; align-items:flex-end; justify-content:center; }
+
+    /* Month view */
+    .month-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:1px; background:var(--border); border-radius:var(--r-lg); overflow:hidden; }
+    .month-header { padding:10px; text-align:center; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-tertiary); background:var(--bg-alt); }
+    .month-cell {
+      min-height:90px; padding:8px; background:var(--surface-solid); cursor:pointer;
+      transition:background 0.12s;
+    }
+    .month-cell:hover { background:var(--bg-alt); }
+    .month-cell.today { background:#F0F9FF; }
+    .month-cell.outside { opacity:0.35; }
+    .month-num { font-size:13px; font-weight:600; margin-bottom:6px; }
+    .month-cell.today .month-num { background:var(--accent); color:#FFF; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; }
+    .month-dots { display:flex; flex-direction:column; gap:3px; }
+    .month-dot-row { display:flex; align-items:center; gap:5px; font-size:9.5px; color:var(--text-secondary); }
+    .month-dot-row .state-dot { width:6px; height:6px; }
+  </style>
 </head>
 <body>
   <div class="app-shell">
@@ -19,204 +66,48 @@
         <div class="page-head">
           <div>
             <h1>Agenda</h1>
-            <p>Calendario semanal de citas · Clínica Sonrisas</p>
+            <p>Gestión de citas · Clínica Sonrisas · Abril 2026</p>
           </div>
           <div class="page-head-actions">
-            <button class="btn btn-secondary" onclick="showToast('Filtros abiertos','info')">
-              <i data-lucide="sliders-horizontal"></i> Filtros
-            </button>
-            <button class="btn btn-primary" onclick="openNewCitaModal()">
-              <i data-lucide="plus"></i> Nueva cita
-            </button>
+            <button class="btn btn-secondary" onclick="showToast('Filtros','info')"><i data-lucide="sliders-horizontal"></i> Filtros</button>
+            <button class="btn btn-primary" onclick="openNewCitaModal()"><i data-lucide="plus"></i> Nueva cita</button>
           </div>
         </div>
 
         <div class="calendar">
           <div class="cal-header">
             <div class="cal-nav">
-              <button class="icon-btn" onclick="showToast('Semana anterior','info')"><i data-lucide="chevron-left"></i></button>
-              <h3>13 — 19 de abril 2026</h3>
-              <button class="icon-btn" onclick="showToast('Semana siguiente','info')"><i data-lucide="chevron-right"></i></button>
-              <button class="btn btn-ghost btn-sm">Hoy</button>
+              <button class="icon-btn" onclick="navigatePeriod(-1)"><i data-lucide="chevron-left"></i></button>
+              <h3 id="period-label">13 — 19 de abril 2026</h3>
+              <button class="icon-btn" onclick="navigatePeriod(1)"><i data-lucide="chevron-right"></i></button>
+              <button class="btn btn-ghost btn-sm" onclick="goToToday()">Hoy</button>
             </div>
             <div style="display:flex;gap:10px;align-items:center">
-              <div class="cal-view-toggle">
-                <button>Día</button>
-                <button class="active">Semana</button>
-                <button>Mes</button>
+              <div class="cal-view-toggle" id="view-toggle">
+                <button onclick="switchView('day')">Día</button>
+                <button class="active" onclick="switchView('week')">Semana</button>
+                <button onclick="switchView('month')">Mes</button>
               </div>
-              <select class="form-select" style="width:200px;padding:7px 12px;font-size:12.5px">
-                <option>Todos los profesionales</option>
-                <option>Dra. María Fernández</option>
-                <option>Dr. Andrés Gutiérrez</option>
-                <option>Dr. Sebastián Rojas</option>
+              <select class="form-select" style="width:200px;padding:7px 12px;font-size:12.5px" id="prof-filter" onchange="renderCurrentView()">
+                <option value="all">Todos los profesionales</option>
+                <option value="maria">Dra. María Fernández</option>
+                <option value="andres">Dr. Andrés Gutiérrez</option>
+                <option value="sebastian">Dr. Sebastián Rojas</option>
               </select>
             </div>
           </div>
 
-          <div class="cal-grid">
-            <div class="cal-time-col">
-              <div class="cal-time-slot">08:00</div>
-              <div class="cal-time-slot">09:00</div>
-              <div class="cal-time-slot">10:00</div>
-              <div class="cal-time-slot">11:00</div>
-              <div class="cal-time-slot">12:00</div>
-              <div class="cal-time-slot">13:00</div>
-              <div class="cal-time-slot">14:00</div>
-              <div class="cal-time-slot">15:00</div>
-              <div class="cal-time-slot">16:00</div>
-              <div class="cal-time-slot">17:00</div>
-              <div class="cal-time-slot">18:00</div>
-            </div>
-
-            <!-- Lunes -->
-            <div class="cal-day">
-              <div class="cal-day-header"><div class="cal-day-name">Lun</div><div class="cal-day-num">13</div></div>
-              <div class="cal-day-body">
-                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
-                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
-                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
-                <div class="cal-slot"></div><div class="cal-slot"></div>
-                <div class="cal-event ev-blue" style="top:16px;height:48px" onclick="window.location.href='paciente-detalle.html'">
-                  <strong>C. Vargas</strong><span>Limpieza</span>
-                </div>
-                <div class="cal-event ev-green" style="top:184px;height:56px" onclick="window.location.href='paciente-detalle.html'">
-                  <strong>R. Ibáñez</strong><span>Resina</span>
-                </div>
-                <div class="cal-event ev-purple" style="top:464px;height:64px" onclick="window.location.href='paciente-detalle.html'">
-                  <strong>V. Rivera</strong><span>Blanqueamiento</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Martes (hoy) -->
-            <div class="cal-day today">
-              <div class="cal-day-header"><div class="cal-day-name">Mar</div><div class="cal-day-num">14</div></div>
-              <div class="cal-day-body">
-                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
-                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
-                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
-                <div class="cal-slot"></div><div class="cal-slot"></div>
-                <div class="cal-event ev-blue" style="top:28px;height:40px" onclick="window.location.href='paciente-detalle.html'">
-                  <strong>J. Pérez</strong><span>08:30 · Limpieza</span>
-                </div>
-                <div class="cal-event ev-rose" style="top:84px;height:56px" onclick="window.location.href='paciente-detalle.html'">
-                  <strong>A. García</strong><span>09:30 · Endodoncia</span>
-                </div>
-                <div class="cal-event ev-amber" style="top:168px;height:28px" onclick="window.location.href='paciente-detalle.html'">
-                  <strong>C. Mendoza</strong><span>11:00</span>
-                </div>
-                <div class="cal-event ev-green" style="top:336px;height:88px" onclick="window.location.href='paciente-detalle.html'">
-                  <strong>L. Choque</strong><span>14:00 · Corona</span>
-                </div>
-                <div class="cal-event ev-purple" style="top:476px;height:44px" onclick="window.location.href='paciente-detalle.html'">
-                  <strong>P. Flores</strong><span>16:30 · Resina</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Miércoles -->
-            <div class="cal-day">
-              <div class="cal-day-header"><div class="cal-day-name">Mié</div><div class="cal-day-num">15</div></div>
-              <div class="cal-day-body">
-                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
-                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
-                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
-                <div class="cal-slot"></div><div class="cal-slot"></div>
-                <div class="cal-event ev-green" style="top:56px;height:40px">
-                  <strong>J. Pérez</strong><span>Consulta</span>
-                </div>
-                <div class="cal-event ev-blue" style="top:140px;height:52px">
-                  <strong>V. Rivera</strong><span>Control</span>
-                </div>
-                <div class="cal-event ev-rose" style="top:252px;height:72px">
-                  <strong>C. Mendoza</strong><span>Ortodoncia</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Jueves -->
-            <div class="cal-day">
-              <div class="cal-day-header"><div class="cal-day-name">Jue</div><div class="cal-day-num">16</div></div>
-              <div class="cal-day-body">
-                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
-                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
-                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
-                <div class="cal-slot"></div><div class="cal-slot"></div>
-                <div class="cal-event ev-amber" style="top:16px;height:40px">
-                  <strong>R. Ibáñez</strong><span>Control</span>
-                </div>
-                <div class="cal-event ev-purple" style="top:196px;height:84px">
-                  <strong>L. Choque</strong><span>Corona</span>
-                </div>
-                <div class="cal-event ev-green" style="top:336px;height:56px">
-                  <strong>P. Flores</strong><span>Limpieza</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Viernes -->
-            <div class="cal-day">
-              <div class="cal-day-header"><div class="cal-day-name">Vie</div><div class="cal-day-num">17</div></div>
-              <div class="cal-day-body">
-                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
-                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
-                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
-                <div class="cal-slot"></div><div class="cal-slot"></div>
-                <div class="cal-event ev-blue" style="top:28px;height:52px">
-                  <strong>A. García</strong><span>Limpieza</span>
-                </div>
-                <div class="cal-event ev-rose" style="top:112px;height:68px">
-                  <strong>C. Vargas</strong><span>Endodoncia</span>
-                </div>
-                <div class="cal-event ev-green" style="top:280px;height:44px">
-                  <strong>J. Pérez</strong><span>Control</span>
-                </div>
-                <div class="cal-event ev-amber" style="top:420px;height:56px">
-                  <strong>V. Rivera</strong><span>Ortodoncia</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Sábado -->
-            <div class="cal-day">
-              <div class="cal-day-header"><div class="cal-day-name">Sáb</div><div class="cal-day-num">18</div></div>
-              <div class="cal-day-body">
-                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
-                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
-                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
-                <div class="cal-slot"></div><div class="cal-slot"></div>
-                <div class="cal-event ev-green" style="top:56px;height:48px">
-                  <strong>P. Flores</strong><span>Resina</span>
-                </div>
-                <div class="cal-event ev-purple" style="top:168px;height:76px">
-                  <strong>L. Choque</strong><span>Corona</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Domingo -->
-            <div class="cal-day">
-              <div class="cal-day-header"><div class="cal-day-name">Dom</div><div class="cal-day-num">19</div></div>
-              <div class="cal-day-body" style="background:repeating-linear-gradient(45deg,transparent,transparent 6px,rgba(0,0,0,0.015) 6px,rgba(0,0,0,0.015) 12px)">
-                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
-                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
-                <div class="cal-slot"></div><div class="cal-slot"></div><div class="cal-slot"></div>
-                <div class="cal-slot"></div><div class="cal-slot"></div>
-                <div style="position:absolute;top:50%;left:0;right:0;text-align:center;transform:translateY(-50%);font-size:11px;color:var(--text-tertiary);font-weight:600">
-                  Cerrado
-                </div>
-              </div>
-            </div>
-          </div>
+          <div id="calendar-body"></div>
         </div>
 
-        <div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap;font-size:11.5px;color:var(--text-secondary)">
-          <div style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:3px;background:#DBEAFE;border-left:3px solid #3B82F6"></span> Limpieza</div>
-          <div style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:3px;background:#FFE4E6;border-left:3px solid #F43F5E"></span> Endodoncia</div>
-          <div style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:3px;background:#DCFCE7;border-left:3px solid #22C55E"></span> Resina / Consulta</div>
-          <div style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:3px;background:#EDE9FE;border-left:3px solid #A855F7"></span> Corona / Blanqueamiento</div>
-          <div style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:3px;background:#FEF3C7;border-left:3px solid #F59E0B"></span> Ortodoncia</div>
+        <!-- States legend -->
+        <div style="margin-top:16px;display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--text-secondary)">
+          <div style="display:flex;align-items:center;gap:6px"><span class="state-dot programada"></span> Programada</div>
+          <div style="display:flex;align-items:center;gap:6px"><span class="state-dot confirmada"></span> Confirmada</div>
+          <div style="display:flex;align-items:center;gap:6px"><span class="state-dot sala-espera"></span> En Sala de Espera</div>
+          <div style="display:flex;align-items:center;gap:6px"><span class="state-dot en-atencion"></span> En Atención</div>
+          <div style="display:flex;align-items:center;gap:6px"><span class="state-dot finalizada"></span> Finalizada</div>
+          <div style="display:flex;align-items:center;gap:6px"><span class="state-dot no-asistio"></span> No Asistió</div>
         </div>
 
       </main>
@@ -225,6 +116,234 @@
 
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   <script src="../js/app.js"></script>
-  <script>initLayout({ page: 'agenda', breadcrumb: 'Operación', heading: 'Agenda semanal' });</script>
+  <script>
+    initLayout({ page: 'agenda', breadcrumb: 'Operación', heading: 'Agenda' });
+
+    /* ═══ APPOINTMENT DATA ═══ */
+    const CITAS = [
+      // Lunes 13
+      { day:13, hora:'08:30', dur:45, pac:'C. Vargas', prof:'andres', trat:'Limpieza dental', estado:'finalizada' },
+      { day:13, hora:'11:30', dur:40, pac:'R. Ibáñez', prof:'andres', trat:'Resina 35', estado:'finalizada' },
+      { day:13, hora:'16:00', dur:60, pac:'V. Rivera', prof:'maria', trat:'Blanqueamiento', estado:'finalizada' },
+      // Martes 14 (hoy)
+      { day:14, hora:'08:30', dur:45, pac:'J. Pérez', prof:'andres', trat:'Limpieza dental', estado:'confirmada' },
+      { day:14, hora:'09:30', dur:90, pac:'A. García', prof:'andres', trat:'Endodoncia 15', estado:'en-atencion' },
+      { day:14, hora:'11:00', dur:30, pac:'C. Mendoza', prof:'maria', trat:'Control ortodoncia', estado:'sala-espera' },
+      { day:14, hora:'14:00', dur:120, pac:'L. Choque', prof:'sebastian', trat:'Corona porcelana', estado:'confirmada' },
+      { day:14, hora:'16:30', dur:45, pac:'P. Flores', prof:'andres', trat:'Resina posterior', estado:'programada' },
+      { day:14, hora:'17:30', dur:30, pac:'R. Ibáñez', prof:'sebastian', trat:'Control post-op', estado:'programada' },
+      // Miércoles 15
+      { day:15, hora:'09:00', dur:45, pac:'J. Pérez', prof:'sebastian', trat:'Consulta general', estado:'confirmada' },
+      { day:15, hora:'11:00', dur:60, pac:'V. Rivera', prof:'maria', trat:'Control ortodoncia', estado:'programada' },
+      { day:15, hora:'13:00', dur:90, pac:'C. Mendoza', prof:'maria', trat:'Ortodoncia ajuste', estado:'programada' },
+      // Jueves 16
+      { day:16, hora:'08:00', dur:30, pac:'R. Ibáñez', prof:'andres', trat:'Control', estado:'confirmada' },
+      { day:16, hora:'11:30', dur:120, pac:'L. Choque', prof:'sebastian', trat:'Corona porcelana (cont.)', estado:'programada' },
+      { day:16, hora:'15:00', dur:45, pac:'P. Flores', prof:'andres', trat:'Limpieza dental', estado:'programada' },
+      // Viernes 17
+      { day:17, hora:'08:30', dur:60, pac:'A. García', prof:'andres', trat:'Limpieza dental', estado:'confirmada' },
+      { day:17, hora:'10:00', dur:90, pac:'C. Vargas', prof:'andres', trat:'Endodoncia 27', estado:'programada' },
+      { day:17, hora:'13:00', dur:45, pac:'J. Pérez', prof:'sebastian', trat:'Control post-tratamiento', estado:'programada' },
+      { day:17, hora:'16:00', dur:60, pac:'V. Rivera', prof:'maria', trat:'Ortodoncia control', estado:'programada' },
+      // Sábado 18
+      { day:18, hora:'09:00', dur:45, pac:'P. Flores', prof:'andres', trat:'Resina', estado:'programada' },
+      { day:18, hora:'11:00', dur:120, pac:'L. Choque', prof:'sebastian', trat:'Corona (finalización)', estado:'programada' },
+    ];
+
+    const PROF_NAMES = { andres:'Dr. A. Gutiérrez', maria:'Dra. M. Fernández', sebastian:'Dr. S. Rojas' };
+    const STATE_LABELS = { 'programada':'Programada', 'confirmada':'Confirmada', 'sala-espera':'En Sala de Espera', 'en-atencion':'En Atención', 'finalizada':'Finalizada', 'no-asistio':'No Asistió' };
+    const STATE_CLASS = { 'programada':'ev-programada', 'confirmada':'ev-confirmada', 'sala-espera':'ev-sala-espera', 'en-atencion':'ev-en-atencion', 'finalizada':'ev-finalizada', 'no-asistio':'ev-no-asistio' };
+    const DAYS = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+
+    let currentView = 'week';
+
+    function getFiltered() {
+      const prof = document.getElementById('prof-filter')?.value || 'all';
+      return CITAS.filter(c => prof === 'all' || c.prof === prof);
+    }
+
+    function switchView(view) {
+      currentView = view;
+      document.querySelectorAll('#view-toggle button').forEach(b => b.classList.remove('active'));
+      document.querySelector(`#view-toggle button:nth-child(${view==='day'?1:view==='week'?2:3})`).classList.add('active');
+      renderCurrentView();
+    }
+
+    function navigatePeriod(dir) {
+      showToast(dir > 0 ? 'Siguiente período' : 'Período anterior', 'info');
+    }
+    function goToToday() {
+      showToast('Hoy — 14 de abril', 'info');
+    }
+
+    function renderCurrentView() {
+      const body = document.getElementById('calendar-body');
+      if (currentView === 'week') renderWeek(body);
+      else if (currentView === 'day') renderDay(body);
+      else renderMonth(body);
+      if (window.lucide) lucide.createIcons();
+    }
+
+    /* ═══ WEEK VIEW ═══ */
+    function renderWeek(el) {
+      document.getElementById('period-label').textContent = '13 — 19 de abril 2026';
+      const citas = getFiltered();
+      const days = [
+        { name:'Lun', num:13 }, { name:'Mar', num:14, today:true }, { name:'Mié', num:15 },
+        { name:'Jue', num:16 }, { name:'Vie', num:17 }, { name:'Sáb', num:18 },
+        { name:'Dom', num:19, closed:true },
+      ];
+      const hours = ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00'];
+
+      let html = `<div class="cal-grid">
+        <div class="cal-time-col" style="padding-top:32px">${hours.map(h => `<div class="cal-time-slot">${h}</div>`).join('')}</div>`;
+
+      days.forEach(d => {
+        const dayCitas = citas.filter(c => c.day === d.num);
+        html += `<div class="cal-day ${d.today?'today':''}" ${d.closed?'style="opacity:0.5"':''}>
+          <div class="cal-day-header"><div class="cal-day-name">${d.name}</div><div class="cal-day-num">${d.num}</div></div>
+          <div class="cal-day-body">
+            ${hours.map(() => `<div class="cal-slot"></div>`).join('')}
+            ${d.closed ? `<div style="position:absolute;top:50%;left:0;right:0;text-align:center;transform:translateY(-50%);font-size:11px;color:var(--text-tertiary);font-weight:600">Cerrado</div>` : ''}
+            ${dayCitas.map(c => {
+              const [hh,mm] = c.hora.split(':').map(Number);
+              const top = (hh - 8) * 56 + (mm / 60) * 56;
+              const height = Math.max(28, (c.dur / 60) * 56);
+              return `<div class="cal-event ${STATE_CLASS[c.estado]}" style="top:${top}px;height:${height}px" onclick="openCitaDetailModal(${JSON.stringify(c).replace(/"/g,'&quot;')})">
+                <strong>${c.pac}</strong><span>${c.hora} · ${c.trat}</span>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>`;
+      });
+      html += '</div>';
+      el.innerHTML = html;
+    }
+
+    /* ═══ DAY VIEW ═══ */
+    function renderDay(el) {
+      document.getElementById('period-label').textContent = 'Martes, 14 de abril 2026';
+      const citas = getFiltered().filter(c => c.day === 14).sort((a,b) => a.hora.localeCompare(b.hora));
+
+      let html = `<div style="padding:20px;display:flex;flex-direction:column;gap:10px">`;
+      if (citas.length === 0) {
+        html += `<div style="text-align:center;padding:60px 20px;color:var(--text-tertiary)"><i data-lucide="calendar-x" style="width:40px;height:40px;margin:0 auto 12px;display:block"></i><div style="font-size:14px;font-weight:600">Sin citas para hoy</div></div>`;
+      } else {
+        citas.forEach(c => {
+          const endH = parseInt(c.hora.split(':')[0]) + Math.floor((parseInt(c.hora.split(':')[1]) + c.dur) / 60);
+          const endM = (parseInt(c.hora.split(':')[1]) + c.dur) % 60;
+          const endStr = `${String(endH).padStart(2,'0')}:${String(endM).padStart(2,'0')}`;
+          const stateColor = { 'programada':'#9CA3AF','confirmada':'#3B82F6','sala-espera':'#F59E0B','en-atencion':'#A855F7','finalizada':'#22C55E','no-asistio':'#EF4444' };
+
+          html += `<div class="day-card" style="border-left-color:${stateColor[c.estado]}" onclick="openCitaDetailModal(${JSON.stringify(c).replace(/"/g,'&quot;')})">
+            <div class="day-time">
+              <div class="day-time-main">${c.hora}</div>
+              <div class="day-time-dur">${endStr} · ${c.dur}min</div>
+            </div>
+            <div class="day-info">
+              <div class="day-patient">${c.pac}</div>
+              <div class="day-meta">${c.trat} · ${PROF_NAMES[c.prof]}</div>
+            </div>
+            <div class="day-actions">
+              <span class="badge badge-${c.estado==='finalizada'?'success':c.estado==='confirmada'?'info':c.estado==='en-atencion'?'info':c.estado==='sala-espera'?'warning':c.estado==='no-asistio'?'error':'neutral'}">
+                <span class="state-dot ${c.estado}" style="width:6px;height:6px"></span> ${STATE_LABELS[c.estado]}
+              </span>
+            </div>
+          </div>`;
+        });
+      }
+      html += '</div>';
+      el.innerHTML = html;
+    }
+
+    /* ═══ MONTH VIEW ═══ */
+    function renderMonth(el) {
+      document.getElementById('period-label').textContent = 'Abril 2026';
+      const citas = getFiltered();
+      // April 2026: starts Wednesday (day 3), 30 days
+      const startDow = 3; // 0=Sun
+      const daysInMonth = 30;
+      const prevDays = startDow; // days from March to show
+      const totalCells = Math.ceil((prevDays + daysInMonth) / 7) * 7;
+
+      let html = `<div class="month-grid">`;
+      // Headers
+      DAYS.forEach(d => { html += `<div class="month-header">${d}</div>`; });
+
+      for (let i = 0; i < totalCells; i++) {
+        const dayNum = i - prevDays + 1;
+        const isOutside = dayNum < 1 || dayNum > daysInMonth;
+        const isToday = dayNum === 14;
+        const displayNum = isOutside ? (dayNum < 1 ? 31 + dayNum : dayNum - daysInMonth) : dayNum;
+        const dayCitas = isOutside ? [] : citas.filter(c => c.day === dayNum);
+
+        html += `<div class="month-cell ${isOutside?'outside':''} ${isToday?'today':''}" onclick="${!isOutside?`switchView('day')`:''}" >
+          <div class="month-num">${isToday ? `<span>${displayNum}</span>` : displayNum}</div>
+          <div class="month-dots">
+            ${dayCitas.slice(0,3).map(c => `<div class="month-dot-row"><span class="state-dot ${c.estado}"></span>${c.pac.split(' ')[0]} ${c.hora}</div>`).join('')}
+            ${dayCitas.length > 3 ? `<div class="month-dot-row" style="color:var(--text-tertiary)">+${dayCitas.length - 3} más</div>` : ''}
+          </div>
+        </div>`;
+      }
+      html += '</div>';
+      el.innerHTML = html;
+    }
+
+    /* ═══ CITA DETAIL MODAL (click on event) ═══ */
+    function openCitaDetailModal(c) {
+      const stateColor = { 'programada':'#9CA3AF','confirmada':'#3B82F6','sala-espera':'#F59E0B','en-atencion':'#A855F7','finalizada':'#22C55E','no-asistio':'#EF4444' };
+      const stateOpts = Object.entries(STATE_LABELS).map(([k,v]) => `<option value="${k}" ${c.estado===k?'selected':''}>${v}</option>`).join('');
+
+      openGenericModal({
+        title: c.pac,
+        subtitle: `${c.hora} · ${c.dur} min · ${c.trat}`,
+        size: 'lg',
+        submitLabel: 'Guardar cambios',
+        body: `
+          <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px">
+            <span class="badge" style="background:${stateColor[c.estado]}20;color:${stateColor[c.estado]};border:1px solid ${stateColor[c.estado]}40">
+              <span class="state-dot ${c.estado}" style="width:6px;height:6px"></span> ${STATE_LABELS[c.estado]}
+            </span>
+            <span class="badge badge-neutral">${PROF_NAMES[c.prof]}</span>
+            <span class="badge badge-neutral">${c.dur} minutos</span>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Estado de la cita</label>
+              <select class="form-select" id="cita-estado">${stateOpts}</select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Profesional</label>
+              <select class="form-select">
+                <option ${c.prof==='maria'?'selected':''}>Dra. María Fernández</option>
+                <option ${c.prof==='andres'?'selected':''}>Dr. Andrés Gutiérrez</option>
+                <option ${c.prof==='sebastian'?'selected':''}>Dr. Sebastián Rojas</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Fecha</label><input class="form-input" type="date" value="2026-04-${String(c.day).padStart(2,'0')}"></div>
+            <div class="form-group"><label class="form-label">Hora</label><input class="form-input" type="time" value="${c.hora}"></div>
+          </div>
+          <div class="form-group"><label class="form-label">Tratamiento</label><input class="form-input" value="${c.trat}"></div>
+          <div class="form-group"><label class="form-label">Notas</label><textarea class="form-textarea" placeholder="Observaciones..."></textarea></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;padding-top:10px;border-top:1px solid var(--border)">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="closeGenericModal();showToast('Recordatorio WhatsApp enviado','success')"><i data-lucide="message-circle"></i> WhatsApp</button>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="closeGenericModal();showToast('Cita reagendada','success')"><i data-lucide="calendar"></i> Reagendar</button>
+            <button type="button" class="btn btn-secondary btn-sm" style="color:var(--error)" onclick="closeGenericModal();showToast('Cita cancelada','error')"><i data-lucide="x-circle"></i> Cancelar cita</button>
+          </div>
+        `,
+        onSubmit: () => {
+          const newState = document.getElementById('cita-estado')?.value;
+          c.estado = newState || c.estado;
+          renderCurrentView();
+          showToast(`Cita actualizada → ${STATE_LABELS[c.estado]}`, 'success');
+        },
+      });
+    }
+
+    // Initial render
+    renderCurrentView();
+  </script>
 </body>
 </html>
