@@ -548,6 +548,26 @@ function openNewCitaModal(preselect = '') {
         }
       }
 
+      // Insert into CITAS array on agenda page and re-render
+      if (location.pathname.includes('agenda') && typeof CITAS !== 'undefined') {
+        const d = new Date(fecha);
+        const dayNum = d.getDate();
+        const profMap = { 'Dra. María Fernández':'maria', 'Dr. Andrés Gutiérrez':'andres', 'Dr. Sebastián Rojas':'sebastian' };
+        const durMap = { '30 min':30, '45 min':45, '60 min':60, '90 min':90, '120 min':120 };
+        const durSel = document.querySelectorAll('#gen-form select')[3];
+        const durVal = durMap[durSel?.value] || 45;
+        CITAS.push({
+          day: dayNum,
+          hora: hora,
+          dur: durVal,
+          pac: pacName,
+          prof: profMap[profName] || 'andres',
+          trat: tratText,
+          estado: 'programada',
+        });
+        if (typeof renderCurrentView === 'function') renderCurrentView();
+      }
+
       showToast('Cita creada · Paciente notificado', 'success');
     },
   });
