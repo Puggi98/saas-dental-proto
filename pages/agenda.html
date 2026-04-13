@@ -332,7 +332,7 @@
           <div class="form-group"><label class="form-label">Notas</label><textarea class="form-textarea" placeholder="Observaciones..."></textarea></div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;padding-top:10px;border-top:1px solid var(--border)">
             <button type="button" class="btn btn-secondary btn-sm" onclick="closeGenericModal();showToast('Recordatorio WhatsApp enviado','success')"><i data-lucide="message-circle"></i> WhatsApp</button>
-            <button type="button" class="btn btn-secondary btn-sm" onclick="closeGenericModal();showToast('Cita reagendada','success')"><i data-lucide="calendar"></i> Reagendar</button>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="closeGenericModal();openReagendarModal(${idx})"><i data-lucide="calendar"></i> Reagendar</button>
             <button type="button" class="btn btn-secondary btn-sm" style="color:var(--error)" onclick="closeGenericModal();showToast('Cita cancelada','error')"><i data-lucide="x-circle"></i> Cancelar cita</button>
           </div>
         `,
@@ -343,6 +343,90 @@
           showToast(`Cita actualizada → ${STATE_LABELS[c.estado]}`, 'success');
         },
       });
+    }
+
+    /* ═══ REAGENDAR MODAL ═══ */
+    function openReagendarModal(idx) {
+      const c = CITAS[idx];
+      if (!c) return;
+      openGenericModal({
+        title: 'Reagendar cita',
+        subtitle: `${c.pac} · ${c.trat}`,
+        submitLabel: 'Confirmar reagendamiento',
+        body: `
+          <div style="padding:14px;background:var(--bg-alt);border-radius:var(--r-md);margin-bottom:16px;display:flex;align-items:center;gap:14px">
+            <div style="width:40px;height:40px;border-radius:10px;background:var(--surface-dark);color:#FFF;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0">${c.pac.split(' ')[0][0]}${(c.pac.split(' ')[1]||'')[0]||''}</div>
+            <div>
+              <div style="font-weight:700;font-size:14px">${c.pac}</div>
+              <div style="font-size:12px;color:var(--text-secondary)">${c.trat} · ${PROF_NAMES[c.prof]} · ${c.dur} min</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+            <div style="padding:12px;background:var(--error-light);border-radius:var(--r-md);text-align:center">
+              <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-tertiary);font-weight:600;margin-bottom:4px">Fecha actual</div>
+              <div style="font-size:16px;font-weight:800;text-decoration:line-through;color:var(--error)">${c.day} abr · ${c.hora}</div>
+            </div>
+            <div style="padding:12px;background:var(--success-light);border-radius:var(--r-md);text-align:center">
+              <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-tertiary);font-weight:600;margin-bottom:4px">Nueva fecha</div>
+              <div style="font-size:16px;font-weight:800;color:var(--success)" id="reagendar-preview">Seleccionar</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Nueva fecha</label>
+              <input class="form-input" type="date" id="reagendar-fecha" value="2026-04-${String(Math.min(c.day+2,30)).padStart(2,'0')}" oninput="updateReagendarPreview()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nueva hora</label>
+              <input class="form-input" type="time" id="reagendar-hora" value="${c.hora}" oninput="updateReagendarPreview()">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Profesional</label>
+            <select class="form-select" id="reagendar-prof">
+              <option value="maria" ${c.prof==='maria'?'selected':''}>Dra. María Fernández</option>
+              <option value="andres" ${c.prof==='andres'?'selected':''}>Dr. Andrés Gutiérrez</option>
+              <option value="sebastian" ${c.prof==='sebastian'?'selected':''}>Dr. Sebastián Rojas</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Motivo del reagendamiento</label>
+            <select class="form-select">
+              <option>Solicitud del paciente</option>
+              <option>Profesional no disponible</option>
+              <option>Emergencia</option>
+              <option>Cambio de tratamiento</option>
+              <option>Otro</option>
+            </select>
+          </div>
+          <label style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text-secondary);margin-top:8px">
+            <input type="checkbox" checked> Notificar al paciente por WhatsApp
+          </label>
+        `,
+        onSubmit: () => {
+          const newFecha = document.getElementById('reagendar-fecha')?.value;
+          const newHora = document.getElementById('reagendar-hora')?.value;
+          const newProf = document.getElementById('reagendar-prof')?.value;
+          if (newFecha) c.day = new Date(newFecha).getDate();
+          if (newHora) c.hora = newHora;
+          if (newProf) c.prof = newProf;
+          c.estado = 'programada';
+          renderCurrentView();
+          showToast(`Cita reagendada al ${c.day} abr · ${c.hora}`, 'success');
+        },
+      });
+      setTimeout(() => updateReagendarPreview(), 100);
+    }
+
+    function updateReagendarPreview() {
+      const fecha = document.getElementById('reagendar-fecha')?.value;
+      const hora = document.getElementById('reagendar-hora')?.value;
+      const preview = document.getElementById('reagendar-preview');
+      if (preview && fecha && hora) {
+        const d = new Date(fecha);
+        const months = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+        preview.textContent = `${d.getDate()} ${months[d.getMonth()]} · ${hora}`;
+      }
     }
 
     // Initial render
