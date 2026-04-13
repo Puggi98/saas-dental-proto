@@ -44,7 +44,7 @@ const NAV_BY_ROLE = {
   odontologo: [
     { section: 'Clínico', items: [
       { id: 'dashboard',  label: 'Dashboard',  icon: 'layout-dashboard', href: 'dashboard.html' },
-      { id: 'agenda',     label: 'Mi agenda',  icon: 'calendar-days',    href: 'agenda.html', badge: '7' },
+      { id: 'agenda',     label: 'Mi agenda',  icon: 'calendar-days',    href: 'agenda.html' },
       { id: 'pacientes',  label: 'Pacientes',  icon: 'users',            href: 'pacientes.html' },
       { id: 'documentos', label: 'Documentos', icon: 'folder-open',      href: 'documentos.html' },
     ]},
